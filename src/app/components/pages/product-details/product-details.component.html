@@ -1,0 +1,269 @@
+<app-breadcrumb [items]="breadcrumbItems"></app-breadcrumb>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card p-3 sticky-side-div">
+            <div class=""> <!-- class="product-img-slider" -->
+                <ngx-slick-carousel class="carousel swiper product-thumbnail-slider p-2 rounded custom-arrow"
+                    [config]="slideConfig" #slickModal="slick-carousel" (afterChange)="slickChange($event)">
+                    @for (i of product.galleryImageUrls; track $index) {
+                    <div ngxSlickItem class="slide">
+                        <div class="slide-inner">
+                            <img id="showed-img" [src]="i | fullImageUrl" alt="" class="slide-image"
+                                (click)="openImageModal(i)" />
+                        </div>
+                    </div>
+                    }
+                </ngx-slick-carousel>
+
+                <!-- end swiper thumbnail slide -->
+                <ngx-slick-carousel class="carousel swiper product-nav-slider mt-2" [config]="slidesConfig">
+                    @for (i of product.galleryImageUrls; track $index) {
+                    <div ngxSlickItem class="swiper-slide swiperlist me-2" (click)="slidePreview($index,$event)">
+                        <div class="nav-slide-item">
+                            <img [src]="i | fullImageUrl" alt="" class="img-fluid d-block">
+                        </div>
+                    </div>
+                    }
+                </ngx-slick-carousel>
+            </div>
+            <!-- end swiper nav slide -->
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="row g-0">
+            <div class="col-md-8">
+                <div class="card rounded-end-0">
+                    <div class="card-body p-4">
+                        <h4 class="text-capitalize mb-3">{{product.name}}</h4>
+                        <div class="hstack gap-3 flex-wrap mb-4">
+                            <div class="text-muted"><b class="text-body fw-medium">{{product.soldCount ?
+                                    product.soldCount : 3.7}}</b> đã bán</div>
+                            <div class="vr"></div>
+                            <div class="text-muted"><b class="text-body fw-medium">{{product.soldCount}}</b>
+                                trong kho</div>
+                            <div class="vr"></div>
+                            <!-- <div class="text-muted">Ngày ra mắt : <span class="text-body fw-medium">{{product.publish}}</span></div> -->
+                        </div>
+
+                        <h6 class="fs-md mb-3">Các phiên bản khác:</h6>
+                        <div class="d-flex flex-wrap gap-2">
+                            @for (variant of product.variants; track variant.id) {
+                            <div class="option-card" [ngClass]="{ 'selected': selectedVariant.id === variant.id }"
+                                (click)="selectVariant(variant.id)">
+                                <div>{{variant.name}}</div>
+                                <div class="price">{{variant.price | thousandSeparator}} ₫</div>
+                            </div>
+                            }
+                        </div>
+
+                        <div class="mt-4">
+                            <h5 class="fs-md mb-3">Colors :</h5>
+                            <div class="d-flex flex-wrap gap-2">
+                                @for (option of selectedVariant.options; track option.id) {
+                                <div class="option-card d-flex align-items-center"
+                                    [ngClass]="{ 'selected': selectedOption.id === option.id }"
+                                    (click)="selectOption(option.id)">
+                                    <img [src]="option.imageUrl | fullImageUrl" alt="{{option.name}}"
+                                        class="thumb me-2">
+                                    <div>
+                                        <div>{{option.name}}</div>
+                                        <div class="price">{{selectedVariant.price | thousandSeparator}} ₫</div>
+                                    </div>
+                                </div>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <h5 class="fs-md mb-3">Shipping Information:</h5>
+                            <p class="text-muted mb-2"><b>Delivery Location</b> </p>
+                            <p class="text-muted mb-0">A thicker knit T-Shirt with a rag cut edge and sleeves and a
+                                printed muscle man on the back, you will feel #ULTRA in one of these.</p>
+                        </div>
+
+                    </div>
+                </div><!--end card-->
+            </div><!--end col-->
+            <div class="col-md-4">
+                <div class="card card-height-100 border-start rounded-start-0">
+                    <div class="card-body p-4">
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <div class="card card-primary">
+                                    <div class="card-body d-flex align-items-center flex-wrap gap-2">
+                                        <div class="flex-grow-1">
+                                            <p><i class="bi bi-gift fs-5 text-danger">Siêu khuyến mãi</i></p>
+                                            <p class="mb-2 fw-semibold"><span class="text-danger fw-bold">Học sinh, sinh
+                                                    viên</span> giảm lên đến <span
+                                                    class="text-danger fw-bold">500.000₫</span></p>
+                                            <p class="mb-2 fw-semibold">Trả góp dễ dàng, <span
+                                                    class="text-danger fw-bold">lãi suất 0% </span>mỗi tháng</p>
+                                            <p class="mb-2 fw-semibold"><span class="text-danger fw-bold">Trả 1 đổi
+                                                    1</span> trong vòng 30 ngày đầu tiên</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!--end col-->
+                            <div class="col-md-12">
+                                <div class="row g-3">
+                                    <div class="col-md-12">
+                                        <div class="card border shadow-none mb-0">
+                                            <div class="card-body p-2">
+                                                <div class="text-center">
+                                                    <div *ngIf="selectedVariant.salePrice != 0" class="product-price">
+                                                        <span class="current-price fw-bold text-danger">{{
+                                                            (selectedVariant.price - selectedVariant.salePrice) |
+                                                            thousandSeparator
+                                                            }} ₫</span>
+                                                        <br>
+                                                        <span
+                                                            class="old-price text-muted text-decoration-line-through">{{
+                                                            selectedVariant.price | thousandSeparator }} ₫</span>
+                                                    </div>
+                                                    <div *ngIf="selectedVariant.salePrice == 0" class="product-price">
+                                                        <span class="current-price fw-bold text-danger">{{
+                                                            selectedVariant.price | thousandSeparator }} ₫</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div><!--end col-->
+                                    <div class="col-md-12">
+                                        <div class="card border shadow-none mb-0">
+                                            <div class="card-body p-2">
+                                                <div class="text-center">
+                                                    <div class="product-price">
+                                                        Bảo hành <span class="fw-bold text-danger">{{ product.warranty
+                                                            }} </span>tháng
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div><!--end col-->
+                                </div><!--end row-->
+                            </div><!--end col-->
+                        </div><!--end row-->
+                        <div class="mt-4 d-flex gap-2">
+                            <!-- <button type="button" class="btn btn-success w-100">Mua ngay</button> -->
+                            <div *ngIf="auth.isLoggedIn()">
+                                <button *ngIf="!isItemInCart" type="button" class="btn btn-add-to-cart w-100" (click)="addToCart()"
+                                    (mouseenter)="isHover = true" (mouseleave)="isHover = false">
+
+                                    <ng-container *ngIf="!isHover; else textTemplate">
+                                        <i class="bi bi-cart"></i>
+                                    </ng-container>
+
+                                    <ng-template #textTemplate>
+                                        Thêm vào giỏ hàng
+                                    </ng-template>
+                                </button>
+
+                                <button *ngIf="isItemInCart" type="button" class="btn btn-add-to-cart w-100"
+                                    (click)="addToCart()" (mouseenter)="isHover = true" (mouseleave)="isHover = false">
+
+                                    <ng-container *ngIf="!isHover; else textTemplate">
+                                        <i class="bi bi-cart-check"></i>
+                                    </ng-container>
+
+                                    <ng-template #textTemplate>
+                                        Đã có trong giỏ hàng
+                                    </ng-template>
+                                </button>
+                            </div>
+
+
+                            <button *ngIf="!auth.isLoggedIn()" type="button" class="btn btn-add-to-cart w-100"
+                                (mouseenter)="isHover = true" (mouseleave)="isHover = false">
+
+                                <ng-container *ngIf="!isHover; else textTemplate">
+                                    <i class="bi bi-cart"></i>
+                                </ng-container>
+
+                                <ng-template #textTemplate>
+                                    Đăng nhập để thêm vào giỏ hàng
+                                </ng-template>
+                            </button>
+                        </div>
+                    </div>
+                </div><!--end col-->
+            </div><!--end col-->
+        </div><!--end row-->
+        <div class="card">
+            <div class="card-body p-4">
+                <div>
+                    <h5 class="fs-md mb-3">Chi tiết sản phẩm</h5>
+                    <!-- <p class="mb-2" [innerHTML]="selectedVariant.description"></p> -->
+                    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quo ab quos repudiandae, magni rem
+                    reprehenderit fugit voluptas tempore iste ipsam asperiores ratione maxime ducimus, dolorem delectus
+                    voluptatum cumque tenetur praesentium quam dolorum doloribus labore quis quidem atque. Ratione hic
+                    possimus quaerat eos ullam doloremque, rem debitis officiis sit mollitia aspernatur ad magni nemo
+                    repudiandae sequi illo nisi at earum. Molestiae reprehenderit molestias, quasi libero nobis illum
+                    aperiam nam nesciunt sint ut repellat incidunt laboriosam ullam. Labore nesciunt quibusdam tempore a
+                    voluptatem. Officia cumque quas rem vel, odio, ratione sed voluptates tempora, odit corrupti
+                    quibusdam aliquid ipsam corporis asperiores. Modi iusto temporibus ipsum ab pariatur, esse dolores
+                    rem aliquam placeat, eius, a consectetur officia corrupti quidem. Aut harum facere aspernatur qui
+                    animi aperiam aliquid accusantium, ratione laudantium molestiae adipisci hic praesentium dicta
+                    officiis, labore, dolorum doloribus eum eaque reprehenderit. Veritatis voluptas id eligendi quam,
+                    inventore animi quas itaque dignissimos asperiores architecto quisquam vel possimus voluptatem at a
+                    vero atque, et accusamus ipsum porro suscipit numquam, nemo fugiat. Pariatur, vel. Temporibus atque
+                    inventore at quae natus suscipit aut rerum. Exercitationem est itaque recusandae enim dolores
+                    blanditiis, quas facere magnam quo nisi ipsa quos labore cupiditate tempora aperiam consequuntur
+                    suscipit soluta architecto. Aperiam omnis earum veniam ab, incidunt numquam, voluptates porro cumque
+                    illo nemo quis unde sit ratione vitae perferendis animi cupiditate quas rerum fugit minus doloremque
+                    quaerat atque voluptatum laudantium? Ab, in. Debitis adipisci dolores deleniti soluta mollitia
+                    obcaecati, natus pariatur dolorum error omnis neque, veritatis nisi? Quas sint corrupti dolor cumque
+                    atque eveniet facere et eligendi, ab, amet maxime magni esse illo totam perspiciatis deleniti ipsum
+                    asperiores quae, sequi eaque rem sunt consectetur. Culpa tempora quaerat modi praesentium dolorem
+                    aperiam, fuga magni harum fugit temporibus cum asperiores, atque debitis inventore, earum minus
+                    impedit obcaecati. Voluptate ea reprehenderit mollitia, officia natus tempore esse neque dolores.
+                    Exercitationem veniam nobis voluptates aspernatur eos! Tempora quasi doloribus sint modi minima
+                    repudiandae assumenda iusto minus laboriosam, repellat aut fugit deleniti blanditiis eligendi atque,
+                    delectus error eos! Sequi enim autem eius facilis, vel facere omnis quaerat dicta unde culpa
+                    eligendi tempora iste fugit qui odio nemo laboriosam, earum sit quam vitae vero molestiae labore
+                    amet! Unde, harum. Neque, officia fuga? Unde tempore nulla temporibus explicabo. A vero natus
+                    ratione facilis expedita ab iusto vel ex, beatae inventore consequatur provident accusamus dolorem
+                    nostrum nesciunt quam! Eos doloremque officiis non necessitatibus id cum minus nobis reprehenderit
+                    adipisci unde sunt, obcaecati officia temporibus quis architecto nihil dolorum possimus ut! Dolor
+                    adipisci ea ratione esse animi, laborum deserunt, quis alias magni ab voluptatibus odit. Possimus
+                    mollitia nemo beatae ad praesentium animi culpa aut vitae, reprehenderit qui molestiae maiores
+                    magni, sequi architecto illo est nisi nostrum non quasi ducimus voluptatibus consequatur cum
+                    adipisci! Animi, a adipisci. A quisquam delectus adipisci praesentium nisi aperiam cum magnam eum.
+                    Dolores ab cum voluptates, iste nobis quisquam, iusto assumenda dolor officiis totam in et eos
+                    sapiente error perferendis natus? Voluptates, adipisci quia? Esse vitae deleniti ut, dolores porro
+                    vel, debitis itaque consectetur consequuntur repellendus minus laudantium.
+                </div>
+            </div>
+        </div>
+    </div><!--end col-->
+</div><!--end row-->
+
+
+<section class="same-products py-5 bg-white">
+    <div class="container">
+        <h4 class="text-center mb-5">Các sản phẩm tương tự</h4>
+        <div class="row g-4 list-product">
+            <div class="col-lg-3 col-md-6" *ngFor="let product of sameProducts">
+                <app-product-card [product]="product" (viewDetails)="product.productId">
+                </app-product-card>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- open image modal -->
+<div class="modal fade image-modal" tabindex="-1" [ngClass]="{'show': showImageModal}"
+    [style.display]="showImageModal ? 'block' : 'none'">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content bg-light">
+            <div class="modal-header border-0">
+                <button type="button" class="btn-close" (click)="closeImageModal()">X</button>
+            </div>
+            <div class="modal-body text-center">
+                <img [src]="currentImage | fullImageUrl" class="img-fluid" style="max-height: 80vh;">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="showAnim" @flyToCart class="flying-item"></div>

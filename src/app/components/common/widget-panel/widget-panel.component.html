@@ -1,0 +1,19 @@
+<div class="widget-panel">
+    <div class="messenger-float" (click)="openMessenger()">
+        <span class="tooltip">Chat Messenger</span>
+        <img 
+          src="https://upload.wikimedia.org/wikipedia/commons/b/be/Facebook_Messenger_logo_2020.svg"
+          alt="Messenger"
+        />
+    </div>
+
+    <div class="zalo-float" (click)="openZalo()">
+        <span class="tooltip">Chat Zalo</span>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_of_Zalo.svg" alt="Zalo" />
+    </div>
+
+    <div class="scroll-top-btn" *ngIf="isVisibleScrollTop" (click)="scrollToTop()">
+        <span class="tooltip">Lên đầu trang</span>
+        ↑
+    </div>
+</div>

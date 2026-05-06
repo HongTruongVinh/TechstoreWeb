@@ -1,0 +1,11 @@
+.card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: box-shadow 0.3s;
+}
+
+.product-name {
+  cursor: pointer;
+  
+  transition: transform .12s ease;
+  &:hover { transform: translateY(-1px); }
+}

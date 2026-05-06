@@ -1,0 +1,179 @@
+<!-- Hero Section -->
+<section class="hero-section bg-primary text-white py-5">
+  <div class="hero-content">
+    <!-- Category Sidebar -->
+    <app-category-panel *ngIf="!device.isMobile()" class="category-panel"></app-category-panel>
+
+    <!-- Main Hero Content (Carousel + Ad) -->
+    <div class="hero-main">
+      <div class="hero-main-container">
+        <!-- Hero Advertisement -->
+        <div class="hero-advertisement">
+          <div class="advertisement-card">
+            <img src="{{ heroAdvertisementImageLink }}" alt="Siêu khuyến mãi" class="ad-image" />
+          </div>
+        </div>
+
+        <!-- Image Carousel -->
+        <div class="hero-carousel">
+          <div class="carousel-container">
+            <div class="carousel-track" [style.transform]="'translateX(' + currentSlide * -100 + '%)'">
+              <div class="carousel-slide" *ngFor="let slide of carouselSlides; let i = index">
+                <div class="slide-content">
+                  <div class="slide-image">
+                    <img [src]="slide.imageUrl" alt="{{ slide.title }}" class="slide-img" />
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Carousel Indicators -->
+            <div class="carousel-indicators">
+              <button 
+                *ngFor="let slide of carouselSlides; let i = index"
+                class="indicator"
+                [class.active]="i === currentSlide"
+                (click)="goToSlide(i)">
+              </button>
+            </div>
+            
+            <!-- Carousel Navigation -->
+            <button class="carousel-nav prev" (click)="previousSlide()">
+              <i class="bi bi-chevron-left"></i>
+            </button>
+            <button class="carousel-nav next" (click)="nextSlide()">
+              <i class="bi bi-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Promotions Section -->
+    <div  class="promotions-section">
+      <div class="promotions-header">
+        <h5 class="promotions-title">
+          <i class="bi bi-percent me-2"></i>
+          Khuyến mãi hot
+        </h5>
+      </div>
+      <div class="promotions-grid">
+        <div class="promotion-item" *ngFor="let promotion of promotions" (click)="viewPromotion(promotion)">
+          <div class="promotion-image">
+            <i [class]="'bi ' + promotion.icon + ' display-4'"></i>
+          </div>
+          <div class="promotion-content">
+            <h6 class="promotion-title">{{ promotion.title }}</h6>
+            <p class="promotion-description">{{ promotion.description }}</p>
+            <span class="promotion-discount">{{ promotion.discount }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Featured Products Section -->
+<section class="featured-products py-5">
+  <div class="container">
+    <h2 class="text-center mb-5 text-white">Sản phẩm nổi bật</h2>
+    <div class="row g-4 list-product">
+      <div class="col-lg-3 col-md-6" *ngFor="let product of featuredProducts">
+        <app-product-card [product]="product" (viewDetails)="product.productId" (addCart)="addToCart($event)">
+        </app-product-card>
+      </div>
+    </div>
+    <!-- <div class="text-center mt-4">
+      <button class="btn btn-outline-primary btn-lg">Xem tất cả sản phẩm</button>
+    </div> -->
+  </div>
+</section>
+
+<section class="iphone-products py-5 bg-white">
+  <div class="container">
+    <h2 class="text-center mb-5">Iphone</h2>
+    <div class="row g-4 list-product">
+      <div class="col-lg-3 col-md-6" *ngFor="let product of featuredProducts">
+        <app-product-card [product]="product" (viewDetails)="product.productId" (addCart)="addToCart($event)">
+        </app-product-card>
+      </div>
+    </div>
+    <!-- <div class="text-center mt-4">
+      <button class="btn btn-outline-primary btn-lg">Xem tất cả sản phẩm</button>
+    </div> -->
+  </div>
+</section>
+
+<section class="samsung-products py-5">
+  <div class="container">
+    <h2 class="text-center mb-5 text-white">Samsung</h2>
+    <div class="row g-4 list-product">
+      <div class="col-lg-3 col-md-6" *ngFor="let product of featuredProducts">
+        <app-product-card [product]="product" (viewDetails)="product.productId" (addCart)="addToCart($event)">
+        </app-product-card>
+      </div>
+    </div>
+    <!-- <div class="text-center mt-4">
+      <button class="btn btn-outline-primary btn-lg">Xem tất cả sản phẩm</button>
+    </div> -->
+  </div>
+</section>
+
+<!-- Promotional Banner -->
+<section class="promotional-banner py-5 bg-light">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="banner-card bg-gradient text-white p-5 rounded">
+          <h3 class="fw-bold mb-3">🎉 Sale tưng bừng mừng đại lễ</h3>
+          <p class="lead mb-4">iPhone cũ giảm tới 500.000₫ - Ưu đãi có hạn!</p>
+          <button class="btn btn-warning btn-lg">Mua ngay</button>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="banner-card bg-success text-white p-5 rounded">
+          <h3 class="fw-bold mb-3">💳 Trả góp 0% lãi suất</h3>
+          <p class="lead mb-4">Thoải mái chi tiêu, trả góp nhẹ nhàng</p>
+          <button class="btn btn-light btn-lg">Tìm hiểu thêm</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-section py-5 bg-light">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-lg-4">
+        <div class="feature-item text-center">
+          <div class="feature-icon mb-3">
+            <i class="bi bi-shield-check display-4 text-primary"></i>
+          </div>
+          <h5>Bảo hành chính hãng</h5>
+          <p class="text-muted">Tất cả sản phẩm đều có bảo hành chính hãng từ nhà sản xuất</p>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="feature-item text-center">
+          <div class="feature-icon mb-3">
+            <i class="bi bi-truck display-4 text-success"></i>
+          </div>
+          <h5>Giao hàng miễn phí</h5>
+          <p class="text-muted">Miễn phí vận chuyển toàn quốc cho đơn hàng từ 500.000₫</p>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="feature-item text-center">
+          <div class="feature-icon mb-3">
+            <i class="bi bi-headset display-4 text-info"></i>
+          </div>
+          <h5>Hỗ trợ 24/7</h5>
+          <p class="text-muted">Đội ngũ tư vấn chuyên nghiệp hỗ trợ khách hàng 24/7</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+

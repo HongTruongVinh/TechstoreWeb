@@ -1,0 +1,186 @@
+<app-breadcrumb [items]="breadcrumbs"></app-breadcrumb>
+
+<div class="card border-bottom border-2 mb-2">
+    <div class="card-body d-flex gap-3">
+        <div class="flex-grow-1">
+            <h6 class="card-title mb-3">Khách hàng</h6>
+            <form id="newOrderForm" (ngSubmit)="saveAction()" [formGroup]="newOrderForm" class="tablelist-form" novalidate
+                autocomplete="off">
+
+                <div class="d-flex align-items-center mb-3">
+                    <label for="customerName" class="form-label me-3 mb-0" style="width: 120px;">Tên <span
+                            class="text-danger">*</span></label>
+                    <input formControlName="customerName" type="text" class="form-control" id="customerName"
+                        placeholder="Nhập tên khách hàng" required>
+                </div>
+
+                <div class="d-flex align-items-center mb-3">
+                    <label for="customerPhoneNumber" class="form-label me-3 mb-0" style="width: 120px;">SĐT
+                        <span class="text-danger">*</span></label>
+                    <input formControlName="customerPhoneNumber" type="text" class="form-control"
+                        id="customerPhoneNumber" placeholder="Nhập số điện thoại" required>
+                </div>
+
+                <div class="d-flex align-items-center mb-3">
+                    <label for="customerAddress" class="form-label me-3 mb-0" style="width: 120px;">Địa chỉ nhận
+                        <span class="text-danger">*</span></label>
+                    <input formControlName="customerAddress" type="text" class="form-control" id="customerAddress"
+                        placeholder="Nhập địa chỉ nhận hàng" required>
+                </div>
+
+                <div class="d-flex align-items-center mb-3">
+                    <label for="note" class="form-label me-3 mb-0" style="width: 120px;">Ghi chú</label>
+                    <input formControlName="note" type="text" class="form-control" id="note"
+                        placeholder="Nhập ghi chú">
+                </div>
+
+                <div class="d-flex align-items-center mb-3">
+                    <label for="paymentMethod" class="form-label me-3 mb-0" style="width: 120px;">Phương
+                        thức:</label>
+                    <select [(ngModel)]="selectedpaymentMethodId" class="form-select">
+                        <option *ngFor="let paymentMethod of paymentMethods" [value]="paymentMethod.methodId">
+                            {{ paymentMethod.name }}
+                        </option>
+                    </select>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<div class="row mb-2">
+    <div class="col-xxl-12">
+        <div class="card">
+            <div class="card-header d-flex align-items-center gap-3">
+                <h6 class="card-title mb-0 flex-grow-1">Các mặt hàng</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table align-middle table-nowrap table-borderless">
+                        <thead class="table-active">
+                            <tr>
+                                <th>Mặt hàng</th>
+                                <th>Đơn giá</th>
+                                <th>Số lượng</th>
+                                <th class="text-end">Thành tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (orderItem of orderItems; track $index)
+                            {
+                            <tr>
+                                <td>
+                                    <div class="product-item d-flex align-items-center gap-2">
+                                        <div class="avatar-sm flex-shrink-0">
+                                            <div class="avatar-title bg-light rounded">
+                                                <img [src]="orderItem.mainImageUrl | fullImageUrl" alt=""
+                                                    class="avatar-xs">
+                                            </div>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h6 class="fs-md">
+                                                 {{ orderItem.productName + ' - ' + orderItem.variantName }}
+                                            </h6>
+                                            <small class="text-muted">
+                                                Phân Loại: <span class="text-dark fw-medium">{{orderItem.optionName}}</span>
+                                            </small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>{{orderItem.salePrice?? orderItem.price | thousandSeparator}} VND</td>
+                                <td>
+                                    {{orderItem.quantity}}
+                                </td>
+                                <td class="fw-medium text-end">{{orderItem.totalPrice | thousandSeparator}} VND</td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                    <div *ngIf="isLoading" id="elmLoader">
+                        <div class="spinner-border text-primary avatar-sm" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!--end card-->
+    </div>
+</div><!--end row-->
+<div class="row mb-2">
+    <div class="col-xxl-12">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="card-title mb-0">Ưu đãi</h6>
+            </div>
+            <div class="card-body pt-4">
+                <div class="d-flex align-items-center mb-3">
+                    <label for="discountCode" class="form-label me-3 mb-0" style="width: 120px;">
+                        Mã ưu đãi
+                    </label>
+
+                    <div class="input-group">
+                        <input [(ngModel)]="discountCode" type="text" class="form-control me-1" id="discountCode"
+                            placeholder="Nhập mã ưu đãi" />
+
+                        <button class="btn btn-primary" type="button" (click)="checkDiscountCode()">
+                            Kiểm tra mã
+                        </button>
+                    </div>
+                </div>
+
+
+                <div class="d-flex align-items-center mb-3">
+                    <label for="paymentMethod" class="form-label me-3 mb-0" style="width: 120px;">Chọn mã:</label>
+                    <select [(ngModel)]="discountCode" class="form-select">
+                        <option *ngFor="let discountCode of listDiscountCodes" [value]="discountCode">
+                            {{ discountCode }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-2">
+    <div class="col-xxl-12">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="card-title mb-0">Tổng thanh toán</h6>
+            </div>
+            <div class="card-body pt-4">
+                <div class="table-responsive table-card">
+                    <table class="table table-borderless mb-0">
+                        <tbody>
+                            <tr>
+                                <td>Giá tổng sản phẩm :</td>
+                                <td class="text-end">{{subtotal | thousandSeparator}}</td>
+                            </tr>
+                            <tr>
+                                <td>Giảm giá :</td>
+                                <td class="text-end">-{{discount | thousandSeparator}}
+                                </td>
+                            </tr>
+                            <tr class="border-top border-top-dashed">
+                                <th scope="row">Tổng (VND) :</th>
+                                <th class="text-end">{{totalPrice| thousandSeparator}} VND</th>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-2">
+    <div class="col-xxl-12">
+        <div class="d-flex justify-content-between gap-3">
+            <button type="button" class="btn btn-secondary" (click)="backToCart()">Quay lại giỏ hàng</button>
+            <button type="submit" class="btn btn-primary" form="newOrderForm">Xác nhận đặt hàng</button>
+        </div>
+    </div>
+</div>

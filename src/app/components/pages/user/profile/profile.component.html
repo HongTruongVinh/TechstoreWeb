@@ -1,0 +1,197 @@
+<div class="row ms-2">
+    <div class="d-flex align-items-center flex-wrap gap-2 mb-4">
+        <ul class="nav nav-pills arrow-navtabs nav-secondary gap-2 flex-grow-1 order-2 order-lg-1" role="tablist">
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" data-bs-toggle="tab" href="javascript:void(0);"
+                    [class.active]="currentTab === 'personalDetails'" (click)="changeTab('personalDetails')" role="tab"
+                    aria-selected="true">
+                    Trang thông tin cá nhân
+                </a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" data-bs-toggle="tab" href="javascript:void(0);"
+                    [class.active]="currentTab === 'changePassword'" (click)="changeTab('changePassword')" role="tab"
+                    aria-selected="false" tabindex="-1">
+                    Trang đổi mật khẩu
+                </a>
+            </li>
+        </ul>
+
+    </div>
+    <div class="tab-content">
+        <div [hidden]="currentTab !== 'personalDetails'" class="tab-pane active" id="personalDetails" role="tabpanel">
+            <div class="card">
+                <div class="card-header d-flex align-items-center flex-wrap">
+                    <h6 class="card-title mb-0">Thông tin cá nhân</h6>
+                    <div class="flex-shrink-0 ms-auto order-1 order-lg-2">
+                        <a (click)="enableEditMode()" class="btn btn-primary"><i
+                                class="bi bi-pencil-square align-baseline me-1"></i>Chỉnh sửa</a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form (ngSubmit)="updateProfileAction()" [formGroup]="profileForm">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label for="firstName" class="form-label">Tên</label>
+                                    <input formControlName="firstName" type="text" class="form-control" id="firstName"
+                                        placeholder="Nhập tên của bạn">
+                                </div>
+                            </div>
+                            <!--end col-->
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label for="lastnameInput" class="form-label">Họ và tên đệm</label>
+                                    <input formControlName="lastName" type="text" class="form-control"
+                                        id="lastnameInput" placeholder="Nhập họ và tên đệm của bạn">
+                                </div>
+                            </div>
+                            <!--end col-->
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label for="phonenumberInput" class="form-label">Số điện thoại</label>
+                                    <input formControlName="phoneNumber" type="text" class="form-control"
+                                        id="phonenumberInput" placeholder="Nhập số điện thoại">
+                                </div>
+                            </div>
+                            <!--end col-->
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label for="emailInput" class="form-label">Địa chỉ Email</label>
+                                    <input formControlName="email" type="email" class="form-control" id="emailInput"
+                                        placeholder="Nhập địa chỉ email">
+                                </div>
+                            </div>
+                            <!--end col-->
+                            <div class="col-lg-4">
+                                <div class="mb-3">
+                                    <label for="cityInput" class="form-label">Địa chỉ</label>
+                                    <input formControlName="address" type="text" class="form-control" id="cityInput"
+                                        placeholder="City">
+                                </div>
+                            </div>
+                            <!--end col-->
+                            <!--end col-->
+                            <div class="col-lg-12" *ngIf="isEditMode">
+                                <div class="hstack gap-2 justify-content-end">
+                                    <button type="submit" class="btn btn-primary">Lưu</button>
+                                    <button type="button" class="btn btn-subtle-danger" (click)="cancelEdit()">Hủy
+                                        bỏ</button>
+                                </div>
+                            </div>
+                            <!--end col-->
+                        </div>
+                        <!--end row-->
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div [hidden]="currentTab !== 'changePassword'" class="tab-pane active" id="changePassword" role="tabpanel">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="card-title mb-0">Đổi mật khẩu</h6>
+                </div>
+                <div class="card-body">
+                    <form action="pages-profile-settings.html">
+                        <div class="row g-2 justify-content-lg-between align-items-center">
+                            <div class="col-lg-4">
+                                <div class="auth-pass-inputgroup">
+                                    <label for="oldpasswordInput" class="form-label">Mật khẩu cũ*</label>
+                                    <div class="position-relative">
+                                        <input [type]="fieldTextType ? 'text' : 'password'"
+                                            class="form-control password-input" id="oldpasswordInput"
+                                            placeholder="Enter current password"
+                                            pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}">
+                                        <button
+                                            class="btn btn-link position-absolute top-0 end-0 text-decoration-none text-muted password-addon"
+                                            type="button">
+                                            <i class="ri-eye-fill align-middle"
+                                                [ngClass]="{'mdi-eye-off-outline': !fieldTextType, 'mdi-eye-outline': fieldTextType}"
+                                                (click)="toggleFieldTextType()"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <div class="auth-pass-inputgroup">
+                                    <label for="password-input" class="form-label">Mật khẩu mới*</label>
+                                    <div class="position-relative">
+                                        <input [type]="fieldTextType1 ? 'text' : 'password'"
+                                            class="form-control password-input" id="password-input"
+                                            onpaste="return false" placeholder="Enter new password"
+                                            pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required>
+                                        <button
+                                            class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon"
+                                            type="button"><i class="ri-eye-fill align-middle"
+                                                [ngClass]="{'mdi-eye-off-outline': !fieldTextType1, 'mdi-eye-outline': fieldTextType1}"
+                                                (click)="toggleFieldTextType1()"></i></button>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <div class="auth-pass-inputgroup">
+                                    <label for="confirm-password-input" class="form-label">Nhập lại mật khẩu
+                                        mới*</label>
+                                    <div class="position-relative">
+                                        <input [type]="fieldTextType2 ? 'text' : 'password'"
+                                            class="form-control password-input" onpaste="return false"
+                                            id="confirm-password-input" placeholder="Confirm password"
+                                            pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required>
+                                        <button
+                                            class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon"
+                                            type="button"><i class="ri-eye-fill align-middle"
+                                                [ngClass]="{'mdi-eye-off-outline': !fieldTextType2, 'mdi-eye-outline': fieldTextType2}"
+                                                (click)="toggleFieldTextType2()"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between">
+                                <a href="javascript:void(0);" class="link-primary text-decoration-underline">Quên mật
+                                    khẩu
+                                    ?</a>
+                                <div class="">
+
+                                    <button type="submit" class="btn btn-success">Lưu thay đổi</button>
+                                </div>
+                            </div>
+
+                            <!--end col-->
+
+                            <div class="col-lg-12">
+                                <div class="card bg-light shadow-none passwd-bg" id="password-contain">
+                                    <div class="card-body">
+                                        <div class="mb-4">
+                                            <h5 class="fs-sm">Mật khẩu phải chứa:</h5>
+                                        </div>
+                                        <div class="">
+                                            <p id="pass-length" class="invalid fs-xs mb-2">Tối thiểu <b>8
+                                                    ký tự</b></p>
+                                            <p id="pass-lower" class="invalid fs-xs mb-2">Có ít nhất
+                                                <b>chữ thường</b>
+                                                (a-z)
+                                            </p>
+                                            <p id="pass-upper" class="invalid fs-xs mb-2">Có ít nhất
+                                                <b>chữ hoa</b>
+                                                (A-Z)
+                                            </p>
+                                            <p id="pass-number" class="invalid fs-xs mb-0">Có ít nhất
+                                                <b>số</b>
+                                                (0-9)
+                                            </p>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <!--end row-->
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!--end tab-pane-->
+    </div>
+</div>

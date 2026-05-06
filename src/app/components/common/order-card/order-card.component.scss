@@ -1,0 +1,34 @@
+.product-card {
+  background-color: #fff;
+  border-radius: 10px;
+  border: 1px solid #eaeaea;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.product-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.product-card .text-muted {
+  color: #777 !important;
+}
+
+.product-card .fw-semibold {
+  font-weight: 600;
+}
+
+.order-name {
+  cursor: pointer;
+  
+  transition: transform .12s ease;
+  &:hover { transform: translateY(-1px); }
+}
+
+.final-amount {
+  font-size: 1.25rem; 
+  font-weight: 600; 
+  color: red;      
+}

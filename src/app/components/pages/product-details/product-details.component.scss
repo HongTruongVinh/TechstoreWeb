@@ -1,0 +1,219 @@
+.product-price {
+  margin-bottom: 0.5rem;
+
+  .current-price {
+    font-size: 1.1rem;
+  }
+
+  .old-price {
+    font-size: 0.9rem;
+    margin-left: 0.5rem;
+  }
+}
+
+
+.image-modal .btn-close {
+  filter: none;
+  color: #000 !important;
+  opacity: 1;
+}
+
+.option-card {
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  padding: 10px 15px;
+  cursor: pointer;
+  min-width: 120px;
+  text-align: center;
+  background: #fff;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.option-card:hover {
+  border-color: #aaa;
+}
+
+.option-card.selected {
+  border-color: red;
+  box-shadow: 0 0 0 2px rgba(255,0,0,0.2);
+}
+
+.option-card .price {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.btn-add-to-cart{
+  background-color: rgb(255, 232, 62) !important; 
+  color: #000 !important;
+}
+
+.thumb {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+}
+
+.carousel {
+  width: 100%;
+  height: 400px; /* Hoặc chiều cao bạn mong muốn */
+  position: relative;
+  overflow: hidden;
+}
+
+.slide,
+.slide-inner {
+  width: 100%;
+  height: 100%;
+}
+
+.slide-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slide-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Hoặc contain tùy ý */
+  border-radius: 5px;
+}
+
+/* Additional styles: responsive layout, thumbnails, carousel controls, sticky sidebar, modal polish */
+
+/* Make the left column sticky on larger viewports */
+.sticky-side-div{
+  position: -webkit-sticky;
+  position: sticky;
+  top: 1rem;
+}
+
+.product-img-slider{
+  .product-thumbnail-slider{
+    .slide{ padding: 0.5rem; }
+  }
+
+  .product-nav-slider{
+    display: flex;
+    align-items: center;
+    overflow-x: auto;
+    padding: 6px 4px;
+
+    .swiper-slide{
+      width: auto;
+      cursor: pointer;
+      margin-right: 0.5rem;
+
+      .nav-slide-item{
+        width: 64px;
+        height: 64px;
+        border-radius: 6px;
+        overflow: hidden;
+        border: 2px solid transparent;
+        transition: transform 0.15s ease, border-color 0.15s ease;
+      }
+
+      img{
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+
+      &:hover .nav-slide-item{ transform: scale(1.03); }
+      &.active .nav-slide-item,
+      &.slick-current .nav-slide-item{ border-color: #f05a5a; }
+    }
+  }
+}
+
+/* Customize slick/ngx-slick arrows if present */
+.slick-prev, .slick-next{
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0,0,0,0.45);
+  color: #fff;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.18);
+  transition: background 0.15s ease, transform 0.12s ease;
+}
+.slick-prev:hover, .slick-next:hover{ background: rgba(0,0,0,0.6); transform: translateY(-50%) scale(1.03); }
+.slick-prev{ left: 10px; }
+.slick-next{ right: 10px; }
+
+/* Carousel image hover effect */
+.carousel .slide-image{ cursor: zoom-in; transition: transform 0.25s ease; }
+.carousel .slide-image:hover{ transform: scale(1.02); }
+
+/* Option card improvements: better spacing, visuals and keyboard focus */
+.option-card{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 140px;
+  padding: 12px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.08s ease;
+}
+.option-card:focus, .option-card:focus-visible{ outline: none; box-shadow: 0 0 0 3px rgba(0,123,255,0.12); }
+.option-card:hover{ transform: translateY(-1px); }
+.option-card.selected{ background: linear-gradient(180deg,#fff7f7,#fff); border-color: #d93025; box-shadow: 0 6px 16px rgba(217,48,37,0.06); }
+.option-card .price{ font-weight: 600; color: #c53030; }
+
+/* Thumbs */
+.thumb{ width: 40px; height: 40px; object-fit: cover; border-radius: 4px; }
+
+/* Buttons polish */
+.btn-success{ background-image: linear-gradient(180deg,#2ecc71,#27ae60); border: none; }
+.btn-warning{ background-image: linear-gradient(180deg,#ffb84d,#ff9933); border: none; }
+
+/* Card height utility used by markup */
+.card-height-100{ height: 100%; display:flex; flex-direction:column; }
+
+/* Modal styling: make background subtle and move close button into corner */
+.image-modal{
+  .modal-backdrop{ display:none; }
+  .modal-dialog{ max-width: 1100px; }
+  .modal-content{ background: rgba(255,255,255,0.98); border: none; border-radius: 8px; }
+  .modal-header{ position: absolute; right: 12px; top: 12px; z-index: 40; }
+  .btn-close{
+    background: rgba(255,255,255,0.95);
+    border-radius: 50%;
+    width: 40px; height: 40px;
+    display:inline-flex; align-items:center; justify-content:center;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  }
+}
+
+/* Small responsive tweaks */
+@media (max-width: 1199.98px){
+  .carousel{ height: 350px; }
+  .thumb{ width: 36px; height: 36px; }
+  .option-card{ min-width: 110px; }
+  .sticky-side-div{ position: static; }
+}
+
+@media (max-width: 575.98px){
+  .carousel{ height: 240px; }
+  .product-price .current-price{ font-size: 1rem; }
+  .option-card{ min-width: 100px; padding: 8px; font-size: 0.92rem; }
+  .product-nav-slider{ .swiper-slide{ margin-right: 0.35rem; } }
+}
+
+/* Small utility fixes for vertical rule inside the header area */
+.vr{ height: 20px; margin: 0 .5rem; border-left: 1px solid rgba(0,0,0,0.06); }
+
+.btn-add-to-cart{
+  background-color: #2fb936;
+  border: none;
+  color: #fff;
+  font-weight: 600;
+}

@@ -1,0 +1,17 @@
+<app-breadcrumb *ngIf="!device.isMobile()" [items]="breadcrumbItems"></app-breadcrumb>
+
+<div class="container">
+  <div class="row">
+    <div class="col-lg-3">
+      <!-- Sidebar -->
+        <app-sidebar *ngIf="!device.isMobile()" ></app-sidebar>
+    </div>
+
+    <div class="col-lg-9">
+      <!-- main content -->
+       <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>
+
+<app-mobile-bar *ngIf="device.isMobile()"></app-mobile-bar>

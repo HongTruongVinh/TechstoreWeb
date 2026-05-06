@@ -1,0 +1,59 @@
+<div class="register-modal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 p-4">
+            <button type="button" class="btn-close ms-auto" (click)="close()"
+                style="position: absolute; top: 16px; right: 16px;"></button>
+            <div class="text-center mb-3">
+                <img src="assets/images/icons/logo-light.png" alt="Logo" class="logo">
+                <h4 class="fw-bold mt-2 mb-3">Đăng ký tài khoản</h4>
+            </div>
+            <form (ngSubmit)="registerAction()" [formGroup]="registerForm">
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <input type="text" class="form-control" placeholder="Nhập họ và tên đệm*"
+                            formControlName="lastName" name="lastName">
+                    </div>
+                    <div class="col-6">
+                        <input type="text" class="form-control" placeholder="Nhập tên *" formControlName="firstName"
+                            name="firstName">
+                    </div>
+                </div>
+                <input type="text" class="form-control mb-3" placeholder="Nhập số điện thoại *"
+                    formControlName="phoneNumber" name="phoneNumber">
+                <input type="email" class="form-control mb-3" placeholder="Nhập email (không bắt buộc)"
+                    formControlName="email" name="email">
+                <input type="address" class="form-control mb-3" placeholder="Nhập địa chỉ *"
+                    formControlName="address" name="address">
+                <input type="password" class="form-control mb-3" placeholder="Nhập mật khẩu *"
+                    formControlName="password" name="password">
+                <input type="password" class="form-control mb-3" placeholder="Nhập lại mật khẩu *"
+                    formControlName="confirmPassword" name="confirmPassword">
+                <div class="text-muted mb-2" style="font-size: 0.95rem;">
+                    Bằng việc đăng kí này, bạn đã chấp nhận các chính sách của TechStore.
+                </div>
+                <button type="submit" class="btn btn-danger w-100 mb-3">Đăng ký</button>
+            </form>
+            <div class="d-flex align-items-center my-3">
+                <hr class="flex-grow-1">
+                <span class="mx-2 text-muted">Hoặc</span>
+                <hr class="flex-grow-1">
+            </div>
+            <div class="d-flex justify-content-between mb-3 gap-2">
+                <button type="button"
+                    class="btn btn-light social-btn flex-grow-1 d-flex align-items-center justify-content-center">
+                    <img src="assets/images/icons/google-icon-48.png" alt="Google" class="social-logo">
+                    Google
+                </button>
+                <button type="button"
+                    class="btn btn-light social-btn flex-grow-1 d-flex align-items-center justify-content-center">
+                    <img src="assets/images/icons/zalo-icon-48.png" alt="Zalo" class="social-logo">
+                    Zalo
+                </button>
+            </div>
+            <div class="text-center mt-2">
+                <span class="text-muted">Bạn đã có tài khoản?</span>
+                <a class="text-danger ms-1" (click)="openLoginModal()">Đăng nhập ngay</a>
+            </div>
+        </div>
+    </div>
+</div>

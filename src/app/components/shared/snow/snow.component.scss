@@ -1,0 +1,12 @@
+:host {
+  position: fixed;
+  inset: 0;
+  pointer-events: none; // không chặn click
+  z-index: 999;
+}
+
+canvas{
+  display:block;
+  width:100%;
+  height:100%;
+}

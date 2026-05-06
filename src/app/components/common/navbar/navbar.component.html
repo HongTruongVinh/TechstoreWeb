@@ -1,0 +1,143 @@
+<nav class="navbar">
+  <div class="navbar-container">
+    <!-- Logo và Search Box -->
+    <div class="navbar-left">
+      <div class="logo">
+        <a href="#" class="logo-link">
+          <img src="assets/images/icons/logo-light.png" alt="TechStore" class="logo-img">
+          <span class="logo-text">TechStore</span>
+        </a>
+      </div>
+      <div class="search-container">
+        <div class="search-box">
+          <input type="text" placeholder="Tìm kiếm điện thoại..." class="search-input" [(ngModel)]="searchQuery"
+            (keyup.enter)="onSearch()">
+          <button class="search-btn" (click)="onSearch()">
+            <i class="ri-search-line"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Links -->
+    <div *ngIf="!device.isMobile()" class="navbar-right">
+      <button class="nav-btn" (click)="openCategories()">
+        <i class="bi bi-ui-checks-grid"></i>
+        <span>Danh mục</span>
+      </button>
+      <button class="nav-btn" (click)="contact()">
+        <i class="bi bi-telephone-forward-fill"></i>
+        <span>1900.123.123</span>
+      </button>
+      <button *ngIf="!isLoggedIn" class="nav-btn login-btn" (click)="onLogin()">
+        <i class="bi bi-person"></i>
+        <span>Đăng nhập</span>
+      </button>
+      <button *ngIf="isLoggedIn" class="nav-btn login-btn" (click)="openCart()">
+        <i class="bi bi-cart"></i>
+        <span>Giỏ hàng</span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!--login Modal-->
+<div bsModal #loginModal="bs-modal" class="modal fade" id="loginModal">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 p-4" style="border-radius: 16px; max-width: 400px; margin: auto;">
+      <button type="button" class="btn-close btn-close-white ms-auto" (click)="loginModal.hide()"
+        style="position: absolute; top: 16px; right: 16px;"></button>
+      <div class="text-center mb-3">
+        <img src="assets/images/icons/logo-light.png" alt="Logo" style="width: 64px; margin-bottom: 8px;">
+        <h4 class="fw-bold mt-2 mb-3">Đăng nhập tài khoản</h4>
+      </div>
+      <form (ngSubmit)="loginAction()" [formGroup]="loginForm">
+        <input type="text" class="form-control mb-3" placeholder="Email hoặc SĐT" formControlName="loginIdentifier"
+          name="loginIdentifier">
+        <input type="password" class="form-control mb-3" placeholder="Mật khẩu" formControlName="password"
+          name="password">
+        <button type="submit" class="btn btn-danger w-100 mb-3">Đăng nhập</button>
+      </form>
+      <div class="d-flex align-items-center my-3">
+        <hr class="flex-grow-1">
+        <span class="mx-2 text-muted">Hoặc</span>
+        <hr class="flex-grow-1">
+      </div>
+      <div class="d-flex justify-content-between mb-3 gap-2">
+        <button type="button"
+          class="btn btn-light social-btn flex-grow-1 d-flex align-items-center justify-content-center">
+          <img src="assets/images/icons/google-icon-48.png" alt="Google" style="width: 32px; margin-right: 10px;">
+          Google
+        </button>
+        <button type="button"
+          class="btn btn-light social-btn flex-grow-1 d-flex align-items-center justify-content-center">
+          <img src="assets/images/icons/zalo-icon-48.png" alt="Zalo" style="width: 32px; margin-right: 10px;">
+          Zalo
+        </button>
+      </div>
+      <div class="text-center mt-2">
+        <span class="text-muted">Bạn chưa có tài khoản?</span>
+        <a href="#" class="text-danger ms-1" (click)="openRegisterModal(); loginModal.hide()">Đăng ký ngay</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Register Modal -->
+<div bsModal #registerModal="bs-modal" class="modal fade" id="registerModal">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 p-4" style="border-radius: 16px; max-width: 480px; margin: auto;">
+      <button type="button" class="btn-close btn-close-white ms-auto" (click)="registerModal.hide()"
+        style="position: absolute; top: 16px; right: 16px;"></button>
+      <div class="text-center mb-3">
+        <img src="assets/images/logo-light.png" alt="Logo" style="width: 64px; margin-bottom: 8px;">
+        <h4 class="fw-bold mt-2 mb-3">Đăng ký tài khoản</h4>
+      </div>
+      <form (ngSubmit)="registerAction()" [formGroup]="registerForm">
+        <div class="row mb-3">
+          <div class="col-6">
+            <input type="text" class="form-control" placeholder="Nhập họ và tên đệm*" formControlName="lastName"
+              name="lastName">
+          </div>
+          <div class="col-6">
+            <input type="text" class="form-control" placeholder="Nhập tên *" formControlName="firstName"
+              name="firstName">
+          </div>
+        </div> <input type="text" class="form-control mb-3" placeholder="Nhập số điện thoại *"
+          formControlName="phoneNumber" name="phoneNumber"><input type="email" class="form-control mb-3"
+          placeholder="Nhập email (không bắt buộc)" formControlName="email" name="email">
+        <input type="address" class="form-control mb-3" placeholder="Nhập địa chỉ *" formControlName="address"
+          name="address">
+        <input type="password" class="form-control mb-3" placeholder="Nhập mật khẩu *" formControlName="password"
+          name="password">
+        <input type="password" class="form-control mb-3" placeholder="Nhập lại mật khẩu *"
+          formControlName="confirmPassword" name="confirmPassword">
+        <div class="text-muted mb-2" style="font-size: 0.95rem;">
+          Bằng việc đăng kí này, bạn đã chấp nhận các chính sách của TechStore.
+        </div>
+        <button type="submit" class="btn btn-danger w-100 mb-3">Đăng ký</button>
+      </form>
+      <div class="d-flex align-items-center my-3">
+        <hr class="flex-grow-1">
+        <span class="mx-2 text-muted">Hoặc</span>
+        <hr class="flex-grow-1">
+      </div>
+      <div class="d-flex justify-content-between mb-3 gap-2">
+        <button type="button"
+          class="btn btn-light social-btn flex-grow-1 d-flex align-items-center justify-content-center">
+          <img src="assets/images/google-icon-96.png" alt="Google" style="width: 32px; margin-right: 10px;">
+          Google
+        </button>
+        <button type="button"
+          class="btn btn-light social-btn flex-grow-1 d-flex align-items-center justify-content-center">
+          <img src="assets/images/zalo-icon-48.png" alt="Zalo" style="width: 32px; margin-right: 10px;">
+          Zalo
+        </button>
+      </div>
+      <div class="text-center mt-2">
+        <span class="text-muted">Bạn đã có tài khoản?</span>
+        <a href="#" class="text-danger ms-1" (click)="registerModal.hide(); loginModal.show()">Đăng nhập ngay</a>
+      </div>
+    </div>
+  </div>
+</div>

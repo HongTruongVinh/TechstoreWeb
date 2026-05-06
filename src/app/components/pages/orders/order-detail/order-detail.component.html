@@ -1,0 +1,182 @@
+
+<app-breadcrumb [items]="breadcrumbItems"></app-breadcrumb>
+
+<div class="row g-3 mb-3">
+    <!-- Left Card -->
+    <div class="col-md-6">
+        <div class="card h-100 shadow-sm">
+            <div class="card-header d-flex align-items-center gap-3">
+                <h6 class="card-title mb-0 flex-grow-1">Đơn hàng</h6>
+            </div>
+            <div class="card-body">
+
+                <div class="d-flex align-items-center mb-3">
+                    <label class="me-3" style="width: 120px;">Mã đơn hàng:</label>
+                    <span>{{ orderDetail.orderId }}</span>
+                </div>
+
+                <div class="d-flex align-items-center mb-3">
+                    <label class="me-3" style="width: 120px;">Trạng thái:</label>
+                    <span class="text-info">{{orderDetail.orderStatus | orderStatus}}</span>
+                </div>
+
+
+                <div class="d-flex align-items-center mb-3">
+                    <label class="me-3" style="width: 120px;">Thanh toán:</label>
+                    <span>
+                        {{ paymentMethods[orderDetail.paymentMethod].name || 'Không xác định' }}
+                    </span>
+                </div>
+
+                <div *ngIf="orderDetail.notes != null && orderDetail.notes != ''"
+                    class="d-flex align-items-center mb-3">
+                    <label class="me-3" style="width: 120px;">Ghi chú:</label>
+                    <span>{{ orderDetail.notes }}</span>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Card -->
+    <div class="col-md-6">
+        <div class="card h-100 shadow-sm">
+            <div class="card-header d-flex align-items-center gap-3">
+                <h6 class="card-title mb-0 flex-grow-1">Khách hàng</h6>
+            </div>
+            <div class="card-body">
+
+                <div class="d-flex align-items-center mb-3">
+                    <label class="me-3" style="width: 120px;">Tên:</label>
+                    <span>{{ orderDetail.customerName }}</span>
+                </div>
+
+                <div class="d-flex align-items-center mb-3">
+                    <label class="me-3" style="width: 120px;">SĐT:</label>
+                    <span>{{ orderDetail.customerPhonenumber }}</span>
+                </div>
+
+                <div class="d-flex align-items-center mb-3">
+                    <label class="me-3" style="width: 120px;">Địa chỉ nhận:</label>
+                    <span>{{ orderDetail.shippingAddress }}</span>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-2">
+    <div class="col-xxl-12">
+        <div class="card">
+            <div class="card-header d-flex align-items-center gap-3">
+                <h6 class="card-title mb-0 flex-grow-1">Các mặt hàng</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table align-middle table-nowrap table-borderless">
+                        <thead class="table-active">
+                            <tr>
+                                <th>Mặt hàng</th>
+                                <th>Đơn giá</th>
+                                <th>Số lượng</th>
+                                <th class="text-end">Thành tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (orderItem of orderItems; track $index)
+                            {
+                            <tr>
+                                <td>
+                                    <div class="product-item d-flex align-items-center gap-2">
+                                        <div class="avatar-sm flex-shrink-0">
+                                            <div class="avatar-title bg-light rounded">
+                                                <img [src]="orderItem.mainImageUrl | fullImageUrl" alt=""
+                                                    class="avatar-xs">
+                                            </div>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h6 class="fs-md">
+                                                 {{ orderItem.productName + ' - ' + orderItem.variantName }}
+                                            </h6>
+                                            <small *ngIf="orderItem.variantName != null && orderItem.variantName != ''" class="text-muted">
+                                                Phiên bản: <span class="text-dark fw-medium">{{orderItem.variantName}}</span>
+                                            </small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>{{orderItem.priceAtOrderTime | thousandSeparator}} VND</td>
+                                <td>
+                                    {{orderItem.quantity}}
+                                </td>
+                                <td class="fw-medium text-end">{{orderItem.totalPrice | thousandSeparator}} VND</td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                    <div *ngIf="isLoading" id="elmLoader">
+                        <div class="spinner-border text-primary avatar-sm" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!--end card-->
+    </div>
+</div><!--end row-->
+
+<div class="row g-3 mb-3">
+    <!-- Left Card -->
+    <div class="col-md-6">
+        <div class="card h-100 shadow-sm">
+            <div class="card-header d-flex align-items-center gap-3">
+                <h6 class="card-title mb-0 flex-grow-1">Ưu đãi</h6>
+            </div>
+            <div class="card-body">
+
+                <div class="d-flex align-items-center mb-3">
+                    <label class="me-3">Mã ưu đãi đã áp dụng:</label>
+                    <span>{{ discountCode || 'Không có mã ưu đãi nào được áp dụng' }}</span>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Card -->
+    <div class="col-md-6">
+        <div class="card h-100 shadow-sm">
+            <div class="card-header d-flex align-items-center gap-3">
+                <h6 class="card-title mb-0 flex-grow-1">Tổng thanh toán</h6>
+            </div>
+            <div class="card-body">
+
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <label class="me-3">Giá tổng sản phẩm:</label>
+                    <span>{{ subtotal | thousandSeparator }} VND</span>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <label class="me-3">Giảm giá:</label>
+                    <span>{{ discount | thousandSeparator }} VND</span>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <label class="me-3">Tổng thanh toán:</label>
+                    <span class="final-amount">{{ totalPrice | thousandSeparator }} VND</span>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-2">
+    <div class="col-xxl-12">
+        <div class="d-flex justify-content-between gap-3">
+            <button type="button" class="btn btn-secondary" (click)="CancelOrder()">Hủy đơn hàng</button>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,37 @@
+
+.footerr {
+  background: #f8f9fa;
+  border-top: 1px solid #e5e5e5;
+  font-family: "Inter", sans-serif;
+}
+
+.footer-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+}
+
+.footer-link {
+  color: #333;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.footer-link:hover {
+  color: #0d6efd;
+}
+
+.social-icons a {
+  color: #555;
+  font-size: 1.2rem;
+  margin-right: 12px;
+  transition: color 0.2s;
+}
+
+.social-icons a:hover {
+  color: #0d6efd;
+}
+
+.footer-bottom {
+  background: #e9ecef;
+}

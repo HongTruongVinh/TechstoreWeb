@@ -1,0 +1,53 @@
+<div class="sidebar-menu" (mouseleave)="onCategoryLeave()">
+    <div class="menu-column">
+        <div class="menu-item" *ngFor="let category of categories"
+            (click)="viewCategory(category); onCategoryClick(category)" (mouseenter)="onCategoryHover(category)"
+            [class.active]="hoveredCategoryId === category.categoryId">
+            <div class="menu-icon">
+                <img [src]="category.iconImageUrl | fullImageUrl" alt="" class="img-fluid d-block">
+            </div>
+            <div class="menu-content">
+                <span class="menu-title">{{ category.name }}</span>
+            </div>
+
+            <!-- Brands Dropdown Panel for desktop -->
+            <div class="category-dropdown" *ngIf="!isMobile && hoveredCategoryId === category.categoryId">
+                <div class="dropdown-content">
+                    <div class="dropdown-header" *ngIf="isMobile">
+                        <h5 class="dropdown-title" (click)="onCategoryLeave()">{{ category.name }}</h5>
+                    </div>
+                    <div class="brands-list">
+                        <div class="brand-item" *ngFor="let brand of brands"
+                            (click)="viewProducts(category.slug, brand.slug)">
+                            <img [src]="brand.iconImageUrl | fullImageUrl" [alt]="brand.name" class="brand-logo">
+                            <span class="brand-name">{{ brand.name }}</span>
+                        </div>
+                        <div *ngIf="brands.length === 0" class="no-brands">
+                            <p>Chưa có thương hiệu</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mobile-brand-panel" *ngIf="isMobile">
+        <div class="brand-panel-inner">
+            <ng-container *ngIf="selectedCategory as selectedCategory">
+                <div class="brand-panel-header">{{ selectedCategory.name }}</div>
+                <div class="dropdown-content">
+                    <div class="brands-list">
+                        <div class="brand-item" *ngFor="let brand of brands"
+                            (click)="viewProducts(selectedCategory.slug, brand.slug)">
+                            <img [src]="brand.iconImageUrl | fullImageUrl" [alt]="brand.name" class="brand-logo">
+                            <span class="brand-name">{{ brand.name }}</span>
+                        </div>
+                        <div *ngIf="brands.length === 0" class="no-brands">
+                            <p>Chưa có thương hiệu</p>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+</div>

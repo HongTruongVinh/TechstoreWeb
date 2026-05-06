@@ -1,0 +1,37 @@
+<app-breadcrumb [items]="breadcrumbItems"></app-breadcrumb>
+
+<div class="container py-2">
+  <!-- Tiêu đề và kết quả tìm kiếm -->
+  <h2 class="fw-bold mb-2">TechStore | Tìm kiếm từ khóa {{title}}</h2>
+  <div class="mb-3 text-muted">
+    Tìm thấy <b>{{ allProducts.length }}</b> sản phẩm cho từ khóa <b>{{title}}</b>
+  </div>
+
+  <!-- Tabs filter -->
+  <div class="mb-3">
+    <button class="btn btn-outline-secondary me-2 mb-2" *ngFor="let tab of tabs" [class.active]="tab.active" (click)="selectTab(tab)">
+      {{ tab.label }}
+    </button>
+  </div>
+
+  <!-- Bộ lọc sắp xếp -->
+  <div class="mb-4 d-flex gap-2 align-items-center">
+    <span class="fw-bold">Sắp xếp theo</span>
+    <button class="btn btn-light border" [class.active]="sortType === 'price-desc'" (click)="sort('price-desc')">
+      <i class="bi bi-arrow-down-up"></i> Giá Cao - Thấp
+    </button>
+    <button class="btn btn-light border" [class.active]="sortType === 'price-asc'" (click)="sort('price-asc')">
+      <i class="bi bi-arrow-up-down"></i> Giá Thấp - Cao
+    </button>
+    <button class="btn btn-light border" [class.active]="sortType === 'popular'" (click)="sort('popular')">
+      <i class="bi bi-eye"></i> Xem Nhiều
+    </button>
+  </div>
+
+  <!-- Grid sản phẩm -->
+  <div class="row g-4">
+    <div class="col-lg-3 col-md-4 col-sm-6" *ngFor="let product of products">
+      <app-product-card [product]="product" (viewDetails)="product.productId"></app-product-card>
+    </div>
+  </div>
+</div>

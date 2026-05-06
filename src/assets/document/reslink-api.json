@@ -1,0 +1,68 @@
+{
+  "Category": {
+    "GetCategories": "categories",
+    "GetCategory": "categories/{0}"
+  },
+  "Brand": {
+    "GetBrands": "brands",
+    "GetBrand": "brands/{0}"
+  },
+  "Product": {
+    "GetCustomerProducts": "products",
+    "SearchCustomerProducts": "products/search?keyword={0}&pageNumber={1}&pageSize={2}",
+    "GetFeaturedProducts": "products/featured",
+    "GetProductDetails": "products/{0}",
+    "GetProductsByCategoryAndBrand": "products/category?categorySlug={0}&brandSlug={1}"
+  },
+  "Order": {
+    "GetItem": "admin/orders/{0}",
+    "UserOrders": "orders",
+    "CreateCodOrder": "orders/cod-order",
+    "CreatePrepayOrder": "orders/pre-pay-order",
+    "CancelOrder": "orders/cancel/{0}",
+    "OrderDetails": "orders/{0}"
+  },
+  "User": {
+    "UpdateProfile": "Users",
+    "Cart": "Cart",
+    "GetUsers": "Users/profile/{0}"
+  },
+  "Cart": {
+    "GetAllItems": "Carts",
+    "AddItemToCart": "Carts",
+    "UpdateItemInCart": "Carts/{0}",
+    "RemoveItemFromCart": "Carts/remove",
+    "ClearCart": "Carts/clear/{0}"
+  },
+  "Statistics": {
+    "GetDashboardOverviewData": "admin/statistics/overview"
+  },
+  "Home": {
+    "GetDataForHome": "home"
+  },
+  "UploadDataCloud": {
+    "UpLoadPhotoToCloud": "upload-to-cloud/cloudinary/{0}",
+    "DeletePhotoCloud": "upload-to-cloud/cloudinary/{0}",
+    "UpdateStatusSoftware": "upload-to-cloud/file-software/status/{0}",
+    "UpdateInformationSoftware": "upload-to-cloud/file-software/{0}",
+    "GetListFileSoftware": "upload-to-cloud/file-software"
+  },
+  "Authentication": {
+    "RegisterUser": "authentication/register",
+    "LoginNormalAccount": "authentication/login",
+    "LoginWithGoogle": "authentication/login-google",
+    "LoginWithFaceBook": "authentication/login-facebook"
+  },
+  "Shipper": {
+    "GetShippers": "shippers",
+    "GetShipper": "shippers/{0}"
+  },
+  "Invoice": {
+    "GetInvoices": "invoices",
+    "GetInvoice": "invoices/{0}"
+  },
+  "Payment": {
+    "GetPayments": "payments",
+    "GetPayment": "payments/{0}"
+  }
+}

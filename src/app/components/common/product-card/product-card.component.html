@@ -1,0 +1,24 @@
+<div class="product-card border rounded shadow-sm">
+  <div class="product-image p-3 text-center">
+    <img [src]="product.mainImageUrl | fullImageUrl" alt="" class="img-fluid d-block" (click)="viewProductDetails(buildProductUrl(product))" />
+  </div>
+  <div class="product-info p-3">
+    <h6 class="product-title" (click)="viewProductDetails(buildProductUrl(product))">{{ product.productName }}</h6>
+    <div *ngIf="product.salePrice > 0" class="product-price">
+      <span class="current-price fw-bold text-danger">{{ formatPrice(product.price - product.salePrice) }}</span>
+      <span class="old-price text-muted text-decoration-line-through">{{ formatPrice(product.price) }}</span>
+    </div>
+    <div *ngIf="product.salePrice < 1" class="product-price">
+      <span class="current-price fw-bold text-danger">{{ formatPrice(product.price) }}</span>
+    </div>
+    <div class="product-rating mb-2">
+      <span *ngFor="let star of getStarsArray(product.averageRating??0)">
+        <i *ngIf="star === 1" class="bi bi-star-fill text-warning"></i>
+        <i *ngIf="star === 0.5" class="bi bi-star-half text-warning"></i>
+        <i *ngIf="star === 0" class="bi bi-star text-warning"></i>
+      </span>
+      <span class="ms-1 text-muted">({{ product.soldCount }})</span>
+    </div>
+    <p class="product-description text-truncate">(Bảo hành {{ product.warranty }} tháng)</p>
+  </div>
+</div>

@@ -1,0 +1,18 @@
+<nav class="mb-2 navbar" aria-label="breadcrumb">
+    <ol class="breadcrumb mb-0">
+        <span class="me-3" (click)="goBack()">
+            ← Quay lại |
+        </span>
+
+        <li *ngFor="let item of items; let last = last" class="breadcrumb-item" [class.active]="last"
+            [attr.aria-current]="last ? 'page' : null">
+            <ng-container *ngIf="!last && item.url; else lastItem">
+                <a [routerLink]="item.url">{{ item.label }}</a>
+            </ng-container>
+
+            <ng-template #lastItem>
+                {{ item.label }}
+            </ng-template>
+        </li>
+    </ol>
+</nav>

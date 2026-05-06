@@ -1,0 +1,28 @@
+<nav class="mobile-menu">
+
+  <a href="#" routerLinkActive="active">
+    <span><i class="bi bi-house"></i></span>
+    <small>Trang chủ</small>
+  </a>
+
+  <a routerLink="/category" (click)="openCategories()">
+    <span><i class="bi bi-list"></i></span>
+    <small>Danh mục</small>
+  </a>
+
+  <a routerLinkActive="active" (click)="contact()">
+    <span><i class="bi bi-telephone"></i></span>
+    <small>Liên hệ</small>
+  </a>
+
+  <a *ngIf="isLoggedIn" routerLinkActive="active" (click)="openCart()">
+    <span><i class="bi bi-cart"></i></span>
+    <small *ngIf="isLoggedIn">Giỏ hàng</small>
+  </a>
+
+  <a *ngIf="!isLoggedIn" routerLinkActive="active" (click)="openLogin()">
+    <span><i class="bi bi-person"></i></span>
+    <small>Đăng nhập</small>
+  </a>
+
+</nav>
