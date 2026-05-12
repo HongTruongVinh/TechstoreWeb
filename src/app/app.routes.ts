@@ -12,7 +12,8 @@ import { OrderDetailComponent } from './components/pages/orders/order-detail/ord
 
 export const routes: Routes = [
     { path: '', component: HomeComponent },
-    { path: 'san-pham/:keyword', component: ProductsComponent },
+    { path: 'danh-muc/:categorySlug', component: ProductsComponent },
+    { path: 'tim-kiem/:keyword', component: ProductsComponent },
     { path: 'san-pham/:categorySlug/:brandSlug', component: ProductsComponent },
     { path: ':slugWithId', component: ProductDetailsComponent },
     {

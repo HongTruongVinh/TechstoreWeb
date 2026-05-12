@@ -1,14 +1,17 @@
+@use '../../../../assets/scss/variables' as v;
+
 .navbar {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  z-index: 9999;
+  z-index: 100;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   backdrop-filter: blur(10px);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   transition: all 0.3s ease;
+  height: v.$navbar-height;
 
   &:hover {
     box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
@@ -22,7 +25,6 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 70px;
   gap: 20px;
   width: 100%;
 }
@@ -33,7 +35,6 @@
   gap: 30px;
   flex: 1;
 }
-
 .logo {
   .logo-link {
     display: flex;
@@ -49,34 +50,34 @@
       transform: translateY(-2px);
       color: #ffd700;
     }
-  }
 
-  .logo-img {
-    width: 40px;
-    height: 40px;
-    object-fit: contain;
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.1);
-    padding: 4px;
-  }
+    .logo-img {
+      width: 56px;
+      height: 56px;
+      object-fit: contain;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 4px;
+    }
 
-  .logo-text {
-    background: linear-gradient(45deg, #ffd700, #ffed4e);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    font-size: 28px;
-    font-weight: 800;
-    letter-spacing: -0.5px;
+    .logo-text {
+      background: linear-gradient(45deg, #ffd700, #ffed4e);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
   }
 }
-
 .search-container {
   flex: 1;
-  max-width: 500px;
+  max-width: 100%;
 }
 
 .search-box {
+  width: 100%;
   position: relative;
   display: flex;
   align-items: center;
@@ -190,6 +191,11 @@
 
 // Responsive Design
 @media (max-width: 768px) {
+
+  .navbar {
+    max-height: 10%;
+  }
+
   .navbar-container {
     padding: 0 15px;
     gap: 15px;
@@ -205,28 +211,29 @@
     }
 
     .logo-img {
-      width: 35px;
-      height: 35px;
+      max-width: 35px;
+      max-height: 35px;
     }
   }
 
   .search-container {
-    width: 100%;
     max-width: 100%;
   }
 
   .search-box {
+    max-width: 100%;
     padding: 6px 15px;
   }
 
   .search-input {
+    max-width: 100%;
     font-size: 14px;
     padding: 6px 8px;
   }
 
   .search-btn {
-    width: 35px;
-    height: 35px;
+    max-width: 35px;
+    max-height: 35px;
     font-size: 16px;
   }
 
@@ -242,12 +249,11 @@
 
 @media (max-width: 480px) {
   .navbar-container {
-    height: 60px;
-    padding: 0 10px;
+    max-height: 100%;
   }
 
   .search-container {
-    max-width: 150px;
+    max-width: 100%;
   }
 
   .search-box {

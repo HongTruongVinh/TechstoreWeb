@@ -15,6 +15,7 @@ export class SidebarComponent {
 
   user!: User;
   activeMenu: string = 'cart'; // default
+  nameAvatar: string = '';
 
   auth = inject(AuthenticationService);
   constructor(
@@ -36,6 +37,13 @@ export class SidebarComponent {
 
     if (this.tokenStorageService.getUser() != null) {
       this.user = this.tokenStorageService.getUser()!;
+    }
+
+    // Set the initial name avatar
+    if (this.user.firstName && this.user.lastName) {
+      this.nameAvatar = this.user.lastName.charAt(0).toUpperCase() + this.user.firstName.charAt(0).toUpperCase();
+    } else {
+      this.nameAvatar = 'TS'; // Default avatar text
     }
   }
 
@@ -60,7 +68,6 @@ export class SidebarComponent {
   }
 
   logout() {
-    this.auth.logout();
     this.tokenStorageService.signOut();
     window.location.reload();
   }

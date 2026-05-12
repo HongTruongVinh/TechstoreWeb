@@ -165,7 +165,7 @@ form {
 // ===============================
 @media (max-width: 768px) {
   .nav-pills.arrow-navtabs {
-    flex-direction: column;
+    flex-direction: row; //column
   }
 
   .btn-secondary {

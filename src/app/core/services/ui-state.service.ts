@@ -7,6 +7,7 @@ export class UiStateService {
     navbarVisible$ = new BehaviorSubject(true);
     mobileMenuVisible$ = new BehaviorSubject(true);
     widgetPanelVisible$ = new BehaviorSubject(true);
+    footerVisible$ = new BehaviorSubject(true);
 
     hideNavbar() {
         this.navbarVisible$.next(false);
@@ -27,5 +28,12 @@ export class UiStateService {
     }
     showWidgetPanel() {
         this.widgetPanelVisible$.next(true);
+    }
+
+    hideFooter() {
+        this.footerVisible$.next(false);
+    }
+    showFooter() {
+        this.footerVisible$.next(true);
     }
 }

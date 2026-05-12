@@ -23,7 +23,8 @@ import { SessionStorageService } from '../../../../core/services/session-storage
   styleUrl: './cart.component.scss'
 })
 export class CartComponent {
-  isLoading = false;
+  pageNumber = 1;
+  pageSize = 100;
   cartItems: CartItem[] = [];
 
   selectedItems: CartItem[] = [];
@@ -42,8 +43,7 @@ export class CartComponent {
   }
 
   loadData() {
-    this.isLoading = true;
-    this.cartService.getAllItems().subscribe({
+    this.cartService.getAllItems(this.pageNumber, this.pageSize).subscribe({
       next: (res) => {
         if (res && res.data) {
           this.cartItems = res.data;
@@ -82,14 +82,10 @@ export class CartComponent {
           this.cartItems = this.cartItems.filter(item => !this.selectedItems.includes(item));
           this.selectedItems = [];
           this.caculateTotal();
-          
-          this.isLoading = false;
         } else {
           this.cartItems = [];
-          this.isLoading = false;
         }
       } else {
-        this.isLoading = false;
       }
     })
   }

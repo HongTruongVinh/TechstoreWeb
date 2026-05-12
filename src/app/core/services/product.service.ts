@@ -63,9 +63,9 @@ export class ProductService {
             );
     }
 
-    searchProducts(keyword: string) {
+    searchProducts(keyword: string, page: number, pageSize: number) {
         return this.linkSettingsService
-            .getResLinkSetting('Product', 'SearchCustomerProducts', keyword, 1, 200)
+            .getResLinkSetting('Product', 'SearchCustomerProducts', keyword, page, pageSize)
             .pipe(
                 switchMap((apiUrl) => {
                     if (!apiUrl) {
@@ -78,9 +78,24 @@ export class ProductService {
             );
     }
 
-    GetProductsByCategoryAndBrand(categorySlug: string, brandSlug: string) {
+    GetProductsByCategory(categorySlug: string, page: number, pageSize: number) {
         return this.linkSettingsService
-            .getResLinkSetting('Product', 'GetProductsByCategoryAndBrand', categorySlug, brandSlug)
+            .getResLinkSetting('Product', 'GetProductsByCategory', categorySlug, page, pageSize)
+            .pipe(
+                switchMap((apiUrl) => {
+                    if (!apiUrl) {
+                        throw new Error('Không tìm thấy URL API cho GetProductsByCategory');
+                    }
+
+                    return this.transferHttp.get(apiUrl);
+                }),
+                map((res: ApiResponseModel<ProductListItemModel[]>) => res)
+            );
+    }
+
+    GetProductsByCategoryAndBrand(categorySlug: string, brandSlug: string, page: number, pageSize: number) {
+        return this.linkSettingsService
+            .getResLinkSetting('Product', 'GetProductsByCategoryAndBrand', categorySlug, brandSlug, page, pageSize)
             .pipe(
                 switchMap((apiUrl) => {
                     if (!apiUrl) {

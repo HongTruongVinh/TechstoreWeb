@@ -1,27 +1,25 @@
-<div class="account-sidebar card p-4 text-center">
-    <img src="assets/images/logo-light.png" alt="Avatar" class="user-avatar mb-3">
+<div class="account-sidebar card p-4 justify-content-center align-items-center">
+   <!-- <img src="assets/images/icons/logo-light.png" alt="Avatar" class="user-avatar mb-3"> -->
+   <div class="name-avatar rounded-circle text-white d-flex
+            align-items-center justify-content-center">
+      {{nameAvatar}}
+   </div>
 
-    <h5 class="fw-bold mb-1">{{user.lastName + " " + user.firstName}}</h5>
-    <p class="text-muted mb-3">Thành viên TechStore </p>
+   <h5 class="fw-bold mb-1">{{user.lastName + " " + user.firstName}}</h5>
+   <p class="text-muted mb-3">Thành viên TechStore </p>
 
-    <div class="d-flex flex-column align-items-center mb-3">
-  <a class="sidebar-link mb-2"
-     [class.active]="activeMenu === 'cart'"
-     (click)="selectMenu('cart')">
-     Giỏ hàng
-  </a>
+   <div class="d-flex flex-column align-items-center mb-3">
+      <a class="sidebar-link mb-2" [class.active]="activeMenu === 'cart'" (click)="selectMenu('cart')">
+         Giỏ hàng
+      </a>
 
-  <a class="sidebar-link mb-2"
-     [class.active]="activeMenu === 'purchase'"
-     (click)="selectMenu('purchase')">
-     Đơn hàng đã mua
-  </a>
+      <a class="sidebar-link mb-2" [class.active]="activeMenu === 'purchase'" (click)="selectMenu('purchase')">
+         Đơn hàng đã mua
+      </a>
 
-  <a class="sidebar-link mb-2"
-     [class.active]="activeMenu === 'info'"
-     (click)="selectMenu('info')">
-     Thông tin cá nhân
-  </a>
-</div>
-    <button class="btn btn-outline-primary w-100" (click)="logout()">Đăng Xuất</button>
+      <a class="sidebar-link mb-2" [class.active]="activeMenu === 'info'" (click)="selectMenu('info')">
+         Thông tin cá nhân
+      </a>
+   </div>
+   <button class="btn btn-outline-primary w-100" (click)="logout()">Đăng Xuất</button>
 </div>

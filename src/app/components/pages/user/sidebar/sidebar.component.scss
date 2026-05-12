@@ -7,10 +7,15 @@
 }
 
 .user-avatar {
-  width: 80px;
-  height: 80px;
   border-radius: 8px;
   object-fit: cover;
+}
+
+.name-avatar{
+  width: 60px;
+  height: 60px;
+  background-color: #6779e3;
+  font-size: larger;
 }
 
 .sidebar-link:hover {

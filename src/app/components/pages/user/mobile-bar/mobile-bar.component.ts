@@ -3,11 +3,12 @@ import { TokenStorageService } from '../../../../core/services/token-storage.ser
 import { Router } from '@angular/router';
 import { UiStateService } from '../../../../core/services/ui-state.service';
 import { AuthenticationService } from '../../../../core/services/auth.service';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
   selector: 'app-mobile-bar',
   standalone: true,
-  imports: [],
+  imports: [RouterLink, RouterLinkActive],
   templateUrl: './mobile-bar.component.html',
   styleUrl: './mobile-bar.component.scss'
 })
@@ -37,7 +38,6 @@ export class MobileBarComponent {
   }
 
   logout() {
-    this.auth.logout();
     this.tokenStorageService.signOut();
     window.location.reload();
   }

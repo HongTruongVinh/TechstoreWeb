@@ -1,0 +1,24 @@
+.product-card {
+  max-width: 50%;
+}
+
+
+.btn-showmore {
+  background-color: #e1edff;
+  color: #3d83f6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 20vw;
+  height: 2vw;
+  min-width: 250px;
+  min-height: 50px;
+  font-size: larger;
+
+  border-radius: 30px;
+
+  &:hover {
+    background-color: #ccdffe;
+    cursor: pointer;
+  }
+}

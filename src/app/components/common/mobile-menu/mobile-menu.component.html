@@ -15,12 +15,12 @@
     <small>Liên hệ</small>
   </a>
 
-  <a *ngIf="isLoggedIn" routerLinkActive="active" (click)="openCart()">
+  <a *ngIf="tks.isLoggedIn()" routerLinkActive="active" (click)="openCart()">
     <span><i class="bi bi-cart"></i></span>
-    <small *ngIf="isLoggedIn">Giỏ hàng</small>
+    <small *ngIf="tks.isLoggedIn()">Giỏ hàng</small>
   </a>
 
-  <a *ngIf="!isLoggedIn" routerLinkActive="active" (click)="openLogin()">
+  <a *ngIf="!tks.isLoggedIn()" routerLinkActive="active" (click)="openLogin()">
     <span><i class="bi bi-person"></i></span>
     <small>Đăng nhập</small>
   </a>

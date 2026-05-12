@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { User } from '../../models/models/user/user.model';
 
 const TOKEN_KEY = 'auth-token';
@@ -8,15 +8,23 @@ const USER_KEY = 'currentUser';
   providedIn: 'root'
 })
 export class TokenStorageService {
-  constructor() { }
+  isLoggedIn = signal(false);
+  
+  constructor() {
+    if (this.getToken() != null) {
+      this.isLoggedIn.set(true);
+    }
+   }
 
   signOut(): void {
     sessionStorage.clear();
+    this.isLoggedIn.set(false);
   }
 
   public saveToken(token: string): void {
     sessionStorage.removeItem(TOKEN_KEY);
     sessionStorage.setItem(TOKEN_KEY, token);
+    this.isLoggedIn.set(true);
   }
 
   public getToken(): string | null {

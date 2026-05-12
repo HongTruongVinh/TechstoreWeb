@@ -16,14 +16,14 @@ export class AuthenticationService {
     private linkSettingsService: LinkSettingsService
   ) { }
 
-  loginNormalAccount(loginRequestModel: LoginRequestModel){
+  loginNormalAccount(loginRequestModel: LoginRequestModel) {
     return this.linkSettingsService.getResLinkSetting('Authentication', 'LoginNormalAccount')
       .pipe(
         switchMap((apiUrl) => {
           if (!apiUrl) {
             throw new Error('Không tìm thấy URL API cho LoginNormalAccount');
           }
-          
+
           return this.transferHttp.post(apiUrl, loginRequestModel);
         }),
         map((res: ApiResponseModel<LoginResponeModel>) => res)
@@ -42,16 +42,6 @@ export class AuthenticationService {
         }),
         map((res: ApiResponseModel<any>) => res)
       );
-  }
-
-  isLoggedIn = signal(false);
-
-  login() {
-    this.isLoggedIn.set(true);
-  }
-
-  logout() {
-    this.isLoggedIn.set(false);
   }
 
 }

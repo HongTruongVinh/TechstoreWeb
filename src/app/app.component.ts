@@ -8,6 +8,7 @@ import { MobileMenuComponent } from "./components/common/mobile-menu/mobile-menu
 import { DeviceService } from './core/services/device.service';
 import { WidgetPanelComponent } from "./components/common/widget-panel/widget-panel.component";
 import { UiStateService } from './core/services/ui-state.service';
+import { LoadingComponent } from "./components/common/loading/loading.component";
 
 @Component({
   selector: 'app-root',
@@ -19,8 +20,9 @@ import { UiStateService } from './core/services/ui-state.service';
     FooterComponent,
     CategoryPanelComponent,
     MobileMenuComponent,
-    WidgetPanelComponent
-  ],
+    WidgetPanelComponent,
+    LoadingComponent
+],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

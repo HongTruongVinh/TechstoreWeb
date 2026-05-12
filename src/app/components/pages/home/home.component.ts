@@ -36,8 +36,6 @@ export class HomeComponent {
   hoveredCategoryId: string | null = null;
 
 
-  showLoginModal: boolean = false;
-  showLoginForm: boolean = true;
 
   heroAdvertisementImageLink = "https://res.cloudinary.com/dc8ijvcze/image/upload/v1777281828/TechShop/images/advertisement/hero-advertisement/April30th.jpg";
   // Carousel slides data
@@ -173,33 +171,12 @@ export class HomeComponent {
     }
   }
 
-  onSearch(): void {
-    if (this.searchQuery.trim()) {
-      this.router.navigate(['/products', this.searchQuery.trim()]);
-    }
-  }
-
-  addToCart(product: any): void {
-    console.log('Adding to cart:', product);
-  }
-
-  viewCategory(category: any): void {
-    console.log('Viewing category:', category);
-  }
-
-  onCategoryHover(category: CategoryModel): void {
-    this.hoveredCategoryId = category.categoryId;
-  }
-
-  onCategoryLeave(): void {
-    this.hoveredCategoryId = null;
+  onSearch(query: string): void {
+    this.router.navigate(['/san-pham', query.trim()]);
   }
 
   viewPromotion(promotion: any): void {
     console.log('Viewing promotion:', promotion);
-
-    this.showLoginModal = true;
-    this.showLoginForm = true;
   }
 
   getStarsArray(rating: number): number[] {
@@ -246,9 +223,5 @@ export class HomeComponent {
       clearInterval(this.autoSlideInterval);
       this.startAutoSlide();
     }
-  }
-
-  viewProducts(categorySlug: string, brandSlug: string): void {
-    this.router.navigate(['/san-pham', categorySlug, brandSlug]);
   }
 }

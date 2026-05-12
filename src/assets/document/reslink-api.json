@@ -12,7 +12,8 @@
     "SearchCustomerProducts": "products/search?keyword={0}&pageNumber={1}&pageSize={2}",
     "GetFeaturedProducts": "products/featured",
     "GetProductDetails": "products/{0}",
-    "GetProductsByCategoryAndBrand": "products/category?categorySlug={0}&brandSlug={1}"
+    "GetProductsByCategory": "products/category?categorySlug={0}&pageNumber={1}&pageSize={2}",
+    "GetProductsByCategoryAndBrand": "products/category-brand?categorySlug={0}&brandSlug={1}&pageNumber={2}&pageSize={3}"
   },
   "Order": {
     "GetItem": "admin/orders/{0}",

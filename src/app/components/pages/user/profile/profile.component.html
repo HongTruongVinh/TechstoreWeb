@@ -1,18 +1,18 @@
-<div class="row ms-2">
+<div class="row">
     <div class="d-flex align-items-center flex-wrap gap-2 mb-4">
         <ul class="nav nav-pills arrow-navtabs nav-secondary gap-2 flex-grow-1 order-2 order-lg-1" role="tablist">
             <li class="nav-item" role="presentation">
                 <a class="nav-link active" data-bs-toggle="tab" href="javascript:void(0);"
                     [class.active]="currentTab === 'personalDetails'" (click)="changeTab('personalDetails')" role="tab"
                     aria-selected="true">
-                    Trang thông tin cá nhân
+                    Thông tin cá nhân
                 </a>
             </li>
             <li class="nav-item" role="presentation">
                 <a class="nav-link" data-bs-toggle="tab" href="javascript:void(0);"
                     [class.active]="currentTab === 'changePassword'" (click)="changeTab('changePassword')" role="tab"
                     aria-selected="false" tabindex="-1">
-                    Trang đổi mật khẩu
+                    Đổi mật khẩu
                 </a>
             </li>
         </ul>

@@ -1,21 +1,21 @@
 <nav class="mobile-bar">
 
-    <a routerLinkActive="active" (click)="home()">
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="home()">
         <span><i class="bi bi-house"></i></span>
         <small>Trang chủ</small>
     </a>
 
-    <a routerLinkActive="active" (click)="cart()">
+    <a routerLink="/user/cart" routerLinkActive="active" (click)="cart()">
         <span><i class="bi bi-cart"></i></span>
         <small>Giỏ hàng</small>
     </a>
 
-    <a routerLinkActive="active" (click)="puchase()">
+    <a routerLink="/user/purchase" routerLinkActive="active" (click)="puchase()">
         <span><i class="bi bi-bag"></i></span>
         <small>Đơn hàng</small>
     </a>
 
-    <a routerLinkActive="active" (click)="infomation()">
+    <a routerLink="/user/profile" routerLinkActive="active" (click)="infomation()">
         <span><i class="bi bi-person"></i></span>
         <small>Cá nhân</small>
     </a>

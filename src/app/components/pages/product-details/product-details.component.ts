@@ -19,6 +19,7 @@ import { trigger, transition, style, animate } from '@angular/animations';
 import { ProductCardComponent } from "../../common/product-card/product-card.component";
 import { ProductListItemModel } from '../../../models/models/product/product-list-item.model';
 import { AuthenticationService } from '../../../core/services/auth.service';
+import { AuthDialogService } from '../../../core/services/AuthDialogService';
 
 @Component({
   selector: 'app-product-details',
@@ -31,7 +32,7 @@ import { AuthenticationService } from '../../../core/services/auth.service';
     ThousandSeparatorPipe,
     BreadcrumbComponent,
     ProductCardComponent
-],
+  ],
   templateUrl: './product-details.component.html',
   styleUrl: './product-details.component.scss',
   animations: [
@@ -63,14 +64,14 @@ export class ProductDetailsComponent {
 
   @ViewChild('slickModal') slickModal!: SlickCarouselComponent;
 
-  auth = inject(AuthenticationService);
+  authDialog = inject(AuthDialogService);
+  tks = inject(TokenStorageService);
   constructor(
     private location: Location,
     private readonly route: ActivatedRoute,
     private readonly titleService: Title,
     private readonly productService: ProductService,
     private readonly cartService: CartService,
-    private readonly tokenStorageService: TokenStorageService,
     private readonly sessionStorageService: SessionStorageService
   ) { }
 
@@ -109,6 +110,8 @@ export class ProductDetailsComponent {
       isOnSale: false,
       isFeatured: false,
 
+      publishDate: new Date(10,10,2026),
+
       variants: []
     }
 
@@ -136,7 +139,7 @@ export class ProductDetailsComponent {
       this.loadProductDetails(id);
     });
 
-    if(this.auth.isLoggedIn()) {
+    if (this.tks.isLoggedIn()) {
       this.sessionStorageService.getCartItems()?.forEach(item => {
         if (item.productVariantOptionId === this.selectedOption.id) {
           this.isItemInCart = true;
@@ -171,6 +174,20 @@ export class ProductDetailsComponent {
 
         if (this.product.galleryImageUrls?.length === 0) {
           this.product.galleryImageUrls = [this.product.mainImageUrl];
+
+          // this.product.variants?.forEach(variant => {
+          //   variant.options.forEach(option => {
+          //     if (option.imageUrl) {
+          //       this.product.galleryImageUrls?.push(option.imageUrl);
+          //     }
+          //   });
+          // });
+
+          this.product.variants[0].options.forEach(option => {
+            if (option.imageUrl) {
+              this.product.galleryImageUrls?.push(option.imageUrl);
+            }
+          })
         }
 
         this.selectVariant(this.product.variants[0].id);
@@ -200,6 +217,9 @@ export class ProductDetailsComponent {
       if (this.sessionStorageService.isItemInCart(this.selectedOption.id)) {
         this.isItemInCart = true;
       }
+      else {
+        this.isItemInCart = false;
+      }
       // this.slickModal.
     }
   }
@@ -217,15 +237,36 @@ export class ProductDetailsComponent {
     this.slickModal.slickGoTo(id)
   }
 
-  addToCart() {
-    const cartItem: CartItemCreateModel = {
+  handleCartAction() {
+    if (!this.tks.isLoggedIn()) {
+      this.onLogin();
+      return;
+    }
+
+    const newCartItem: CartItemCreateModel = {
       productVariantOptionId: this.selectedOption.id,
       quantity: 1
     };
 
-    this.cartService.createItem(cartItem).subscribe((res) => {
+    this.cartService.createItem(newCartItem).subscribe((res) => {
       if (res.retCode === ERetCode.Successfull) {
-        alert('Đã thêm vào giỏ hàng!');
+        //alert('Đã thêm vào giỏ hàng!');
+        const cartItem: CartItem = {
+          id: '',
+          productId: this.product.productId,
+          productVariantOptionId: this.selectedOption.id,
+          productName: this.product.name,
+          variantName: this.selectedVariant.name,
+          optionName: this.selectedOption.name,
+          mainImageUrl: this.selectedOption.imageUrl,
+          quantity: 1,
+          price: this.selectedVariant.price,
+          discount: 0,
+          totalPrice: this.selectedVariant.price,
+          slug: this.product.slug
+        }
+        this.sessionStorageService.addItemToCart(cartItem);
+        this.isItemInCart = true;
         this.showAnim = true;
         setTimeout(() => this.showAnim = false, 800);
       } else {
@@ -249,6 +290,30 @@ export class ProductDetailsComponent {
 
   goBack(): void {
     this.location.back();
+  }
+
+  onLogin() {
+
+    const ref = this.authDialog.openLogin();
+
+    ref.closed.subscribe(result => {
+      if (this.tks.isLoggedIn()) {
+        // this.sessionStorageService.getCartItems()?.forEach(item => {
+        //   if (item.productVariantOptionId === this.selectedOption.id) {
+        //     this.isItemInCart = true;
+        //   }
+        //   else {  
+        //     this.isItemInCart = false;
+        //   }
+        // })
+        if (this.sessionStorageService.isItemInCart(this.selectedOption.id)) {
+          this.isItemInCart = true;
+        }
+        else {
+          this.isItemInCart = false;
+        }
+      }
+    });
   }
 
   showAnim = false;

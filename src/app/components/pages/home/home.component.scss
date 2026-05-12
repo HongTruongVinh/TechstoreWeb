@@ -3,6 +3,7 @@
   display: block;
   width: 100%;
   position: relative;
+  // background-color: #b93ea8;
 }
 
 
@@ -10,18 +11,17 @@
 // Hero Section
 .hero-section {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  min-height: 300px; // Reduced from 500px
-  margin-top: 0; // Remove margin-top as it's handled by layout
-  padding-top: 0; // Remove padding-top
+  // min-height: 300px; // Reduced from 500px
+  height: auto;
   overflow: visible;
   position: relative;
-  border-radius: 20px;
+  border-radius: 0 0 20px 20px;
   opacity: 0.90;
   
   .hero-content {
     display: flex;
     gap: 5px; // Reduced gap for tighter layout
-    min-height: 300px; // Reduced from 500px
+    // min-height: 300px; // Reduced from 500px
     align-items: stretch; //mọi phần tử con của .hero-content (category-panel, hero-main, promotions-section) sẽ co giãn để cùng cao bằng nhau, bằng chiều cao của hàng flex.
     overflow: visible;
   }
@@ -30,7 +30,7 @@
   .category-panel{
     position: relative;
     left: auto;
-    z-index: 9988;
+    z-index: 2;
     background-color:  rgba(255, 255, 255, 0.1);
   }
   
@@ -453,33 +453,47 @@
       order: 3; // Move promotions below sidebar
       
       .promotions-grid {
+        display: flex;
         flex-direction: row;
-        gap: 0.5rem;
+        gap: 0.75rem;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        padding-bottom: 0.5rem;
+        -webkit-overflow-scrolling: touch;
+        touch-action: pan-x;
+
+        &::-webkit-scrollbar {
+          display: none;
+        }
+        -ms-overflow-style: none;
+        scrollbar-width: none;
         
         .promotion-item {
-          flex: 1;
-          padding: 0.75rem;
+          flex: 0 0 85%;
+          min-width: 85%;
+          scroll-snap-align: start;
+          padding: 0.9rem;
           
           .promotion-image {
             margin-bottom: 0.5rem;
             
             i {
-              font-size: 1.5rem;
+              font-size: 1.6rem;
             }
           }
           
           .promotion-content {
             .promotion-title {
-              font-size: 0.8rem;
+              font-size: 0.9rem;
             }
             
             .promotion-description {
-              font-size: 0.7rem;
+              font-size: 0.75rem;
             }
             
             .promotion-discount {
-              font-size: 0.7rem;
-              padding: 0.2rem 0.4rem;
+              font-size: 0.75rem;
+              padding: 0.25rem 0.45rem;
             }
           }
         }
@@ -555,7 +569,6 @@
     .col-lg-3 {
       flex: 0 0 70%;
       max-width: 50%;
-      min-width: 220px;
     }
   }
 }
@@ -576,10 +589,25 @@
     
     .promotions-section {
       .promotions-grid {
-        flex-direction: column; // Stack vertically on small mobile
+        display: flex;
+        flex-direction: row;
         gap: 0.5rem;
-        
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        padding-bottom: 0.5rem;
+        -webkit-overflow-scrolling: touch;
+        touch-action: pan-x;
+
+        &::-webkit-scrollbar {
+          display: none;
+        }
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+
         .promotion-item {
+          flex: 0 0 90%;
+          min-width: 90%;
+          scroll-snap-align: start;
           padding: 0.5rem;
           
           .promotion-image {
@@ -711,4 +739,8 @@
 @keyframes slideInRight {
   from { opacity: 0; transform: translateX(50px); }
   to { opacity: 1; transform: translateX(0); }
+}
+
+.pointer-cursor {
+  cursor: pointer;
 }

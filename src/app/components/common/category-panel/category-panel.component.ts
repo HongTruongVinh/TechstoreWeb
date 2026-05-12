@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output, ElementRef, HostListener, Input } from '@angular/core';
+import { Component, EventEmitter, Output, ElementRef, HostListener, Input, inject } from '@angular/core';
 import { CategoryModel } from '../../../models/models/category/category.model';
 import { BrandModel } from '../../../models/models/brand/brand.model';
 import { Router } from '@angular/router';
@@ -7,6 +7,7 @@ import { CategoryService } from '../../../core/services/category.service';
 import { BrandService } from '../../../core/services/brand.service';
 import { ERetCode } from '../../../models/enum/etype_project.enum';
 import { FullImageUrlPipe } from "../../../pipes/full-image-url.pipe";
+import { UiStateService } from '../../../core/services/ui-state.service';
 
 @Component({
   selector: 'app-category-panel',
@@ -17,6 +18,7 @@ import { FullImageUrlPipe } from "../../../pipes/full-image-url.pipe";
 })
 export class CategoryPanelComponent {
   hoveredCategoryId: string | null = null;
+  hoveredCategory: CategoryModel | undefined;
   categories: CategoryModel[] = [];
   brands: BrandModel[] = [];
   isMobile: boolean = false;
@@ -30,6 +32,7 @@ export class CategoryPanelComponent {
   @Output()
   toggleCategories = new EventEmitter<void>();
 
+  uiState = inject(UiStateService);
   constructor(
     private elementRef: ElementRef,
     private router: Router,
@@ -40,6 +43,17 @@ export class CategoryPanelComponent {
   ngOnInit(): void {
     this.loadData();
     this.updateIsMobile();
+    if (this.isMobile) {
+      this.uiState.hideWidgetPanel();
+      this.uiState.hideNavbar();
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.isMobile) {
+      this.uiState.showWidgetPanel();
+      this.uiState.showNavbar();
+    }
   }
 
   updateIsMobile(): void {
@@ -84,6 +98,7 @@ export class CategoryPanelComponent {
   onCategoryHover(category: CategoryModel): void {
     if (!this.isMobile) {
       this.hoveredCategoryId = category.categoryId;
+      this.hoveredCategory = category;
     }
   }
 
@@ -95,11 +110,16 @@ export class CategoryPanelComponent {
 
   onCategoryLeave(): void {
     this.hoveredCategoryId = null;
+    this.hoveredCategory = undefined;
   }
 
-  viewProducts(categorySlug: string, brandSlug: string): void {
+  viewProducts(categorySlug: string, brandSlug?: string): void {
     this.toggleCategories.emit();
-    this.router.navigate(['/san-pham', categorySlug, brandSlug]);
+    if (brandSlug) {
+      this.router.navigate(['/san-pham', categorySlug, brandSlug]);
+    } else {
+      this.router.navigate(['/danh-muc', categorySlug]);
+    }
   }
 
   @HostListener('document:click', ['$event'])

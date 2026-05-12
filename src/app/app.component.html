@@ -3,17 +3,19 @@
 
 <app-navbar *ngIf="uiState.navbarVisible$ | async" (toggleCategories)="toggleCategoryPanel()"></app-navbar>
 
-<app-category-panel *ngIf="showCategories" [istoggleCategory]="istoggleCategory"
+<app-category-panel class="category-panel" *ngIf="showCategories" [istoggleCategory]="istoggleCategory"
     (toggleCategories)="toggleCategoryPanel()">
 </app-category-panel>
 
-<div class="main-content-wrapper">
+<div class="main-content-wrapper" [ngClass]="{'has-navbar': (uiState.navbarVisible$ | async)}">
     <router-outlet></router-outlet>
 </div>
 
 <app-widget-panel *ngIf="uiState.widgetPanelVisible$ | async"></app-widget-panel>
 
-<app-footer *ngIf="!device.isMobile()"></app-footer>
+<app-footer *ngIf="uiState.footerVisible$ | async"></app-footer>
 
 <app-mobile-menu *ngIf="uiState.mobileMenuVisible$ | async" (toggleCategories)="toggleCategoryPanel()"
     class="mobile-menu"></app-mobile-menu>
+
+<app-loading></app-loading>

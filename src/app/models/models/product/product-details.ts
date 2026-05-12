@@ -29,6 +29,8 @@ export interface ProductDetailsModel {
 
     isOnSale: boolean;
     isFeatured: boolean;
+    
+    publishDate: Date;
 
     variants: ProductVariantModel[];
 }

@@ -1,8 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { FullImageUrlPipe } from '../../../pipes/full-image-url.pipe';
+import { Component, inject } from '@angular/core';
 import { ProductCardComponent } from '../../common/product-card/product-card.component';
-import { ThousandSeparatorPipe } from '../../../pipes/thousandSeparator.pipe';
 import { ProductListItemModel } from '../../../models/models/product/product-list-item.model';
 import { CategoryModel } from '../../../models/models/category/category.model';
 import { BrandModel } from '../../../models/models/brand/brand.model';
@@ -11,14 +9,14 @@ import { CategoryService } from '../../../core/services/category.service';
 import { ActivatedRoute } from '@angular/router';
 import { BrandService } from '../../../core/services/brand.service';
 import { BreadcrumbComponent, BreadcrumbItem } from "../../common/breadcrumb/breadcrumb.component";
+import { ERetCode } from '../../../models/enum/etype_project.enum';
+import { LoadingService } from '../../../core/services/loading/loading.service';
 
 @Component({
   selector: 'app-products',
   standalone: true,
   imports: [
     CommonModule,
-    FullImageUrlPipe,
-    ThousandSeparatorPipe,
     ProductCardComponent,
     BreadcrumbComponent
   ],
@@ -31,17 +29,15 @@ export class ProductsComponent {
     { label: 'Tìm kiếm sản phẩm' }
   ];
   title: string = 'Danh sách sản phẩm';
-  isLoading = false;
   breadCrumbItems!: Array<{}>;
   term: any;
-  editData: any;
 
-  uploadedFiles: any[] = [];
+  totalProducts = 0;
+  products: ProductListItemModel[] = [];
+  page = 1;
+  pageSize = 12;
+  hasMore = false;
 
-  masterSelected!: boolean;
-  allProducts: ProductListItemModel[] = [];
-  products: any;
-  selectedProductId: string = '';
   publicId?: string;
   deleteId: any;
   categories: CategoryModel[] = [];
@@ -50,8 +46,6 @@ export class ProductsComponent {
 
   constructor(
     private readonly productService: ProductService,
-    private readonly categoryService: CategoryService,
-    private readonly brandService: BrandService,
     private readonly route: ActivatedRoute,
   ) { }
 
@@ -63,76 +57,68 @@ export class ProductsComponent {
     ];
 
 
-    this.loadData();
+    this.loadProducts();
   }
 
-  loadData() {
-    this.isLoading = true;
+  loadProducts() {
 
     this.route.paramMap.subscribe(params => {
       const keyword = params.get('keyword');
+      const categorySlug = params.get('categorySlug');
+      const brandSlug = params.get('brandSlug');
 
       if (keyword) {
         this.title = keyword;
-        this.productService.searchProducts(keyword).subscribe((res) => {
-          if (res.retCode == 0) {
+        this.productService.searchProducts(keyword, this.page, this.pageSize).subscribe((res) => {
+          if (res.retCode == ERetCode.Successfull) {
             if (res.data) {
-              this.allProducts = res.data;
-              this.products = res.data;
-              //this.products = this.allProducts.slice(0, 10);
-              this.isLoading = false;
-            } else {
-              this.products = [];
-              this.allProducts = [];
+              this.processData(res.data)
             }
-          } else {
-            this.isLoading = false;
           }
         })
       }
-      else {
-          const categorySlug = params.get('categorySlug');
-          const brandSlug = params.get('brandSlug');
+      else if (categorySlug) {
 
-          if (categorySlug == null || brandSlug == null || categorySlug === undefined || brandSlug === undefined) {
-            this.products = [];
-            this.allProducts = [];
-            return;
-          }
-
-          if (categorySlug && brandSlug) {
-            this.title = `Sản phẩm ${categorySlug} - ${brandSlug}`;
-          }
-
-          this.productService.GetProductsByCategoryAndBrand(categorySlug, brandSlug).subscribe((res) => {
-            if (res.retCode == 0) {
+        if (brandSlug === undefined || brandSlug === null) {
+          this.title = `Sản phẩm ${categorySlug}`;
+          this.productService.GetProductsByCategory(categorySlug, this.page, this.pageSize).subscribe((res) => {
+            if (res.retCode == ERetCode.Successfull) {
               if (res.data) {
-                this.allProducts = res.data;
-                this.products = res.data;
-              } else {
-                this.products = [];
-                this.allProducts = [];
+                this.processData(res.data)
               }
-            } else {
-              this.products = [];
-              this.allProducts = [];
             }
           });
+        }
+        else {
+          this.title = `Sản phẩm ${categorySlug} - ${brandSlug}`;
+          this.productService.GetProductsByCategoryAndBrand(categorySlug, brandSlug, this.page, this.pageSize).subscribe((res) => {
+            if (res.retCode == ERetCode.Successfull) {
+              if (res.data) {
+                this.processData(res.data)
+              }
+            }
+          });
+        }
+      }
+      else {
+        this.products = [];
       }
     });
-
   }
 
-  // search
-  search() {
-    if (this.term) {
-      this.products = this.allProducts.filter((el: any) => el.name.toLowerCase().includes(this.term.toLowerCase()))
-    } else {
-      this.products = this.allProducts.slice(0, 15)
+  processData(data: ProductListItemModel[]) {
+    const newProducts = data || [];
+
+    this.products = [...this.products, ...newProducts];
+
+    if (newProducts.length < this.pageSize) {
+      this.hasMore = false;
     }
-    // noResultElement
-    this.updateNoResultDisplay();
+    else {
+      this.hasMore = true;
+    }
   }
+
 
   selectedBrands: string[] = [];   // vì bindValue="id"
   selectedCategory: string | null = null;
@@ -152,7 +138,6 @@ export class ProductsComponent {
     }
   }
 
-  totalProducts = 95;
   tabs = [
     { label: 'IPHONE 14 PRO MAX CŨ', active: true },
     { label: 'IPHONE 14 PRO MAX', active: false },
@@ -175,11 +160,10 @@ export class ProductsComponent {
     // Sắp xếp sản phẩm
   }
 
-  viewProductDetails(productId: string) {
-    // Chuyển trang chi tiết sản phẩm
-  }
-
-  addToCart(product: any) {
-    // Thêm vào giỏ hàng
+  loadingService = inject(LoadingService);
+  showMore() {
+    // this.loadingService.show();
+    this.page++;
+    this.loadProducts();
   }
 }

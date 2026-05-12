@@ -1,11 +1,96 @@
-.card:hover {
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  transition: box-shadow 0.3s;
+@use '../../../../../assets/scss/variables' as v;
+
+.list-item {
+  overflow-y: auto;
+  max-height: 70vh;
+
+  .card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s;
+  }
+
+  .product-name {
+    cursor: pointer;
+
+    transition: transform .12s ease;
+
+    &:hover {
+      transform: translateY(-1px);
+    }
+  }
+
+  @media (max-width: 768px) {
+    max-height: 100vh;
+  padding-bottom: 20vh;
+  }
 }
 
-.product-name {
-  cursor: pointer;
-  
-  transition: transform .12s ease;
-  &:hover { transform: translateY(-1px); }
+.amount-section {
+  position: fixed;
+  width: 56%;
+  // width: 100%;
+  bottom: 0;
+  height: 15%;
+  z-index: 10;
+  border-color: #7f398e;
+  border-width: 20px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  background-color: v.$title-background-color;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  @media (max-width: 768px) {
+      left: 0;
+      width: 100vw;
+    }
+
+  .count-text {
+    margin-left: 140px;
+
+    @media (max-width: 768px) {
+      margin-left: 0;
+    }
+  }
+
+  .btn {
+    margin-right: 140px;
+    height: 50px;
+    width: 120px;
+    color: white;
+    background-color: #677ae4;
+    border-color: #705fbf;
+
+    &:hover {
+      background-color: #705fbf;
+      border-color: #8543e9;
+    }
+  }
+
+
+  @media (max-width: 768px) {
+    bottom: 6%;
+    max-height: 12%;
+
+    .btn {
+      margin-right: 0;
+      // min-width: 100px;
+    }
+  }
+
+  //  @media (max-width: 3) {
+  //     bottom: 6%;
+  //     max-height: 12%;
+
+  //     .btn {
+  //         margin-right: 0;
+  //         min-width: 100px;
+  //     }
+  // }
+}
+
+.bg-smoke {
+  background-color: v.$title-background-color;
 }

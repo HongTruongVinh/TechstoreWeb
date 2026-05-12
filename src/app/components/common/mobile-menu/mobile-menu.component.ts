@@ -23,20 +23,18 @@ export class MobileMenuComponent {
   @Output()
   login = new EventEmitter<void>();
 
-  isLoggedIn = false;
   firstName: string = '';
 
   authDialog = inject(AuthDialogService);
+  tks = inject(TokenStorageService);
   constructor(
     private uiState: UiStateService,
-    private readonly tokenStorageService: TokenStorageService,
     private readonly router: Router,
   ) { }
 
   ngOnInit() {
-    const user = this.tokenStorageService.getUser();
+    const user = this.tks.getUser();
     if (user) {
-      this.isLoggedIn = true;
       this.firstName = user.firstName;
     }
   }
@@ -51,22 +49,16 @@ export class MobileMenuComponent {
   }
 
   openLogin() {
-
     const ref = this.authDialog.openLogin();
     
     ref.closed.subscribe(result => {
       const data = result as LoginDialogResult | undefined;
 
       if (data?.success) {
-        this.isLoggedIn = true;
-        if (this.tokenStorageService.getUser() != null) {
-          this.firstName = this.tokenStorageService.getUser()!.firstName;
+        if (this.tks.getUser() != null) {
+          this.firstName = this.tks.getUser()!.firstName;
         }
       }
-      
-      this.uiState.showWidgetPanel();
-      this.uiState.showMobileMenu();
-      this.uiState.showNavbar();
     });
   }
 

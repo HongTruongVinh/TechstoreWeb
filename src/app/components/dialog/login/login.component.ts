@@ -76,8 +76,6 @@ export class LoginComponent {
               this.loginResult = { success: true };
 
               this.loginForm.reset();
-
-              this.authenticationService.login();
               
               this.close();
             }
@@ -106,7 +104,7 @@ export class LoginComponent {
   }
 
   createCartSession() {
-    this.cartService.getAllItems().subscribe((res) => {
+    this.cartService.getAllItems(1, 5).subscribe((res) => {
       if (res.retCode == ERetCode.Successfull) {
         if (res.data) {
           this.sessionStorageService.createCartSession(res.data);
@@ -121,7 +119,6 @@ export class LoginComponent {
 
 
   openRegisterModal() {
-    //this.login.emit();
 
     if (this.registerDialogRef) {
       return; // dialog đang mở, không mở thêm
@@ -134,28 +131,10 @@ export class LoginComponent {
       }
     );
 
-    this.uiState.hideMobileMenu();
-    this.uiState.hideNavbar();
-    this.uiState.hideWidgetPanel();
-
     this.registerDialogRef.closed.subscribe(result => {
-      console.log('Register Dialog closed with result:', result);
       this.registerDialogRef = undefined; // reset dialog ref khi đóng
-      this.uiState.showMobileMenu();
-      this.uiState.showNavbar();
     });
   }
-
-  // submit() {
-
-  //   if (this.loginForm.invalid) {
-  //     this.loginForm.markAllAsTouched();
-  //     return;
-  //   }
-
-  //   console.log(this.loginForm.value);
-  //   this.dialogRef.close(this.loginForm.value);
-  // }
 
   close() {
     this.dialogRef.close(this.loginResult);

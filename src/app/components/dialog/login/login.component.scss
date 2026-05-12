@@ -7,13 +7,14 @@
 }
 
 .logo{
-    width: 164px; 
+    max-width: 96px; 
+    max-height: 96px;
     margin-bottom: 8px;
-    margin-left: 110px;
     align-items: center;
 }
 
 .social-logo{
     width: 32px;
+    height: 32px;
     margin: 0 8px;
 }

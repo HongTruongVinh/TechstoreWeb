@@ -16,8 +16,8 @@ export class CartService {
         private readonly linkSettingsService: LinkSettingsService  
     ) { }
 
-    getAllItems() {
-        return this.linkSettingsService.getResLinkSetting('Cart', 'GetAllItems')
+    getAllItems(pageNumber: number, pageSize: number) {
+        return this.linkSettingsService.getResLinkSetting('Cart', 'GetAllItems', pageNumber, pageSize)
                     .pipe(
                         switchMap((apiUrl) => this.transferHttp.get(apiUrl)),
                         map((res: ApiResponseModel<CartItem[]>) => res)

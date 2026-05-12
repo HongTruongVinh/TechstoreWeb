@@ -1,3 +1,110 @@
+/* ============================================
+   LEFT COLUMN - Product Image Slider
+   ============================================ */
+
+/* Sticky container for left column */
+.sticky-side-div {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 1rem;
+}
+
+.slide-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* Product image slider wrapper */
+
+
+/* Carousel navigation buttons */
+.slick-prev,
+.slick-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18);
+  transition: background 0.15s ease, transform 0.12s ease;
+  border: none;
+  cursor: pointer;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.6);
+    transform: translateY(-50%) scale(1.03);
+  }
+}
+
+.slick-prev {
+  left: 10px;
+}
+
+.slick-next {
+  right: 10px;
+}
+
+/* ============================================
+   RIGHT COLUMN - Product Information
+   ============================================ */
+
+/* Product variant and color options */
+.option-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 140px;
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  text-align: center;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.08s ease;
+
+  &:focus,
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.12);
+  }
+
+  &:hover {
+    border-color: #aaa;
+    transform: translateY(-1px);
+  }
+
+  &.selected {
+    background: linear-gradient(180deg, #fff7f7, #fff);
+    border-color: #d93025;
+    box-shadow: 0 6px 16px rgba(217, 48, 37, 0.06);
+  }
+
+  .price {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #c53030;
+  }
+}
+
+/* Thumbnail images inside option cards */
+.thumb {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+/* Product price display */
 .product-price {
   margin-bottom: 0.5rem;
 
@@ -11,209 +118,152 @@
   }
 }
 
+/* Add to cart button */
+.btn-add-to-cart {
+  background-color: #ffea61;
+  border: none;
+  color: #0b0707;
+  font-weight: 600;
+  transition: all 0.3s ease;
 
-.image-modal .btn-close {
-  filter: none;
-  color: #000 !important;
-  opacity: 1;
+  &:hover {
+    background-color: #ffe021;
+  }
 }
 
-.option-card {
-  border: 2px solid #ddd;
-  border-radius: 8px;
-  padding: 10px 15px;
-  cursor: pointer;
-  min-width: 120px;
-  text-align: center;
-  background: #fff;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
+/* ============================================
+   CARD UTILITIES
+   ============================================ */
 
-.option-card:hover {
-  border-color: #aaa;
-}
-
-.option-card.selected {
-  border-color: red;
-  box-shadow: 0 0 0 2px rgba(255,0,0,0.2);
-}
-
-.option-card .price {
-  font-size: 0.9rem;
-  color: #555;
-}
-
-.btn-add-to-cart{
-  background-color: rgb(255, 232, 62) !important; 
-  color: #000 !important;
-}
-
-.thumb {
-  width: 40px;
-  height: 40px;
-  object-fit: cover;
-}
-
-.carousel {
-  width: 100%;
-  height: 400px; /* Hoặc chiều cao bạn mong muốn */
-  position: relative;
-  overflow: hidden;
-}
-
-.slide,
-.slide-inner {
-  width: 100%;
+/* Full height card for right column */
+.card-height-100 {
   height: 100%;
-}
-
-.slide-inner {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
 }
 
-.slide-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover; /* Hoặc contain tùy ý */
-  border-radius: 5px;
+/* ============================================
+   SAME PRODUCTS SECTION
+   ============================================ */
+
+.same-products {
+  /* Inherits from Bootstrap classes */
 }
 
-/* Additional styles: responsive layout, thumbnails, carousel controls, sticky sidebar, modal polish */
+/* ============================================
+   IMAGE MODAL
+   ============================================ */
 
-/* Make the left column sticky on larger viewports */
-.sticky-side-div{
-  position: -webkit-sticky;
-  position: sticky;
-  top: 1rem;
-}
-
-.product-img-slider{
-  .product-thumbnail-slider{
-    .slide{ padding: 0.5rem; }
+.image-modal {
+  .modal-backdrop {
+    display: none;
   }
 
-  .product-nav-slider{
-    display: flex;
+  .modal-dialog {
+    max-width: 1100px;
+  }
+
+  .modal-content {
+    background: rgba(255, 255, 255, 0.98);
+    border: none;
+    border-radius: 8px;
+  }
+
+  .modal-header {
+    position: absolute;
+    right: 12px;
+    top: 12px;
+    z-index: 40;
+    border: none;
+  }
+
+  .btn-close {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
     align-items: center;
-    overflow-x: auto;
-    padding: 6px 4px;
+    justify-content: center;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+    filter: none;
+    color: #000 !important;
+    opacity: 1;
+  }
+}
 
-    .swiper-slide{
-      width: auto;
-      cursor: pointer;
-      margin-right: 0.5rem;
+/* ============================================
+   ANIMATION / UTILITY CLASSES
+   ============================================ */
 
-      .nav-slide-item{
-        width: 64px;
-        height: 64px;
-        border-radius: 6px;
-        overflow: hidden;
-        border: 2px solid transparent;
-        transition: transform 0.15s ease, border-color 0.15s ease;
-      }
+/* Vertical rule separator */
+.vr {
+  height: 20px;
+  margin: 0 0.5rem;
+  border-left: 1px solid rgba(0, 0, 0, 0.06);
+}
 
-      img{
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-      }
+/* Button styling */
+.btn-success {
+  background-image: linear-gradient(180deg, #2ecc71, #27ae60);
+  border: none;
+}
 
-      &:hover .nav-slide-item{ transform: scale(1.03); }
-      &.active .nav-slide-item,
-      &.slick-current .nav-slide-item{ border-color: #f05a5a; }
+.btn-warning {
+  background-image: linear-gradient(180deg, #ffb84d, #ff9933);
+  border: none;
+}
+
+/* Flying cart animation element */
+.flying-item {
+  /* Styles for cart animation */
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 1199.98px) {
+  .product-img-slider {
+    .carousel {
+      height: 350px;
     }
   }
-}
 
-/* Customize slick/ngx-slick arrows if present */
-.slick-prev, .slick-next{
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(0,0,0,0.45);
-  color: #fff;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 5;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.18);
-  transition: background 0.15s ease, transform 0.12s ease;
-}
-.slick-prev:hover, .slick-next:hover{ background: rgba(0,0,0,0.6); transform: translateY(-50%) scale(1.03); }
-.slick-prev{ left: 10px; }
-.slick-next{ right: 10px; }
+  .thumb {
+    width: 36px;
+    height: 36px;
+  }
 
-/* Carousel image hover effect */
-.carousel .slide-image{ cursor: zoom-in; transition: transform 0.25s ease; }
-.carousel .slide-image:hover{ transform: scale(1.02); }
+  .option-card {
+    min-width: 110px;
+  }
 
-/* Option card improvements: better spacing, visuals and keyboard focus */
-.option-card{
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-width: 140px;
-  padding: 12px;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
-  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.08s ease;
-}
-.option-card:focus, .option-card:focus-visible{ outline: none; box-shadow: 0 0 0 3px rgba(0,123,255,0.12); }
-.option-card:hover{ transform: translateY(-1px); }
-.option-card.selected{ background: linear-gradient(180deg,#fff7f7,#fff); border-color: #d93025; box-shadow: 0 6px 16px rgba(217,48,37,0.06); }
-.option-card .price{ font-weight: 600; color: #c53030; }
-
-/* Thumbs */
-.thumb{ width: 40px; height: 40px; object-fit: cover; border-radius: 4px; }
-
-/* Buttons polish */
-.btn-success{ background-image: linear-gradient(180deg,#2ecc71,#27ae60); border: none; }
-.btn-warning{ background-image: linear-gradient(180deg,#ffb84d,#ff9933); border: none; }
-
-/* Card height utility used by markup */
-.card-height-100{ height: 100%; display:flex; flex-direction:column; }
-
-/* Modal styling: make background subtle and move close button into corner */
-.image-modal{
-  .modal-backdrop{ display:none; }
-  .modal-dialog{ max-width: 1100px; }
-  .modal-content{ background: rgba(255,255,255,0.98); border: none; border-radius: 8px; }
-  .modal-header{ position: absolute; right: 12px; top: 12px; z-index: 40; }
-  .btn-close{
-    background: rgba(255,255,255,0.95);
-    border-radius: 50%;
-    width: 40px; height: 40px;
-    display:inline-flex; align-items:center; justify-content:center;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  .sticky-side-div {
+    position: static;
   }
 }
 
-/* Small responsive tweaks */
-@media (max-width: 1199.98px){
-  .carousel{ height: 350px; }
-  .thumb{ width: 36px; height: 36px; }
-  .option-card{ min-width: 110px; }
-  .sticky-side-div{ position: static; }
-}
+@media (max-width: 575.98px) {
+  .product-img-slider {
+    .carousel {
+      height: 240px;
+    }
 
-@media (max-width: 575.98px){
-  .carousel{ height: 240px; }
-  .product-price .current-price{ font-size: 1rem; }
-  .option-card{ min-width: 100px; padding: 8px; font-size: 0.92rem; }
-  .product-nav-slider{ .swiper-slide{ margin-right: 0.35rem; } }
-}
+    .product-nav-slider {
+      .swiper-slide {
+        margin-right: 0.35rem;
+      }
+    }
+  }
 
-/* Small utility fixes for vertical rule inside the header area */
-.vr{ height: 20px; margin: 0 .5rem; border-left: 1px solid rgba(0,0,0,0.06); }
+  .product-price .current-price {
+    font-size: 1rem;
+  }
 
-.btn-add-to-cart{
-  background-color: #2fb936;
-  border: none;
-  color: #fff;
-  font-weight: 600;
+  .option-card {
+    min-width: 100px;
+    padding: 8px;
+    font-size: 0.92rem;
+  }
 }
