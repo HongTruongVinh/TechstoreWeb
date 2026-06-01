@@ -1,5 +1,7 @@
+import { EPaymentMethod } from "../../enum/etype_project.enum";
+
 export interface OrderCreateModel {
-    customerId: string;
+    id?: string;
     customerName: string;
     customerPhoneNumber: string;
     customerEmail?: string;
@@ -7,7 +9,7 @@ export interface OrderCreateModel {
     voucherCode?: string;
     items: OrderItemCreateModel[];
     note?: string;
-    paymentMethod: number;
+    paymentMethod: EPaymentMethod;
 }
 
 export interface OrderItemCreateModel {

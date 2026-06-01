@@ -8,18 +8,18 @@ import { ProductDetailsModel, ProductVariantModel, ProductVariantOptionModel } f
 import { ActivatedRoute } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { ProductService } from '../../../core/services/product.service';
-import { CartService } from '../../../core/services/cart.service';
 import { ERetCode } from '../../../models/enum/etype_project.enum';
 import { CartItemCreateModel } from '../../../models/models/cart/cart-item-create.model';
 import { TokenStorageService } from '../../../core/services/token-storage.service';
-import { SessionStorageService } from '../../../core/services/session-storage.service';
-import { CartItem } from '../../../models/models/cart/cart-item.model';
 import { BreadcrumbComponent, BreadcrumbItem } from "../../common/breadcrumb/breadcrumb.component";
 import { trigger, transition, style, animate } from '@angular/animations';
 import { ProductCardComponent } from "../../common/product-card/product-card.component";
 import { ProductListItemModel } from '../../../models/models/product/product-list-item.model';
-import { AuthenticationService } from '../../../core/services/auth.service';
 import { AuthDialogService } from '../../../core/services/AuthDialogService';
+import { Store } from '@ngrx/store';
+import * as CartSelectors from '../../../store/cart/cart.selectors';
+import * as CartActions from '../../../store/cart/cart.actions';
+import { BehaviorSubject, combineLatest, map, Observable, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-product-details',
@@ -54,83 +54,61 @@ export class ProductDetailsComponent {
     { label: 'Chi tiết sản phẩm' }
   ];
 
+  showAnim = false;
   isHover: boolean = false;
-  isItemInCart = false;
 
-  product!: ProductDetailsModel;
-  selectedVariant!: ProductVariantModel;
-  selectedOption!: ProductVariantOptionModel;
+  product?: ProductDetailsModel;
+  selectedVariant?: ProductVariantModel;
+  selectedOption$ = new BehaviorSubject<ProductVariantOptionModel | null>(null);
   sameProducts: ProductListItemModel[] = [];
+
 
   @ViewChild('slickModal') slickModal!: SlickCarouselComponent;
 
   authDialog = inject(AuthDialogService);
   tks = inject(TokenStorageService);
+  private store = inject(Store);
+  // cartItems$ = this.store.select(CartSelectors.selectAllCartItems);
+
+  // isItemInCart$ = combineLatest({
+  //   option: this.selectedOption$,
+  //   entities: this.store.select(CartSelectors.selectCartItemEntities),
+  // loading: this.store.select(CartSelectors.selectCartItemLoading)
+  // }).pipe(
+  //   map(({ option, entities }) => {
+
+  //     if (!option) {
+  //       return false;
+  //     }
+
+  //     console.log("store: "+option.id);
+  //     // return !!entities[option.id];
+  //     return Object.values(entities)
+  //     .some(item =>
+  //     {
+  //       item?.productVariantOptionId === option.id;
+  //     }
+  //     );
+  //   })
+  // );
+
+  isItemInCart$ = combineLatest([
+    this.selectedOption$,
+    this.store.select(CartSelectors.selectCartItemEntities)
+  ]).pipe(
+    map(([option, entities]) =>
+      !!entities[option?.id ?? '']
+    )
+  );
+
   constructor(
     private location: Location,
     private readonly route: ActivatedRoute,
     private readonly titleService: Title,
-    private readonly productService: ProductService,
-    private readonly cartService: CartService,
-    private readonly sessionStorageService: SessionStorageService
+    private readonly productService: ProductService
   ) { }
 
   ngOnInit(): void {
-
-    //this.createAimAddToCart();
-
-    this.product = {
-      productId: '',
-      name: 'sản phẩm',
-      shortDescription: '',
-
-      description: '',
-      mainImageUrl: '',
-      galleryImageUrls: [],
-
-      soldCount: 0,
-      warranty: 0,
-
-      salePrice: 0,
-      saleStart: new Date(),
-      saleEnd: new Date(),
-
-      catagoryId: '',
-      categoryName: '',
-
-      brandId: '',
-      brandName: '',
-
-      ratedCount: 0,
-      averageRating: 0,
-
-      slug: '',
-      tags: [],
-
-      isOnSale: false,
-      isFeatured: false,
-
-      publishDate: new Date(10,10,2026),
-
-      variants: []
-    }
-
-    this.selectedVariant = {
-      id: '',
-      name: '',
-      description: '',
-      price: 0,
-      salePrice: 0,
-      productId: '',
-      soldCount: 0,
-      options: []
-    }
-
-    // this.route.paramMap.subscribe(params => {
-    //   const productSlug = params.get('productSlug')!;
-    //   this.loadProductDetails(productSlug);
-    // });
-
     this.route.paramMap.subscribe(params => {
       const slugWithId = params.get('slugWithId');
 
@@ -139,13 +117,6 @@ export class ProductDetailsComponent {
       this.loadProductDetails(id);
     });
 
-    if (this.tks.isLoggedIn()) {
-      this.sessionStorageService.getCartItems()?.forEach(item => {
-        if (item.productVariantOptionId === this.selectedOption.id) {
-          this.isItemInCart = true;
-        }
-      });
-    }
   }
 
   slideConfig = {
@@ -158,13 +129,11 @@ export class ProductDetailsComponent {
   };
 
   slidesConfig = {
-    // Configuration options for the ngx-slick-carousel
     infinite: true,
     slidesToShow: 4,
     slidesToScroll: 1,
     autoplay: true,
   }
-
 
 
   loadProductDetails(id: string) {
@@ -175,53 +144,76 @@ export class ProductDetailsComponent {
         if (this.product.galleryImageUrls?.length === 0) {
           this.product.galleryImageUrls = [this.product.mainImageUrl];
 
-          // this.product.variants?.forEach(variant => {
-          //   variant.options.forEach(option => {
-          //     if (option.imageUrl) {
-          //       this.product.galleryImageUrls?.push(option.imageUrl);
-          //     }
-          //   });
-          // });
+          const product = this.product;
+          if (product) {
+            product.variants[0].options.forEach(option => {
+              product.galleryImageUrls.push(option.imageUrl);
+            });
 
-          this.product.variants[0].options.forEach(option => {
-            if (option.imageUrl) {
-              this.product.galleryImageUrls?.push(option.imageUrl);
-            }
-          })
+            this.selectVariant(product.variants[0].id);
+            this.titleService.setTitle(product.name);
+
+            this.isItemInCart$.subscribe(data => {
+              // console.log("isItemInCart: " + data);
+            })
+            this.selectedOption$.subscribe(data => {
+              // console.log("slected: " + data?.id);
+            })
+          }
         }
-
-        this.selectVariant(this.product.variants[0].id);
-        this.titleService.setTitle(this.product.name);
       } else {
         // Handle error or product not found
       }
     });
   }
 
-  extractId(slug: string): string {
-    return slug.split('i.')[1];
-  }
-
   selectVariant(variantId: string) {
-    const selectedVariant = this.product.variants?.find(variant => variant.id === variantId);
-    if (selectedVariant) {
-      this.selectedVariant = selectedVariant;
-      this.selectOption(this.selectedVariant.options[0].id);
+    const product = this.product;
+    if (product) {
+      const selectedVariant = product.variants?.find(variant => variant.id === variantId);
+      if (selectedVariant) {
+        this.selectedVariant = selectedVariant;
+        this.selectOption(this.selectedVariant.options[0].id);
+      }
     }
   }
 
   selectOption(optionId: string) {
-    const selectedOption = this.selectedVariant.options.find(op => op.id === optionId);
-    if (selectedOption) {
-      this.selectedOption = selectedOption;
-      if (this.sessionStorageService.isItemInCart(this.selectedOption.id)) {
-        this.isItemInCart = true;
+    const selectedVariant = this.selectedVariant;
+    if (selectedVariant) {
+      const selectedOption = selectedVariant.options.find(op => op.id === optionId);
+      if (selectedOption) {
+        this.selectedOption$.next(selectedOption);
       }
-      else {
-        this.isItemInCart = false;
-      }
-      // this.slickModal.
     }
+  }
+
+  handleCartAction() {
+    if (!this.tks.isLoggedIn()) {
+      this.onLogin();
+      return;
+    }
+
+    const selectedOption = this.selectedOption$.value;
+    if (!selectedOption) {
+      return;
+    }
+
+    const newCartItem: CartItemCreateModel = {
+      productVariantOptionId: selectedOption.id,
+      quantity: 1
+    };
+
+    this.showAnim = false; // reset
+    setTimeout(() => {
+      this.showAnim = true;
+    }, 0);
+
+    this.store.dispatch(CartActions.addCartItem({ cartItem: newCartItem }));
+  }
+
+  extractId(slug: string): string {
+    return slug.split('i.')[1];
   }
 
   slickChange(event: any) {
@@ -235,45 +227,6 @@ export class ProductDetailsComponent {
     })
     event.target.closest('.swiperlist').classList.add('swiper-slide-thumb-active')
     this.slickModal.slickGoTo(id)
-  }
-
-  handleCartAction() {
-    if (!this.tks.isLoggedIn()) {
-      this.onLogin();
-      return;
-    }
-
-    const newCartItem: CartItemCreateModel = {
-      productVariantOptionId: this.selectedOption.id,
-      quantity: 1
-    };
-
-    this.cartService.createItem(newCartItem).subscribe((res) => {
-      if (res.retCode === ERetCode.Successfull) {
-        //alert('Đã thêm vào giỏ hàng!');
-        const cartItem: CartItem = {
-          id: '',
-          productId: this.product.productId,
-          productVariantOptionId: this.selectedOption.id,
-          productName: this.product.name,
-          variantName: this.selectedVariant.name,
-          optionName: this.selectedOption.name,
-          mainImageUrl: this.selectedOption.imageUrl,
-          quantity: 1,
-          price: this.selectedVariant.price,
-          discount: 0,
-          totalPrice: this.selectedVariant.price,
-          slug: this.product.slug
-        }
-        this.sessionStorageService.addItemToCart(cartItem);
-        this.isItemInCart = true;
-        this.showAnim = true;
-        setTimeout(() => this.showAnim = false, 800);
-      } else {
-        alert('Lỗi khi thêm vào giỏ hàng.');
-      }
-    }
-    );
   }
 
   showImageModal = false;
@@ -293,43 +246,10 @@ export class ProductDetailsComponent {
   }
 
   onLogin() {
-
     const ref = this.authDialog.openLogin();
-
     ref.closed.subscribe(result => {
-      if (this.tks.isLoggedIn()) {
-        // this.sessionStorageService.getCartItems()?.forEach(item => {
-        //   if (item.productVariantOptionId === this.selectedOption.id) {
-        //     this.isItemInCart = true;
-        //   }
-        //   else {  
-        //     this.isItemInCart = false;
-        //   }
-        // })
-        if (this.sessionStorageService.isItemInCart(this.selectedOption.id)) {
-          this.isItemInCart = true;
-        }
-        else {
-          this.isItemInCart = false;
-        }
-      }
+
     });
   }
-
-  showAnim = false;
-  createAimAddToCart() {
-    animations: [
-      trigger('flyToCart', [
-        transition(':enter', [
-          style({ transform: 'scale(1)', opacity: 1 }),
-          animate('800ms ease-in', style({
-            transform: 'translate(300px, -200px) scale(0.2)',
-            opacity: 0
-          }))
-        ])
-      ])
-    ]
-  }
-
 
 }

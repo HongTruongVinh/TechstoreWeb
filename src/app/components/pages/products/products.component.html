@@ -18,14 +18,14 @@
   <!-- Bộ lọc sắp xếp -->
   <div class="mb-4 d-flex gap-2 align-items-center">
     <span class="fw-bold">Sắp xếp theo</span>
-    <button class="btn btn-light border" [class.active]="sortType === 'price-desc'" (click)="sort('price-desc')">
-      <i class="bi bi-arrow-down-up"></i> Giá Cao - Thấp
-    </button>
     <button class="btn btn-light border" [class.active]="sortType === 'price-asc'" (click)="sort('price-asc')">
       <i class="bi bi-arrow-up-down"></i> Giá Thấp - Cao
     </button>
+    <button class="btn btn-light border" [class.active]="sortType === 'price-desc'" (click)="sort('price-desc')">
+      <i class="bi bi-arrow-down-up"></i> Giá Cao - Thấp
+    </button>
     <button class="btn btn-light border" [class.active]="sortType === 'popular'" (click)="sort('popular')">
-      <i class="bi bi-eye"></i> Xem Nhiều
+      <i class="bi bi-eye"></i> Phổ biến
     </button>
   </div>
 

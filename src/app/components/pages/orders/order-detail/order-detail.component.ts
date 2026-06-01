@@ -39,13 +39,12 @@ export class OrderDetailComponent {
   
   isLoading: boolean = false;
 
-  orderDetail!: OrderDetailModel;
-  invoiceDetail!: InvoiceModel;
-  paymentDetail!: PaymentModel;
-  qrCodeDetail!: string;
+  orderDetail?: OrderDetailModel;
+  invoiceDetail?: InvoiceModel;
+  paymentDetail?: PaymentModel;
+  qrCodeDetail?: string;
 
-  orderDetailsForm!: UntypedFormGroup;
-  orderItems!: OrderItemModel[];
+  orderItems?: OrderItemModel[];
   discountCode: string = '';
   subtotal: number = 0;
   discount: number = 0;
@@ -69,13 +68,6 @@ export class OrderDetailComponent {
 
   ngOnInit(): void {
 
-    this.orderDetailsForm = this.formBuilder.group({
-      customerName: [''],
-      customerPhoneNumber: [''],
-      customerAddress: [''],
-      note: [''],
-    });
-
     this.paymentMethods = Object.values(EPaymentMethod)
       .filter(value => typeof value === 'number') // chỉ lấy các giá trị số
       .map(value => ({
@@ -88,11 +80,6 @@ export class OrderDetailComponent {
 
   load(): void {
 
-    //this.qrCodeDetail = {} as QrcodeModel;
-    this.paymentDetail = {} as PaymentModel;
-    this.invoiceDetail = {} as InvoiceModel;
-    this.orderDetail = {} as OrderDetailModel;
-
     this.route.paramMap.subscribe(params => {
       const orderId = params.get('id')!;
       this.isLoading = true;
@@ -100,13 +87,6 @@ export class OrderDetailComponent {
         if (res.retCode == ERetCode.Successfull) {
           if (res.data) {
             this.orderDetail = res.data;
-
-            this.orderDetailsForm = this.formBuilder.group({
-              customerName: [this.orderDetail.customerName],
-              customerPhoneNumber: [this.orderDetail.customerPhonenumber],
-              customerAddress: [this.orderDetail.shippingAddress],
-              note: [this.orderDetail.notes],
-            });
 
             this.selectedpaymentMethodId = this.orderDetail.paymentMethod;
 

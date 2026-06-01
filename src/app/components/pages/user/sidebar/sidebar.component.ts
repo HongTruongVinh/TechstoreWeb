@@ -12,48 +12,48 @@ import { AuthenticationService } from '../../../../core/services/auth.service';
   styleUrl: './sidebar.component.scss'
 })
 export class SidebarComponent {
-
-  user!: User;
+  user?: User;
   activeMenu: string = 'cart'; // default
   nameAvatar: string = '';
+  currentUrl = this.router.url;
 
   auth = inject(AuthenticationService);
   constructor(
     private readonly router: Router,
-    private readonly tokenStorageService: TokenStorageService,
+    private readonly tks: TokenStorageService,
   ) { }
 
   ngOnInit(): void {
-
-    this.user = {
-      id: '',
-      firstName: '',
-      lastName: '',
-      email: '',
-      phoneNumber: '',
-      birthday: new Date(),
-      address: '',
+    if (this.currentUrl == "/user/cart") {
+      this.selectMenu("cart");
+    }
+    else if (this.currentUrl == "/user/purchase") {
+      this.selectMenu("purchase");
+    }
+    else if (this.currentUrl == "/user/info") {
+      this.selectMenu("info");
     }
 
-    if (this.tokenStorageService.getUser() != null) {
-      this.user = this.tokenStorageService.getUser()!;
+    if (this.tks.getUser() != null) {
+      this.user = this.tks.getUser()!;
     }
 
-    // Set the initial name avatar
-    if (this.user.firstName && this.user.lastName) {
-      this.nameAvatar = this.user.lastName.charAt(0).toUpperCase() + this.user.firstName.charAt(0).toUpperCase();
-    } else {
-      this.nameAvatar = 'TS'; // Default avatar text
+    if (this.user) {
+      if (this.user.firstName && this.user.lastName) {
+        this.nameAvatar = this.user.lastName.charAt(0).toUpperCase() + this.user.firstName.charAt(0).toUpperCase();
+      } else {
+        this.nameAvatar = 'TS'; // Default avatar text
+      }
     }
   }
 
   selectMenu(menu: string) {
-  this.activeMenu = menu;
+    this.activeMenu = menu;
 
-  if (menu === 'cart') this.cart();
-  if (menu === 'purchase') this.puchase();
-  if (menu === 'info') this.infomation();
-}
+    if (menu === 'cart') this.cart();
+    if (menu === 'purchase') this.puchase();
+    if (menu === 'info') this.infomation();
+  }
 
   infomation() {
     this.router.navigate(['/user/profile']);
@@ -63,12 +63,12 @@ export class SidebarComponent {
     this.router.navigate(['/user/purchase']);
   }
 
-  cart(){
+  cart() {
     this.router.navigate(['/user/cart']);
   }
 
   logout() {
-    this.tokenStorageService.signOut();
+    this.tks.signOut();
     window.location.reload();
   }
 }

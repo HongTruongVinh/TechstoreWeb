@@ -25,7 +25,7 @@ export class OrderCardComponent {
   }
 
   onViewDetails() {
-    this.router.navigate([`/order-details/${this.order.orderId}`]);
+    this.router.navigate([`/order-details/${this.order.id}`]);
     //this.viewDetails.emit(this.order.orderId);
   }
   

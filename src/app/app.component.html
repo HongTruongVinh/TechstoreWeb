@@ -13,7 +13,8 @@
 
 <app-widget-panel *ngIf="uiState.widgetPanelVisible$ | async"></app-widget-panel>
 
-<app-footer *ngIf="uiState.footerVisible$ | async"></app-footer>
+<!-- <app-footer *ngIf="uiState.footerVisible$ | async"></app-footer> -->
+<app-footer></app-footer>
 
 <app-mobile-menu *ngIf="uiState.mobileMenuVisible$ | async" (toggleCategories)="toggleCategoryPanel()"
     class="mobile-menu"></app-mobile-menu>

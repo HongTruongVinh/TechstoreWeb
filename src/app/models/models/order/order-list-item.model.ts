@@ -2,7 +2,7 @@ import { EOrderStatus, EOrderType, EPaymentMethod } from "../../enum/etype_proje
 import { OrderItemModel } from "../order/order-item.model";
 
 export interface OrderListItemModel {
-    orderId: string;
+    id: string;
     customerId: string;
     customerName: string;
 

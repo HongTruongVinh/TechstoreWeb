@@ -9,6 +9,8 @@ import { OrderItemModel } from "../../models/models/order/order-item.model";
 import { CartItem } from "../../models/models/cart/cart-item.model";
 import { OrderCreateModel } from "../../models/models/order/cod-order-create.model";
 import { OrderDetailModel } from "../../models/models/order/order-detail.model";
+import { PrepayOrderResult } from "../../models/models/order/prepay-order-result.model";
+import { PaymentDataModel } from "../../models/models/payment/payment-data.model";
 
 @Injectable({ providedIn: 'root' })
 export class OrderService {
@@ -58,6 +60,20 @@ export class OrderService {
                     return this.transferHttp.post(apiUrl, newOrder);
                 }),
                 map((res: ApiResponseModel<string>) => res)
+            );
+    }
+
+    createPrepayOrder(newOrder: OrderCreateModel) {
+        return this.linkSettingsService
+            .getResLinkSetting('Payment', 'GetpaymentData')
+            .pipe(
+                switchMap((apiUrl) => {
+                    if (!apiUrl) {
+                        throw new Error('Không tìm thấy URL API cho Tạo đơn hàng Prepay');
+                    }
+                    return this.transferHttp.post(apiUrl, newOrder);
+                }),
+                map((res: ApiResponseModel<PaymentDataModel>) => res)
             );
     }
 

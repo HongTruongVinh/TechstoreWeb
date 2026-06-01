@@ -10,16 +10,19 @@
   "Product": {
     "GetCustomerProducts": "products",
     "SearchCustomerProducts": "products/search?keyword={0}&pageNumber={1}&pageSize={2}",
-    "GetFeaturedProducts": "products/featured",
     "GetProductDetails": "products/{0}",
     "GetProductsByCategory": "products/category?categorySlug={0}&pageNumber={1}&pageSize={2}",
     "GetProductsByCategoryAndBrand": "products/category-brand?categorySlug={0}&brandSlug={1}&pageNumber={2}&pageSize={3}"
+  },
+  "Home": {
+    "GetFeatureProducts": "home/feature",
+    "GetProductsByBrandName": "home/products?brandName={0}&page={1}&pageSize={2}"
   },
   "Order": {
     "GetItem": "admin/orders/{0}",
     "UserOrders": "orders",
     "CreateCodOrder": "orders/cod-order",
-    "CreatePrepayOrder": "orders/pre-pay-order",
+    "CreatePrepayOrder": "orders/prepay-order",
     "CancelOrder": "orders/cancel/{0}",
     "OrderDetails": "orders/{0}"
   },
@@ -37,9 +40,6 @@
   },
   "Statistics": {
     "GetDashboardOverviewData": "admin/statistics/overview"
-  },
-  "Home": {
-    "GetDataForHome": "home"
   },
   "UploadDataCloud": {
     "UpLoadPhotoToCloud": "upload-to-cloud/cloudinary/{0}",
@@ -63,7 +63,10 @@
     "GetInvoice": "invoices/{0}"
   },
   "Payment": {
-    "GetPayments": "payments",
-    "GetPayment": "payments/{0}"
+    "GetpaymentData": "payments/create-payment-data",
+    "PaymentHub": "payments/hub"
+  },
+  "MockingDataAPI": {
+    "PaymentHub": "PaymentWebhook"
   }
 }

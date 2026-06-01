@@ -15,5 +15,6 @@ export interface CartItem{
     discount: number;
     totalPrice: number;
     slug: string;
+    stock: number;
 }
 

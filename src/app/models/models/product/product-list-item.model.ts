@@ -11,7 +11,7 @@ export interface ProductListItemModel {
     salePrice: number;
 
     averageRating?: number;
-    soldCount?: number;
+    soldCount: number;
     ratedCount?: number;
     warranty: number;
 

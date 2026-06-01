@@ -12,13 +12,13 @@ import { Dialog, DialogRef } from '@angular/cdk/dialog';
 import { LoginRequestModel } from '../../../models/models/authentication/login-request.model';
 import { TokenStorageService } from '../../../core/services/token-storage.service';
 import { AuthenticationService } from '../../../core/services/auth.service';
-import { SessionStorageService } from '../../../core/services/session-storage.service';
 import { MessengerServices } from '../../../core/services/messenger.service';
 import { ERetCode } from '../../../models/enum/etype_project.enum';
-import { CartService } from '../../../core/services/cart.service';
 import { RegisterComponent } from '../register/register.component';
-import { UiStateService } from '../../../core/services/ui-state.service';
 import { LoginDialogResult } from '../../../models/models/authentication/login-result.model';
+
+import { Store } from '@ngrx/store';
+import { loadCartItem } from '../../../store/cart/cart.actions';
 
 
 @Component({
@@ -37,14 +37,12 @@ export class LoginComponent {
   loginResult: LoginDialogResult = { success: false };
   loginForm!: UntypedFormGroup;
 
+   private store = inject(Store);
   constructor(
-    private uiState: UiStateService,
     private readonly formBuilder: UntypedFormBuilder,
     private readonly authenticationService: AuthenticationService,
     private readonly tokenStorageService: TokenStorageService,
-    private readonly sessionStorageService: SessionStorageService,
     private readonly messengerService: MessengerServices,
-    private readonly cartService: CartService
   ) { }
 
   ngOnInit(): void {
@@ -65,13 +63,14 @@ export class LoginComponent {
 
       this.authenticationService.loginNormalAccount(loginRequest).subscribe({
         next: (res) => {
-          if (res.retCode == 3) {
+          if (res.retCode == ERetCode.LoginSuccess) {
             const data = res.data;
             if (data) {
               this.tokenStorageService.saveUser(data.user);
               this.tokenStorageService.saveToken(data.token);
 
-              this.createCartSession();
+              // this.createCartSession();
+              this.store.dispatch(loadCartItem());
 
               this.loginResult = { success: true };
 
@@ -103,21 +102,6 @@ export class LoginComponent {
     return true;
   }
 
-  createCartSession() {
-    this.cartService.getAllItems(1, 5).subscribe((res) => {
-      if (res.retCode == ERetCode.Successfull) {
-        if (res.data) {
-          this.sessionStorageService.createCartSession(res.data);
-        } else {
-
-        }
-      } else {
-
-      }
-    })
-  }
-
-
   openRegisterModal() {
 
     if (this.registerDialogRef) {
@@ -134,6 +118,12 @@ export class LoginComponent {
     this.registerDialogRef.closed.subscribe(result => {
       this.registerDialogRef = undefined; // reset dialog ref khi đóng
     });
+  }
+
+  showPassword = false;
+
+  togglePassword(): void {
+    this.showPassword = !this.showPassword;
   }
 
   close() {

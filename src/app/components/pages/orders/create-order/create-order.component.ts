@@ -1,24 +1,23 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { LottieComponent, AnimationOptions } from 'ngx-lottie';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ThousandSeparatorPipe } from '../../../../pipes/thousandSeparator.pipe';
-import { DateToStringPipe } from '../../../../pipes/DatePipe';
 import { FullImageUrlPipe } from '../../../../pipes/full-image-url.pipe';
-import { OrderItemModel } from '../../../../models/models/order/order-item.model';
-import { EPaymentMethod } from '../../../../models/enum/etype_project.enum';
-import { Title } from '@angular/platform-browser';
+import { EPaymentMethod, ERetCode } from '../../../../models/enum/etype_project.enum';
 import { ActivatedRoute } from '@angular/router';
 import { TokenStorageService } from '../../../../core/services/token-storage.service';
 import { OrderService } from '../../../../core/services/order.service';
-import { ProductService } from '../../../../core/services/product.service';
 import { CustomerProductListItemModel } from '../../../../models/models/product/customer-product-list-item.model';
 import { User } from '../../../../models/models/user/user.model';
 import { CartItem } from '../../../../models/models/cart/cart-item.model';
 import { SessionStorageService } from '../../../../core/services/session-storage.service';
 import { OrderCreateModel, OrderItemCreateModel } from '../../../../models/models/order/cod-order-create.model';
-import { BreadcrumbItem } from '../../../common/breadcrumb/breadcrumb.component';
-import { BreadcrumbComponent } from "../../../common/breadcrumb/breadcrumb.component";
+import { MessengerServices } from '../../../../core/services/messenger.service';
+import { PaymentDataModel } from '../../../../models/models/payment/payment-data.model';
+import { PaymentSignalrService } from '../../../../core/services/signalr/payment-signalr.service';
+import { MockingDataService, PaymentWebhookRequest } from '../../../../core/services/api/mocking-data.service';
 
 @Component({
   selector: 'app-create-order',
@@ -29,21 +28,17 @@ import { BreadcrumbComponent } from "../../../common/breadcrumb/breadcrumb.compo
     ReactiveFormsModule,
     NgSelectModule,
     ThousandSeparatorPipe,
-    DateToStringPipe,
     FullImageUrlPipe,
-    BreadcrumbComponent
+    LottieComponent
 ],
   templateUrl: './create-order.component.html',
   styleUrl: './create-order.component.scss'
 })
 export class CreateOrderComponent {
-  breadcrumbs: BreadcrumbItem[] = [
-    { label: 'Trang chủ', url: '/' },
-    { label: 'Đơn hàng', url: '/orders' },
-    { label: 'Tạo mới' }
-  ];
-  
-  isLoading = false;
+  isLoadingQrCode = false;
+  isPaymentSuccess = false;
+  isClickedGenerateQrCode = false;
+  orderId?: string;
 
   invoiceAuthor: any;
   invoiceTime!: Date;
@@ -65,6 +60,7 @@ export class CreateOrderComponent {
   totalPrice: number = 0;
 
   user!: User;
+  paymentData?: PaymentDataModel;
 
   paymentMethods: { methodId: number, name: string }[] = [];
   paymentMethodNames: Record<EPaymentMethod, string> = {
@@ -72,16 +68,26 @@ export class CreateOrderComponent {
     [EPaymentMethod.COD]: 'Thanh toán khi nhận hàng (COD)',
     [EPaymentMethod.Cash]: 'Tiền mặt'
   };
-  selectedpaymentMethodId: number = 0;
+  selectedpaymentMethodId: number = 1;
+ 
+  successOptions: AnimationOptions = {
+    path: '/assets/animations/tick.json',
+    loop: false,
+  };
+
+  loadingOptions: AnimationOptions = {
+    path: '/assets/animations/loading.json'
+  };
 
   constructor(
     private formBuilder: UntypedFormBuilder,
-    private titleService: Title,
     private route: ActivatedRoute,
     private readonly tokenStorageService: TokenStorageService,
     private readonly sessionStorageService: SessionStorageService,
     private readonly orderService: OrderService,
-    private readonly productService: ProductService
+    private readonly paymentSignalrService: PaymentSignalrService,
+    private readonly messengerServices: MessengerServices,
+    private readonly mds: MockingDataService
   ) { }
 
 
@@ -122,7 +128,6 @@ export class CreateOrderComponent {
   }
 
   loadData() {
-    this.isLoading = false;
     invoiceTime: Date.UTC(Date.now());
     this.orderItems = [];
 
@@ -133,30 +138,10 @@ export class CreateOrderComponent {
     }, 0);
 
     this.totalPrice = this.subtotal;
-
-    // this.productService.getCustomerProducts().subscribe((res) => {
-    //   if (res.retCode == 0) {
-    //     if (res.data) {
-    //       this.allProducts = res.data;
-    //       this.isLoading = false;
-    //     } else {
-    //       this.allProducts = [];
-    //     }
-    //   } else {
-    //     this.isLoading = false;
-    //   }
-    // })
-
   }
 
   saveAction() {
-    if (this.newOrderForm.invalid) {
-      alert("Vui lòng điền đầy đủ thông tin khách hàng");
-      return;
-    }
-
-    if (this.orderItems.length == 0) {
-      alert("Vui lòng chọn sản phẩm trước khi lưu đơn hàng");
+    if(!this.validation()){
       return;
     }
 
@@ -172,7 +157,7 @@ export class CreateOrderComponent {
     }
 
     var newOrder: OrderCreateModel = {
-      customerId: '',
+      id: this.orderId,
       customerName: this.newOrderForm.value.customerName,
       customerPhoneNumber: this.newOrderForm.value.customerPhoneNumber,
       customerEmail: this.newOrderForm.value.customerEmail,
@@ -183,9 +168,9 @@ export class CreateOrderComponent {
       paymentMethod: this.selectedpaymentMethodId,
     };
 
-    if (this.selectedpaymentMethodId == 0) {
+    if (this.selectedpaymentMethodId === EPaymentMethod.COD) {
       this.orderService.createCodOrder(newOrder).subscribe((res) => {
-        if (res.retCode == 0) {
+        if (res.retCode == ERetCode.Successfull) {
           alert("Tạo đơn hàng thành công");
           this.sessionStorageService.clearOrder();
           window.history.back();
@@ -193,6 +178,62 @@ export class CreateOrderComponent {
           //alert("Có lỗi xảy ra trong quá trình tạo đơn hàng: " + res.systemMessage);
           return;
         }
+      });
+    }
+    else if (this.selectedpaymentMethodId === EPaymentMethod.DomesticBank) {
+      this.isClickedGenerateQrCode = true;
+      this.isLoadingQrCode = true;
+      this.orderService.createPrepayOrder(newOrder).subscribe((res) => {
+        if (res.retCode == ERetCode.Successfull) {
+          if(res.data) {
+            this.paymentData = res.data;
+          this.isLoadingQrCode = false;
+
+          this.paymentSignalrService.startConnection(this.paymentData.paymentId);
+
+          this.paymentRequest = {
+            paymentId: this.paymentData.paymentId,
+            amount: this.paymentData.amount,
+            transactionId: 'mock-transaction-id'
+          };
+        
+          // setTimeout(() => {
+          //   if(this.paymentRequest){
+          //     this.mds.PaymentSuccess(this.paymentRequest).subscribe(res => {
+          //       console.log("Gửi yêu cầu thanh toán thành công");
+          //     });
+          //   }
+          // }, 5000); // 5 giây
+
+          this.paymentSignalrService
+            .paymentSuccess$
+            .subscribe((data) => {
+
+              this.isPaymentSuccess = true;
+            });
+          }
+          else{
+            this.messengerServices.errorNotification(res.systemMessage || "Không nhận được dữ liệu thanh toán từ server");
+          }
+
+        } else {
+          this.messengerServices.errorNotification(res.systemMessage || "Có lỗi xảy ra trong quá trình tạo đơn hàng");
+          return;
+        }
+      });
+    }
+  }
+
+  paymentRequest? : PaymentWebhookRequest;
+  testSignalR(){
+
+    if(this.isPaymentSuccess){
+      return;
+    }
+
+    if(this.paymentRequest){
+      this.mds.PaymentSuccess(this.paymentRequest).subscribe(res => {
+        console.log("Gửi yêu cầu thanh toán thành công");
       });
     }
   }
@@ -219,102 +260,25 @@ export class CreateOrderComponent {
       return;
     }
 
-    // var instoreOrder: InStoreOrderCreateModel = {
-    //   customerName: this.newOrderForm.value.customerName,
-    //   customerPhonenumber: this.newOrderForm.value.customerPhoneNumber,
-    //   paymentMethod: this.selectedpaymentMethodId,
-    //   items: [],
-    // }
-
-    // for (const item of this.cartData) {
-    //   const aItem: OrderItemCreateModel = {
-    //     productId: item.productId,
-    //     quantity: item.quantity,
-    //     priceAtOrderTime: item.priceAtOrderTime,
-    //     totalPrice: item.totalPrice,
-    //     discount: 0,
-    //   };
-    //   instoreOrder.items.push(aItem);
-    // }
-
-    // this.isLoading = true;
-
-    // this.orderService.createInStoreOrder(instoreOrder).subscribe((res) => {
-    //   if (res.retCode == 0) {
-    //     if (res.data) {
-    //       this.isLoading = false;
-    //       const url = `manage-instore-orders/checkout/${res.data}`;
-    //       window.open(url, '_blank');
-    //     }
-    //   }
-    //   else {
-    //     this.isLoading = false;
-    //     alert("Có lỗi xảy ra trong quá trình tạo đơn hàng: " + res.systemMessage);
-    //     return;
-    //   }
-    // })
   }
 
-  searchProduct() {
+  validation(): boolean{
+    if (this.newOrderForm.invalid) {
+      this.messengerServices.warringWithMessage("Vui lòng điền đầy đủ thông tin khách hàng");
+      return false;
+    }
 
-    // if (this.term.trim() === '' || this.term == undefined) {
-    //   this.displayedProducts = [];
-    //   this.searchModal.hide();
-    //   return;
-    // }
+    if (this.orderItems.length == 0) {
+      this.messengerServices.warringWithMessage("Vui lòng chọn sản phẩm trước khi đặt hàng");
+      return false;
+    }
 
-    // this.productService.searchCustomerProducts(this.term).subscribe((res) => {
-    //   if (res.retCode == 0) {
-    //     if (res.data) {
-    //       this.displayedProducts = res.data;
-    //       if (this.displayedProducts.length > 0) {
-    //         this.searchModal.show();
-    //       }
-    //       else {
-    //         this.searchModal.hide();
-    //       }
-    //     }
-    //   }
-    // })
+    if (![EPaymentMethod.COD, EPaymentMethod.DomesticBank].includes(this.selectedpaymentMethodId)) {
+      this.messengerServices.warringWithMessage("Vui lòng chọn phương thức thanh toán");
+      return false;
+    }
 
-    // if (this.term) {
-    //   this.displayedProducts = this.allProducts.filter((el: any) => el.name.toLowerCase().includes(this.term.toLowerCase())).slice(0, 7);
-    //   if( this.displayedProducts.length > 0) {
-    //     this.searchModal.show();
-    //   }
-    //   else{
-    //     this.searchModal.hide();
-    //   }
-    // }
-  }
-
-  selectProduct(data: any) {
-
-    // if (this.cartData.some(item => item.productId === data.productId)) {
-    //   this.searchModal.hide();
-    //   this.term = '';
-    //   return;
-    // }
-
-    // const orderItem: OrderItemModel = {
-    //   productId: data.productId,
-    //   categoryName: data.categoryName,
-    //   productName: data.name,
-    //   mainImageUrl: data.mainImageUrl,
-    //   priceAtOrderTime: data.price,
-    //   quantity: 1,
-    //   totalPrice: (data.price * 1)
-    // }
-
-    // this.cartData.push(orderItem);
-    // this.searchModal.hide();
-
-    // this.term = '';
-    // this.calculateQty(1, 0, this.cartData.length - 1)
-  }
-
-  goToConfirmCheckout() {
-
+    return true;
   }
 
   backToCart(){

@@ -1,8 +1,8 @@
 <div class="category-menu" (mouseleave)="onCategoryLeave()">
     <div class="menu-column">
-        <div class="menu-item" *ngFor="let category of categories"
+        <div class="menu-item"  *ngFor="let category of categories" 
             (click)="viewCategory(category); onCategoryClick(category)" (mouseenter)="onCategoryHover(category)"
-            [class.active]="hoveredCategoryId === category.categoryId">
+            [class.active]="hoveredCategoryId === category.id">
             <div class="menu-icon">
                 <img [src]="category.iconImageUrl | fullImageUrl" alt="" class="img-fluid d-block">
             </div>

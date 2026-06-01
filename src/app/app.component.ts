@@ -10,6 +10,13 @@ import { WidgetPanelComponent } from "./components/common/widget-panel/widget-pa
 import { UiStateService } from './core/services/ui-state.service';
 import { LoadingComponent } from "./components/common/loading/loading.component";
 
+import { Store } from '@ngrx/store';
+import * as CategoryActions from './store/categories/category.actions';
+import { loadCartItem } from './store/cart/cart.actions';
+// import { CategoryService } from './core/services/category.service';
+import { BrandService } from './core/services/brand.service';
+import { TokenStorageService } from './core/services/token-storage.service';
+
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -22,23 +29,28 @@ import { LoadingComponent } from "./components/common/loading/loading.component"
     MobileMenuComponent,
     WidgetPanelComponent,
     LoadingComponent
-],
+  ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
   title = 'TechstoreWeb';
-  
-  device = inject(DeviceService);
 
   showCategories = false;
   showWidgetPanel = true;
   istoggleCategory: boolean = false;
 
-  constructor(public uiState: UiStateService){}
+  // private categoryService = inject(CategoryService);
+  private brandService = inject(BrandService);
+  device = inject(DeviceService);
+  private store = inject(Store);
+  tks = inject(TokenStorageService);
+  constructor(public uiState: UiStateService) { }
 
   ngOnInit(): void {
     this.updateIsMobile();
+
+     this.loadStore();
   }
 
   toggleCategoryPanel() {
@@ -54,6 +66,20 @@ export class AppComponent {
     }
     else {
       this.showWidgetPanel = true;
+    }
+  }
+
+  loadStore() {
+    this.brandService.loadBrands();
+
+    this.store.dispatch(
+      CategoryActions.loadCategories()
+    );
+
+    if(this.tks.isLoggedIn()){
+      this.store.dispatch(
+      loadCartItem()
+    );
     }
   }
 

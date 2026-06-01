@@ -1,7 +1,8 @@
 
 <app-breadcrumb [items]="breadcrumbItems"></app-breadcrumb>
 
-<div class="row g-3 mb-3">
+@if(orderDetail){
+    <div class="row g-3 mb-3">
     <!-- Left Card -->
     <div class="col-md-6">
         <div class="card h-100 shadow-sm">
@@ -65,6 +66,7 @@
         </div>
     </div>
 </div>
+}
 
 <div class="row mb-2">
     <div class="col-xxl-12">
@@ -100,7 +102,7 @@
                                                  {{ orderItem.productName + ' - ' + orderItem.variantName }}
                                             </h6>
                                             <small *ngIf="orderItem.variantName != null && orderItem.variantName != ''" class="text-muted">
-                                                Phiên bản: <span class="text-dark fw-medium">{{orderItem.variantName}}</span>
+                                                Phiên bản: <span class="text-dark fw-medium">{{orderItem.optionName}}</span>
                                             </small>
                                         </div>
                                     </div>
@@ -135,9 +137,12 @@
             </div>
             <div class="card-body">
 
-                <div class="d-flex align-items-center mb-3">
+                <div *ngIf="discountCode" class="d-flex align-items-center mb-3">
                     <label class="me-3">Mã ưu đãi đã áp dụng:</label>
-                    <span>{{ discountCode || 'Không có mã ưu đãi nào được áp dụng' }}</span>
+                    <span>{{ discountCode }}</span>
+                </div>
+                <div *ngIf="!discountCode" class="d-flex align-items-center mb-3">
+                    <label class="me-3">Không có mã  ưu đãi đã áp dụng</label>  
                 </div>
 
             </div>

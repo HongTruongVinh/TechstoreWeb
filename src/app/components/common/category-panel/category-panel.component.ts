@@ -8,6 +8,8 @@ import { BrandService } from '../../../core/services/brand.service';
 import { ERetCode } from '../../../models/enum/etype_project.enum';
 import { FullImageUrlPipe } from "../../../pipes/full-image-url.pipe";
 import { UiStateService } from '../../../core/services/ui-state.service';
+import { Store } from '@ngrx/store';
+import * as CategorySelectors from '../../../store/categories/category.selectors';
 
 @Component({
   selector: 'app-category-panel',
@@ -22,15 +24,19 @@ export class CategoryPanelComponent {
   categories: CategoryModel[] = [];
   brands: BrandModel[] = [];
   isMobile: boolean = false;
+  categories$ = this.categoryService.categories$;
 
   get selectedCategory(): CategoryModel | undefined {
-    return this.categories.find(c => c.categoryId === (this.hoveredCategoryId ?? ''));
+    return this.categories.find(c => c.id === (this.hoveredCategoryId ?? ''));
   }
-
+  
   @Input() istoggleCategory = false;
 
   @Output()
   toggleCategories = new EventEmitter<void>();
+
+  private store = inject(Store);
+  categoriesStore$ = this.store.select(CategorySelectors.selectAllCategories);
 
   uiState = inject(UiStateService);
   constructor(
@@ -41,12 +47,28 @@ export class CategoryPanelComponent {
   ) { }
 
   ngOnInit(): void {
-    this.loadData();
+    // this.loadData();
+    this.load();
     this.updateIsMobile();
     if (this.isMobile) {
       this.uiState.hideWidgetPanel();
       this.uiState.hideNavbar();
     }
+  }
+
+  load(){
+    // this.categoryService.categories$
+    // .subscribe(data => {
+    //   this.categories = data;
+    // });
+
+    this.categoriesStore$.subscribe(data => {
+      this.categories = data;
+    });
+
+    this.brandService.brands$.subscribe(data => {
+      this.brands = data;
+    })
   }
 
   ngOnDestroy(): void {
@@ -97,14 +119,14 @@ export class CategoryPanelComponent {
 
   onCategoryHover(category: CategoryModel): void {
     if (!this.isMobile) {
-      this.hoveredCategoryId = category.categoryId;
+      this.hoveredCategoryId = category.id;
       this.hoveredCategory = category;
     }
   }
 
   onCategoryClick(category: CategoryModel): void {
     if (this.isMobile) {
-      this.hoveredCategoryId = this.hoveredCategoryId === category.categoryId ? null : category.categoryId;
+      this.hoveredCategoryId = this.hoveredCategoryId === category.id ? null : category.id;
     }
   }
 

@@ -4,3 +4,28 @@
   max-width: 70px;
   max-height: 70px;
 }
+
+.qr-code-image{
+  max-width: 200px;
+  max-height: 200px;
+}
+
+.label-text {
+  font-size: 1.2rem;
+  color: #000000;
+  font-weight: bold;
+}
+
+// font-weight: 300; // Light
+// font-weight: 400; // Normal
+// font-weight: 500; // Medium
+// font-weight: 600; // Semi Bold
+// font-weight: 700; // Bold
+// font-weight: 800; // Extra Bold
+// font-weight: 900; // Black
+
+.success-text {
+  font-size: 1.2rem;
+  color: #28a745;
+  font-weight: bold;
+}

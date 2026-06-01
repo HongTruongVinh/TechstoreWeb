@@ -6,15 +6,23 @@
 
 }
 
-.logo{
-    max-width: 96px; 
+.logo {
+    max-width: 96px;
     max-height: 96px;
     margin-bottom: 8px;
     align-items: center;
 }
 
-.social-logo{
+.social-logo {
     width: 32px;
     height: 32px;
     margin: 0 8px;
+}
+
+.show-password-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
 }

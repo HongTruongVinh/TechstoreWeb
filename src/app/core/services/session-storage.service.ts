@@ -3,9 +3,12 @@ import { CartItem } from "../../models/models/cart/cart-item.model";
 import { TokenStorageService } from "./token-storage.service";
 import { CartService } from "./cart.service";
 import { ERetCode } from "../../models/enum/etype_project.enum";
+import { CategoryService } from "./category.service";
+import { BrandService } from "./brand.service";
 
 const ORDERITEMS_KEY = 'orderItems';
 const CARTITEMS_KEY = 'cartItems';
+
 
 @Injectable({ providedIn: 'root' })
 export class SessionStorageService {
@@ -14,19 +17,6 @@ export class SessionStorageService {
     private tks: TokenStorageService,
     private cartService: CartService
   ) {
-    // if (this.tks.isLoggedIn()) {
-    //   this.cartService.getAllItems().subscribe((res) => {
-    //     if (res.retCode == ERetCode.Successfull) {
-    //       if (res.data) {
-    //         this.createCartSession(res.data);
-    //       } else {
-
-    //       }
-    //     } else {
-
-    //     }
-    //   })
-    // }
   }
 
   createCartSession(CartItems: CartItem[]) {
@@ -81,4 +71,10 @@ export class SessionStorageService {
   clearOrder() {
     sessionStorage.removeItem(ORDERITEMS_KEY);
   }
+
+  getBrands(){
+
+  }
+
+  
 }

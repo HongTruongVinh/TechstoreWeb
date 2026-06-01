@@ -41,16 +41,4 @@ export class UserComponent {
   ngOnDestroy(): void {
     this.uiState.showFooter();
   }
-
-  // @HostListener('window:resize', ['$event'])
-  // onResize(event: Event) {
-  //   if (window.innerWidth <= 768) {
-  //     this.uiState.hideNavbar();
-  //     this.uiState.hideWidgetPanel();
-  //     this.device.isMobile.set(true);
-  //   }
-  //   else{
-  //     this.uiState.showNavbar();
-  //   }
-  // }
 }

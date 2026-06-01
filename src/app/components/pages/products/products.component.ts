@@ -5,9 +5,7 @@ import { ProductListItemModel } from '../../../models/models/product/product-lis
 import { CategoryModel } from '../../../models/models/category/category.model';
 import { BrandModel } from '../../../models/models/brand/brand.model';
 import { ProductService } from '../../../core/services/product.service';
-import { CategoryService } from '../../../core/services/category.service';
 import { ActivatedRoute } from '@angular/router';
-import { BrandService } from '../../../core/services/brand.service';
 import { BreadcrumbComponent, BreadcrumbItem } from "../../common/breadcrumb/breadcrumb.component";
 import { ERetCode } from '../../../models/enum/etype_project.enum';
 import { LoadingService } from '../../../core/services/loading/loading.service';
@@ -156,9 +154,18 @@ export class ProductsComponent {
   }
 
   sort(type: string) {
-    this.sortType = type;
-    // Sắp xếp sản phẩm
+  this.sortType = type;
+
+  if (this.sortType === 'price-desc') {
+    this.products.sort((a, b) => b.price - a.price);
+  } 
+  else if (this.sortType === 'price-asc') {
+    this.products.sort((a, b) => a.price - b.price);
+  } 
+  else if (this.sortType === 'popular') {
+    this.products.sort((a, b) => b.soldCount - a.soldCount);
   }
+}
 
   loadingService = inject(LoadingService);
   showMore() {

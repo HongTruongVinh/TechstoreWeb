@@ -1,5 +1,5 @@
 export interface CategoryModel {
-    categoryId: string;
+    id: string;
     name: string;
     description: string;
     iconImageUrl: string;

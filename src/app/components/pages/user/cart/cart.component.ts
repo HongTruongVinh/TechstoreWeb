@@ -1,14 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FullImageUrlPipe } from '../../../../pipes/full-image-url.pipe';
 import { ThousandSeparatorPipe } from '../../../../pipes/thousandSeparator.pipe';
 import { ERetCode } from '../../../../models/enum/etype_project.enum';
 import { CartItem } from '../../../../models/models/cart/cart-item.model';
 import { CartService } from '../../../../core/services/cart.service';
-import { ProductService } from '../../../../core/services/product.service';
 import { Router } from '@angular/router';
-import { OrderService } from '../../../../core/services/order.service';
 import { SessionStorageService } from '../../../../core/services/session-storage.service';
+import { Store } from '@ngrx/store';
+import * as CartSelectors from '../../../../store/cart/cart.selectors';
+import * as CartActions from '../../../../store/cart/cart.actions';
+import { loadCartItem } from '../../../../store/cart/cart.actions';
 
 @Component({
   selector: 'app-cart',
@@ -23,18 +25,18 @@ import { SessionStorageService } from '../../../../core/services/session-storage
   styleUrl: './cart.component.scss'
 })
 export class CartComponent {
-  pageNumber = 1;
-  pageSize = 100;
-  cartItems: CartItem[] = [];
 
   selectedItems: CartItem[] = [];
   totalPrice: number = 0;
 
+  private store = inject(Store);
+  cartItems$ = this.store.select(CartSelectors.selectAllCartItems);
+  selectedItems$ = this.store.select(CartSelectors.selectSelectedItems);
+  totalPrice$ = this.store.select(CartSelectors.selectTotalPrice);
+
   constructor(
     private readonly cartService: CartService,
-    private readonly productService: ProductService,
     private readonly sessionStorageService: SessionStorageService,
-    private readonly orderService: OrderService,
     private readonly router: Router
   ) { }
 
@@ -43,74 +45,67 @@ export class CartComponent {
   }
 
   loadData() {
-    this.cartService.getAllItems(this.pageNumber, this.pageSize).subscribe({
-      next: (res) => {
-        if (res && res.data) {
-          this.cartItems = res.data;
-        }
-      }
-    });
-
-    this.cartItems = this.sessionStorageService.getCartItems() || [];
-  }
-
-  removeItem(cartItemId: string): void {
-    this.cartItems = this.cartItems.filter(item => item.id !== cartItemId);
+    this.store.dispatch(loadCartItem());
   }
 
   updateQuantity(cartItemId: string, newQuantity: number): void {
-    const item = this.cartItems.find(item => item.id === cartItemId);
-    if (item) {
-      item.quantity = newQuantity;
-      item.totalPrice = (item.salePrice ?? item.price - item.discount) * newQuantity;
-      this.caculateTotal();
-    }
+    // this.cartItems$.subscribe(cartItems => {
+    //   const item = cartItems.find(item => item.id === cartItemId);
+    //   if (item) {
+    //     item.quantity = newQuantity;
+    //     item.totalPrice = (item.salePrice ?? item.price - item.discount) * newQuantity;
+    //     this.caculateTotal();
+    //   }
+    // }
+    // )
+
+    this.store.dispatch(
+    CartActions.updateCartItemQuantity({
+      id: cartItemId,
+      quantity: newQuantity
+    })
+  );
+    this.caculateTotal();
   }
 
-  clearCart(): void {
-    this.cartItems = [];
-    this.selectedItems = [];
+  selectAll(checked: boolean) {
+    if (checked) {
+      this.cartItems$.subscribe(cartItems => {
+        this.selectedItems = cartItems;
+      })
+    } else {
+      this.selectedItems = [];
+    }
+    this.caculateTotal();
   }
 
   remove() {
-    // this.cartItems = this.cartItems.filter(item => !this.selectedItems.includes(item));
-    // this.selectedItems = [];
-    this.cartService.deleteItem(this.selectedItems.map(item => item.id)).subscribe((res) => {
-      if (res.retCode == ERetCode.Successfull) {
-        if (res.data) {
-          
-          this.cartItems = this.cartItems.filter(item => !this.selectedItems.includes(item));
-          this.selectedItems = [];
-          this.caculateTotal();
-        } else {
-          this.cartItems = [];
-        }
-      } else {
-      }
-    })
+    const ids = this.selectedItems.map(item => item.id);
+
+    this.store.dispatch(
+      CartActions.removeCartItems({ cartItemIds: ids })
+    );
+
+    this.selectedItems = [];
+    this.caculateTotal();
   }
 
-  increase(item: any) {
-    // item.quantity++;
-    this.updateQuantity(item.id, item.quantity + 1);
+  increase(item: CartItem) {
+    // console.log("p"+item.id);
+    if (item.quantity <= item.stock) this.updateQuantity(item.productVariantOptionId, item.quantity + 1);
   }
 
-  decrease(item: any) {
-    // if (item.quantity > 1) item.quantity--;
-    if (item.quantity > 1) this.updateQuantity(item.id, item.quantity - 1);
+  decrease(item: CartItem) {
+    if (item.quantity > 1) this.updateQuantity(item.productVariantOptionId, item.quantity - 1);
   }
-
-  // goToProduct(productId: string) {
-  //   this.router.navigate(['/product-details', productId]);
-  // }
 
   viewProductDetails(slugWithId: string) {
-      this.router.navigate(['', slugWithId]);
-    }
-  
-    buildProductUrl(product: CartItem): string {
-      return `${product.slug}-i.${product.productId}`;
-    }
+    this.router.navigate(['', slugWithId]);
+  }
+
+  buildProductUrl(product: CartItem): string {
+    return `${product.slug}-i.${product.productId}`;
+  }
 
   toggleSelection(item: CartItem, checked: boolean) {
     if (checked) {
@@ -121,6 +116,19 @@ export class CartComponent {
     }
     this.caculateTotal();
   }
+
+  toggleSelect(product: CartItem) {
+  this.store.dispatch(
+    CartActions.toggleSelectItem({
+      cartItemId: product.id
+    })
+  );
+
+  this.selectedItems$.subscribe(items => {
+    this.selectedItems = items;
+    this.caculateTotal();
+  });
+}
 
   isSelected(item: CartItem): boolean {
     return this.selectedItems.some(i => i.id === item.id);
@@ -138,5 +146,6 @@ export class CartComponent {
     this.sessionStorageService.createOrder(this.selectedItems);
     this.router.navigate(['/user/create-order']);
   }
+
 }
 

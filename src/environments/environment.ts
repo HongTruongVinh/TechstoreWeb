@@ -3,23 +3,24 @@
 // The list of file replacements can be found in `angular.json`.
 
 
-// export const environment = {
-//   production: false,
-//   //baseUrl: 'https://techstoreapi-35j6.onrender.com/api/',
-//   //urlUploadFile : 'https://techstoreapi-35j6.onrender.com/api/',
-//   baseUrl: 'https://localhost:7081/api/',
-//   urlUploadFile : 'https://localhost:7081/api/',
-//   imagesLink: 'https://res.cloudinary.com/dc8ijvcze/image/upload/v1747216196/',
-// };
+export const environment = {
+  production: false,
+  //baseUrl: 'https://techstoreapi-35j6.onrender.com/api/',
+  //urlUploadFile : 'https://techstoreapi-35j6.onrender.com/api/',
+  baseUrl: 'https://localhost:7081/api/',
+  urlUploadFile : 'https://localhost:7081/api/',
+  imagesLink: 'https://res.cloudinary.com/dc8ijvcze/image/upload/v1747216196/',
+  baseHost: 'https://localhost:7081/',
+};
 
 
 //ng serve --host 0.0.0.0 --port 4200
-export const environment = {
-  production: false,
-  baseUrl: 'http://10.11.2.9:5046/api/',
-  urlUploadFile : 'http://10.11.2.9:5046/api/',
-  imagesLink: 'https://res.cloudinary.com/dc8ijvcze/image/upload/v1747216196/',
-};
+// export const environment = {
+//   production: false,
+//   baseUrl: 'http://10.11.2.9:5046/api/',
+//   urlUploadFile : 'http://10.11.2.9:5046/api/',
+//   imagesLink: 'https://res.cloudinary.com/dc8ijvcze/image/upload/v1747216196/',
+// };
 
 
 /*

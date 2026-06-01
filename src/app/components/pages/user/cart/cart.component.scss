@@ -3,6 +3,7 @@
 .list-item {
   overflow-y: auto;
   max-height: 70vh;
+  padding-bottom: 10vh;
 
   .card:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -11,7 +12,7 @@
 
   .product-name {
     cursor: pointer;
-
+    max-width: 320px;
     transition: transform .12s ease;
 
     &:hover {
@@ -55,6 +56,10 @@
     }
   }
 
+  .amount-text{
+    margin-left: 140px;
+  }
+
   .btn {
     margin-right: 140px;
     height: 50px;
@@ -93,4 +98,17 @@
 
 .bg-smoke {
   background-color: v.$title-background-color;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.quantity-text {
+  overflow: visible;
+
+  .stock-text {
+    white-space: nowrap;
+    font-size: 12px;
+  }
 }

@@ -119,6 +119,12 @@ export class RegisterComponent {
     return true;
   }
 
+  showPassword = false;
+
+  togglePassword(): void {
+    this.showPassword = !this.showPassword;
+  }
+
   close(): void {
     this.registerForm.reset();
     this.dialogRef.close();

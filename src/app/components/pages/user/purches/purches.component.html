@@ -1,3 +1,94 @@
-@for (order of allOrders; track order.orderId) {
-    <app-order-card [order]="order"></app-order-card>
-}
+<div class="row">
+    <div class="d-flex align-items-center flex-wrap gap-2 mb-3">
+        <ul class="nav nav-pills arrow-navtabs nav-secondary gap-2 flex-grow-1 order-2 order-lg-1" role="tablist">
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" data-bs-toggle="tab" href="javascript:void(0);"
+                    [class.active]="currentTab === 'allOrders'" (click)="changeTab('allOrders')" role="tab"
+                    aria-selected="true">
+                    Tất cả ({{ allOrders.length }})
+                </a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" data-bs-toggle="tab" href="javascript:void(0);"
+                    [class.active]="currentTab === 'pending'" (click)="changeTab('pending')" role="tab"
+                    aria-selected="false" tabindex="-1">
+                    Chờ xác nhận ({{ pendingOrders.length }})
+                </a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" data-bs-toggle="tab" href="javascript:void(0);"
+                    [class.active]="currentTab === 'processing'" (click)="changeTab('processing')" role="tab"
+                    aria-selected="false" tabindex="-1">
+                    Đang xử lý ({{ processingOrders.length }})
+                </a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" data-bs-toggle="tab" href="javascript:void(0);"
+                    [class.active]="currentTab === 'delivering'" (click)="changeTab('delivering')" role="tab"
+                    aria-selected="false" tabindex="-1">
+                    Vận chuyển ({{ deliveringOrders.length }})
+                </a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" data-bs-toggle="tab" href="javascript:void(0);"
+                    [class.active]="currentTab === 'completed'" (click)="changeTab('completed')" role="tab"
+                    aria-selected="false" tabindex="-1">
+                    Hoàn thành
+                </a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" data-bs-toggle="tab" href="javascript:void(0);"
+                    [class.active]="currentTab === 'canceled'" (click)="changeTab('canceled')" role="tab" aria-selected="false"
+                    tabindex="-1">
+                    Đã hủy
+                </a>
+            </li>
+        </ul>
+
+    </div>
+    <div class="tab-content">
+        <div [hidden]="currentTab !== 'allOrders'" class="tab-pane active" id="allOrders" role="tabpanel">
+            <div class="list-item">
+                @for(order of allOrders; track order.id){
+                <app-order-card [order]="order"></app-order-card>
+                }
+            </div>
+        </div>
+        <div [hidden]="currentTab !== 'pending'" class="tab-pane active" id="pending" role="tabpanel">
+            <div class="list-item">
+                @for(order of pendingOrders; track order.id){
+                <app-order-card [order]="order"></app-order-card>
+                }
+            </div>
+        </div>
+         <div [hidden]="currentTab !== 'processing'" class="tab-pane active" id="processing" role="tabpanel">
+            <div class="list-item">
+                @for(order of processingOrders; track order.id){
+                <app-order-card [order]="order"></app-order-card>
+                }
+            </div>
+        </div>
+        <div [hidden]="currentTab !== 'delivering'" class="tab-pane active" id="delivering" role="tabpanel">
+            <div class="list-item">
+                @for(order of deliveringOrders; track order.id){
+                <app-order-card [order]="order"></app-order-card>
+                }
+            </div>
+        </div>
+        <div [hidden]="currentTab !== 'completed'" class="tab-pane active" id="completed" role="tabpanel">
+            <div class="list-item">
+                @for(order of completedOrders; track order.id){
+                <app-order-card [order]="order"></app-order-card>
+                }
+            </div>
+        </div>
+        <div [hidden]="currentTab !== 'canceled'" class="tab-pane active" id="canceled" role="tabpanel">
+            <div class="list-item">
+                @for(order of canceledOrders; track order.id){
+                <app-order-card [order]="order"></app-order-card>
+                }
+            </div>
+        </div>
+        <!--end tab-pane-->
+    </div>
+</div>

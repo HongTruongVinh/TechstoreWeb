@@ -48,6 +48,36 @@ export class ProductService {
             );
     }
 
+    getIPhoneProducts() {
+        return this.linkSettingsService
+            .getResLinkSetting('Product', 'GetIPhoneProducts')
+            .pipe(
+                switchMap((apiUrl) => {
+                    if (!apiUrl) {
+                        throw new Error('Không tìm thấy URL API cho IPhone Products');
+                    }
+
+                    return this.transferHttp.get(apiUrl);
+                }),
+                map((res: ApiResponseModel<ProductListItemModel[]>) => res)
+            );
+    }
+
+    getSamsungProducts() {
+        return this.linkSettingsService
+            .getResLinkSetting('Product', 'GetSamsungProducts')
+            .pipe(
+                switchMap((apiUrl) => {
+                    if (!apiUrl) {
+                        throw new Error('Không tìm thấy URL API cho Samsung Products');
+                    }
+
+                    return this.transferHttp.get(apiUrl);
+                }),
+                map((res: ApiResponseModel<ProductListItemModel[]>) => res)
+            );
+    }
+
     getProductDetails(productId: string) {
         return this.linkSettingsService
             .getResLinkSetting('Product', 'GetProductDetails', productId)

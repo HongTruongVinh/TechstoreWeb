@@ -6,7 +6,7 @@ export interface ProductDetailsModel {
 
     description: string;
     mainImageUrl: string;
-    galleryImageUrls?: string[];
+    galleryImageUrls: string[];
 
     soldCount: number;
     warranty: Number;

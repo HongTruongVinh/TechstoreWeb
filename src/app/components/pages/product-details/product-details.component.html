@@ -1,5 +1,6 @@
 <app-breadcrumb [items]="breadcrumbItems"></app-breadcrumb>
 
+@if(product && selectedVariant){
 <div class="row">
     <div class="col-lg-4">
         <div class="card p-3 sticky-side-div">
@@ -43,7 +44,8 @@
                             <div class="text-muted"><b class="text-body fw-medium">{{product.soldCount}}</b>
                                 trong kho</div>
                             <div class="vr"></div>
-                            <div class="text-muted">Ngày ra mắt : <span class="text-body fw-medium">{{product.publishDate | date}}</span></div>
+                            <div class="text-muted">Ngày ra mắt : <span
+                                    class="text-body fw-medium">{{product.publishDate | date}}</span></div>
                         </div>
 
                         <h6 class="fs-md mb-3">Các phiên bản khác:</h6>
@@ -62,7 +64,7 @@
                             <div class="d-flex flex-wrap gap-2">
                                 @for (option of selectedVariant.options; track option.id) {
                                 <div class="option-card d-flex align-items-center"
-                                    [ngClass]="{ 'selected': selectedOption.id === option.id }"
+                                    [ngClass]="{ 'selected': (selectedOption$ | async)?.id === option.id }"
                                     (click)="selectOption(option.id)">
                                     <img [src]="option.imageUrl | fullImageUrl" alt="{{option.name}}"
                                         class="thumb me-2">
@@ -76,7 +78,7 @@
                         </div>
 
                         <div class="mt-4">
-                            
+
                         </div>
 
                     </div>
@@ -147,9 +149,9 @@
 
                                 <ng-container *ngIf="!isHover; else hoverTemplate">
 
-                                    <i *ngIf="!isItemInCart" class="bi bi-cart"></i>
+                                    <i *ngIf="!(isItemInCart$ | async)" class="bi bi-cart"></i>
 
-                                    <i *ngIf="isItemInCart" class="bi bi-cart-check"></i>
+                                    <i *ngIf="(isItemInCart$ | async)" class="bi bi-cart-check"></i>
 
                                 </ng-container>
 
@@ -159,11 +161,11 @@
                                         Đăng nhập để thêm vào giỏ hàng
                                     </span>
 
-                                    <span *ngIf="tks.isLoggedIn() && !isItemInCart">
+                                    <span *ngIf="tks.isLoggedIn() && !(isItemInCart$ | async)">
                                         Thêm vào giỏ hàng
                                     </span>
 
-                                    <span *ngIf="tks.isLoggedIn() && isItemInCart">
+                                    <span *ngIf="tks.isLoggedIn() && (isItemInCart$ | async)">
                                         Đã có trong giỏ hàng
                                     </span>
 
@@ -245,33 +247,34 @@
             </div>
         </div><!--end col-->
     </div><!--end row-->
+</div>
+}
 
-
-    <section class="same-products py-5 bg-white">
-        <div class="container">
-            <h4 class="text-center mb-5">Các sản phẩm khác</h4>
-            <div class="row g-4 list-product">
-                <div class="col-lg-3 col-md-6" *ngFor="let product of sameProducts">
-                    <app-product-card [product]="product" (viewDetails)="product.productId">
-                    </app-product-card>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- open image modal -->
-    <div class="modal fade image-modal" tabindex="-1" [ngClass]="{'show': showImageModal}"
-        [style.display]="showImageModal ? 'block' : 'none'">
-        <div class="modal-dialog modal-dialog-centered modal-xl">
-            <div class="modal-content bg-light">
-                <div class="modal-header border-0">
-                    <button type="button" class="btn-close" (click)="closeImageModal()">X</button>
-                </div>
-                <div class="modal-body text-center">
-                    <img [src]="currentImage | fullImageUrl" class="img-fluid" style="max-height: 80vh;">
-                </div>
+<section class="same-products py-5 bg-white">
+    <div class="container">
+        <h4 class="text-center mb-5">Các sản phẩm khác</h4>
+        <div class="row g-4 list-product">
+            <div class="col-lg-3 col-md-6" *ngFor="let product of sameProducts">
+                <app-product-card [product]="product" (viewDetails)="product.productId">
+                </app-product-card>
             </div>
         </div>
     </div>
+</section>
 
-    <div *ngIf="showAnim" @flyToCart class="flying-item"></div>
+<!-- open image modal -->
+<div class="modal fade image-modal" tabindex="-1" [ngClass]="{'show': showImageModal}"
+    [style.display]="showImageModal ? 'block' : 'none'">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content bg-light">
+            <div class="modal-header border-0">
+                <button type="button" class="btn-close" (click)="closeImageModal()">X</button>
+            </div>
+            <div class="modal-body text-center">
+                <img [src]="currentImage | fullImageUrl" class="img-fluid" style="max-height: 80vh;">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="showAnim" @flyToCart class="flying-item"></div>

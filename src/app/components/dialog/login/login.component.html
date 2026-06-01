@@ -9,8 +9,11 @@
       <form (ngSubmit)="submit()" [formGroup]="loginForm">
         <input type="text" class="form-control mb-3" placeholder="Email hoặc SĐT" formControlName="loginIdentifier"
           name="loginIdentifier">
-        <input type="password" class="form-control mb-3" placeholder="Mật khẩu" formControlName="password"
-          name="password">
+        <div class="position-relative mb-3">
+          <input [type]="showPassword ? 'text' : 'password'" class="form-control pe-5" placeholder="Mật khẩu"
+            formControlName="password" name="password">
+          <i class="bi show-password-icon" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'" (click)="togglePassword()"></i>
+        </div>
         <button type="submit" class="btn btn-danger w-100 mb-3">Đăng nhập</button>
       </form>
       <div class="d-flex align-items-center my-3">

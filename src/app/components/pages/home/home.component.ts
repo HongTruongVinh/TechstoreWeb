@@ -5,13 +5,12 @@ import { ProductCardComponent } from '../../common/product-card/product-card.com
 import { CategoryModel } from '../../../models/models/category/category.model';
 import { ProductListItemModel } from '../../../models/models/product/product-list-item.model';
 import { Router } from '@angular/router';
-import { CategoryService } from '../../../core/services/category.service';
 import { ProductService } from '../../../core/services/product.service';
 import { ERetCode } from '../../../models/enum/etype_project.enum';
 import { BrandModel } from '../../../models/models/brand/brand.model';
-import { BrandService } from '../../../core/services/brand.service';
 import { CategoryPanelComponent } from "../../common/category-panel/category-panel.component";
 import { DeviceService } from '../../../core/services/device.service';
+import { HomeService } from '../../../core/services/home.service';
 
 @Component({
   selector: 'app-home',
@@ -30,12 +29,13 @@ export class HomeComponent {
   searchQuery: string = '';
   currentSlide: number = 0;
   autoSlideInterval: any;
-  categories: CategoryModel[] = [];
-  brands: BrandModel[] = [];
-  featuredProducts: ProductListItemModel[] = [];
-  hoveredCategoryId: string | null = null;
+  
+  featureProducts: ProductListItemModel[] = [];
 
-
+  brandName1 = "Iphone";
+  brandProducts1: ProductListItemModel[] = [];
+  brandName2 = "Samsung";
+  brandProducts2: ProductListItemModel[] = [];
 
   heroAdvertisementImageLink = "https://res.cloudinary.com/dc8ijvcze/image/upload/v1777281828/TechShop/images/advertisement/hero-advertisement/April30th.jpg";
   // Carousel slides data
@@ -104,8 +104,7 @@ export class HomeComponent {
 
   constructor(
     private router: Router,
-    private readonly categoryService: CategoryService,
-    private readonly brandService: BrandService,
+    private readonly homeService: HomeService,
     private readonly productService: ProductService
   ) { }
 
@@ -118,50 +117,46 @@ export class HomeComponent {
   }
 
   loadData(): void {
-    this.categoryService.getAllItems().subscribe((res) => {
+
+    this.homeService.getFeaturedProducts().subscribe((res) => {
       if (res.retCode == ERetCode.Successfull) {
         if (res.data) {
-          this.categories = res.data;
-        } else {
-          this.categories = [];
+          this.featureProducts = res.data;
         }
-      } else {
-
       }
     })
 
-    this.brandService.getAllItems().subscribe((res) => {
+    this.productService.searchProducts(this.brandName1, 1, 16).subscribe((res) => {
       if (res.retCode == ERetCode.Successfull) {
         if (res.data) {
-          this.brands = res.data;
-        } else {
-          this.brands = [];
+          this.brandProducts1 = res.data;
         }
-      } else {
-
       }
     })
 
-    this.productService.getFeaturedProducts().subscribe((res) => {
+    this.productService.searchProducts(this.brandName2, 1, 16).subscribe((res) => {
       if (res.retCode == ERetCode.Successfull) {
         if (res.data) {
-          this.featuredProducts = res.data;
+          this.brandProducts2 = res.data;
         }
-      } else {
-
       }
     })
 
-    this.productService.getFeaturedProducts().subscribe((res) => {
-      if (res.retCode == ERetCode.Successfull) {
-        if (res.data) {
-          this.featuredProducts = res.data;
-        } else {
-          this.featuredProducts = [];
-        }
-      } else {
-      }
-    })
+    // this.homeService.getProductsByBrandName(this.brandName1).subscribe((res) => {
+    //   if (res.retCode == ERetCode.Successfull) {
+    //     if (res.data) {
+    //       this.brandProducts1 = res.data;
+    //     }
+    //   }
+    // })
+
+    // this.homeService.getProductsByBrandName(this.brandName2).subscribe((res) => {
+    //   if (res.retCode == ERetCode.Successfull) {
+    //     if (res.data) {
+    //       this.brandProducts2 = res.data;
+    //     }
+    //   }
+    // })
   }
 
   ngOnDestroy(): void {
