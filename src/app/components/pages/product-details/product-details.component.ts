@@ -20,6 +20,7 @@ import { Store } from '@ngrx/store';
 import * as CartSelectors from '../../../store/cart/cart.selectors';
 import * as CartActions from '../../../store/cart/cart.actions';
 import { BehaviorSubject, combineLatest, map, Observable, switchMap } from 'rxjs';
+import { User } from '../../../models/models/user/user.model';
 
 @Component({
   selector: 'app-product-details',
@@ -57,6 +58,7 @@ export class ProductDetailsComponent {
   showAnim = false;
   isHover: boolean = false;
 
+  userId?: string;
   product?: ProductDetailsModel;
   selectedVariant?: ProductVariantModel;
   selectedOption$ = new BehaviorSubject<ProductVariantOptionModel | null>(null);
@@ -92,12 +94,25 @@ export class ProductDetailsComponent {
   //   })
   // );
 
+  // isItemInCart$ = combineLatest([
+  //   this.selectedOption$,
+  //   this.store.select(CartSelectors.selectCartItemEntities)
+  // ]).pipe(
+  //   map(([option, entities]) =>
+  //     !!entities[option?.id ?? '']
+  //   )
+  // );
+
   isItemInCart$ = combineLatest([
     this.selectedOption$,
     this.store.select(CartSelectors.selectCartItemEntities)
   ]).pipe(
     map(([option, entities]) =>
-      !!entities[option?.id ?? '']
+      !!entities[
+      this.userId && option?.id
+        ? `${this.userId}-${option.id}`
+        : ''
+      ]
     )
   );
 
@@ -105,7 +120,8 @@ export class ProductDetailsComponent {
     private location: Location,
     private readonly route: ActivatedRoute,
     private readonly titleService: Title,
-    private readonly productService: ProductService
+    private readonly productService: ProductService,
+    private readonly tss: TokenStorageService,
   ) { }
 
   ngOnInit(): void {
@@ -117,6 +133,7 @@ export class ProductDetailsComponent {
       this.loadProductDetails(id);
     });
 
+    this.userId = this.tss.getUser()?.id;
   }
 
   slideConfig = {

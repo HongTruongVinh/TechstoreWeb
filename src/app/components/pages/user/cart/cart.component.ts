@@ -92,11 +92,11 @@ export class CartComponent {
 
   increase(item: CartItem) {
     // console.log("p"+item.id);
-    if (item.quantity <= item.stock) this.updateQuantity(item.productVariantOptionId, item.quantity + 1);
+    if (item.quantity <= item.stock) this.updateQuantity(item.id, item.quantity + 1);
   }
 
   decrease(item: CartItem) {
-    if (item.quantity > 1) this.updateQuantity(item.productVariantOptionId, item.quantity - 1);
+    if (item.quantity > 1) this.updateQuantity(item.id, item.quantity - 1);
   }
 
   viewProductDetails(slugWithId: string) {

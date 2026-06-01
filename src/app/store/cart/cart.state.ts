@@ -6,13 +6,13 @@ export interface CartItemState extends EntityState<CartItem> {
   selectedItemIds: string[];
 }
 
-// export const cartItemAdapter: EntityAdapter<CartItem> =
-//   createEntityAdapter<CartItem>();
+export const cartItemAdapter: EntityAdapter<CartItem> =
+  createEntityAdapter<CartItem>();
 
-export const cartItemAdapter =
-  createEntityAdapter<CartItem>({
-    selectId: (item) => item.productVariantOptionId
-  });
+// export const cartItemAdapter =
+//   createEntityAdapter<CartItem>({
+//     selectId: (item) => item.productVariantOptionId
+//   });
 
 export const initialState: CartItemState =
   cartItemAdapter.getInitialState({

@@ -43,7 +43,7 @@ export const selectSelectedItems = createSelector(
   selectAllCartItems,
   selectSelectedItemIds,
   (items, selectedIds) =>
-    items.filter(item => selectedIds.includes(item.productVariantOptionId))
+    items.filter(item => selectedIds.includes(item.id))
 );
 
 export const selectTotalPrice = createSelector(

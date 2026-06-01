@@ -45,7 +45,7 @@ export const removeCartItemsFailure = createAction(
 );
 
 export const updateCartItemQuantity = createAction(
-  '[Cart] Update Quantity',
+  '[CartItem] Update Quantity',
   props<{
     id: string;
     quantity: number;
@@ -53,6 +53,6 @@ export const updateCartItemQuantity = createAction(
 );
 
 export const toggleSelectItem = createAction(
-  '[Cart] Toggle Select Item',
+  '[CartItem] Toggle Select Item',
   props<{ cartItemId: string }>()
 );
