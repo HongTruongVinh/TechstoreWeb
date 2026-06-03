@@ -1,5 +1,5 @@
 export interface OrderItemModel {
-    productId: string;
+    productVariantOptionId: string;
     productName: string;
     optionName: string;
     variantName: string;

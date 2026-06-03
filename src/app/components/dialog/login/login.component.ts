@@ -34,6 +34,7 @@ export class LoginComponent {
   private dialog = inject(Dialog);
 
   isLoading = false;
+  loginfail = false;
   loginResult: LoginDialogResult = { success: false };
   loginForm!: UntypedFormGroup;
 
@@ -48,7 +49,7 @@ export class LoginComponent {
   ngOnInit(): void {
     this.loginForm = this.formBuilder.group({
       loginIdentifier: ['0123456001', [Validators.required]],
-      password: ['string', [Validators.required]],
+      password: ['Abcd@1234', [Validators.required]],
     });
   }
 
@@ -79,8 +80,9 @@ export class LoginComponent {
               this.close();
             }
           }
-          else if (res.retCode == 4) {
-            this.messengerService.errorNotification('Sai mật khẩu hoặc tài khoản');
+          else if (res.retCode == ERetCode.LoginError) {
+            this.loginfail = true;
+            // this.messengerService.errorNotification('Sai mật khẩu hoặc tài khoản');
           }
           else {
             this.messengerService.errorNotification(res.systemMessage ?? '');

@@ -14,6 +14,7 @@
             formControlName="password" name="password">
           <i class="bi show-password-icon" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'" (click)="togglePassword()"></i>
         </div>
+        <label class="text-danger mb-2" *ngIf="loginfail"> Sai tên đăng nhập hoặc mật khẩu</label>
         <button type="submit" class="btn btn-danger w-100 mb-3">Đăng nhập</button>
       </form>
       <div class="d-flex align-items-center my-3">

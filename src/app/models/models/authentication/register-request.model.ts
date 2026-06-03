@@ -3,6 +3,6 @@ export interface RegisterRequestModel{
     firstName: string;
     phoneNumber: string;
     address: string;
-    email: string;
+    email?: string;
     password: string;
 }
