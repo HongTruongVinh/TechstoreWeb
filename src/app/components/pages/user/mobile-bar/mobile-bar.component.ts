@@ -1,8 +1,8 @@
 import { Component, inject } from '@angular/core';
-import { TokenStorageService } from '../../../../core/services/token-storage.service';
+import { TokenStorageService } from '../../../../core/services/ui/token-storage.service';
 import { Router } from '@angular/router';
-import { UiStateService } from '../../../../core/services/ui-state.service';
-import { AuthenticationService } from '../../../../core/services/auth.service';
+import { UiStateService } from '../../../../core/services/ui/ui-state.service';
+import { AuthenticationService } from '../../../../core/services/api/auth.service';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({

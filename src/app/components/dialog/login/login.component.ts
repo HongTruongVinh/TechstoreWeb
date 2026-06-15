@@ -10,9 +10,9 @@ import {
 import { CommonModule } from '@angular/common';
 import { Dialog, DialogRef } from '@angular/cdk/dialog';
 import { LoginRequestModel } from '../../../models/models/authentication/login-request.model';
-import { TokenStorageService } from '../../../core/services/token-storage.service';
-import { AuthenticationService } from '../../../core/services/auth.service';
-import { MessengerServices } from '../../../core/services/messenger.service';
+import { TokenStorageService } from '../../../core/services/ui/token-storage.service';
+import { AuthenticationService } from '../../../core/services/api/auth.service';
+import { MessengerServices } from '../../../core/services/ui/messenger.service';
 import { ERetCode } from '../../../models/enum/etype_project.enum';
 import { RegisterComponent } from '../register/register.component';
 import { LoginDialogResult } from '../../../models/models/authentication/login-result.model';
@@ -49,7 +49,7 @@ export class LoginComponent {
   ngOnInit(): void {
     this.loginForm = this.formBuilder.group({
       loginIdentifier: ['0123456001', [Validators.required]],
-      password: ['Abcd@1234', [Validators.required]],
+      password: ['Abcd1234', [Validators.required]],
     });
   }
 

@@ -1,4 +1,8 @@
-import { ApplicationConfig } from '@angular/core';
+import {
+  ApplicationConfig,
+  APP_INITIALIZER,
+  inject
+} from '@angular/core';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
 
 import { routes } from './app.routes';
@@ -16,16 +20,29 @@ import { categoryReducer } from './store/categories/category.reducer';
 import { CategoryEffects } from './store/categories/category.effects';
 import { cartItemReducer } from './store/cart/cart.reducer';
 import { CartItemEffects } from './store/cart/cart.effects';
+import { CategoryService } from './core/services/api/category.service';
+import { BrandService } from './core/services/api/brand.service';
 
 const store = {
-  categories: categoryReducer,
+  // categories: categoryReducer,
   cartItems: cartItemReducer
 }
 const effects = [
-  CategoryEffects,
+  // CategoryEffects,
   CartItemEffects
 ]
-//end import store 
+
+export function initializeApp() {
+  const categoryService = inject(CategoryService);
+  const brandService = inject(BrandService);
+
+  return async () => {
+    await Promise.all([
+      categoryService.loadCategories(),
+      brandService.loadBrands()
+    ]);
+  };
+}
 
 
 export const appConfig: ApplicationConfig = {
@@ -52,6 +69,12 @@ export const appConfig: ApplicationConfig = {
 
     provideLottieOptions({
       player: () => player
-    })
+    }),
+
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeApp,
+      multi: true
+    }
   ]
 };

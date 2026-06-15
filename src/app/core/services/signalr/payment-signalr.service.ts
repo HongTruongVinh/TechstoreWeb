@@ -1,5 +1,5 @@
 import * as signalR from '@microsoft/signalr';
-import { LinkSettingsService } from '../link-settings.service';
+import { LinkSettingsService } from '../api/link-settings.service';
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { environment } from '../../../../environments/environment';

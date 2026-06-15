@@ -1,12 +1,12 @@
 import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { LoginComponent } from '../../dialog/login/login.component';
 import { Dialog, DialogRef } from '@angular/cdk/dialog';
-import { UiStateService } from '../../../core/services/ui-state.service';
-import { TokenStorageService } from '../../../core/services/token-storage.service';
+import { UiStateService } from '../../../core/services/ui/ui-state.service';
+import { TokenStorageService } from '../../../core/services/ui/token-storage.service';
 import { LoginDialogResult } from '../../../models/models/authentication/login-result.model';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { AuthDialogService } from '../../../core/services/AuthDialogService';
+import { AuthDialogService } from '../../../core/services/ui/AuthDialogService';
 
 @Component({
   selector: 'app-mobile-menu',

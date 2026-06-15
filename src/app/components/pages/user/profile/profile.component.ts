@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { TokenStorageService } from '../../../../core/services/token-storage.service';
-import { MessengerServices } from '../../../../core/services/messenger.service';
+import { TokenStorageService } from '../../../../core/services/ui/token-storage.service';
+import { MessengerServices } from '../../../../core/services/ui/messenger.service';
 import { User } from '../../../../models/models/user/user.model';
-import { UserService } from '../../../../core/services/user.service';
+import { UserService } from '../../../../core/services/api/user.service';
 import { UserUpdateModel } from '../../../../models/models/user/user-update.model';
 import { ERetCode } from '../../../../models/enum/etype_project.enum';
 import { CommonModule } from '@angular/common';

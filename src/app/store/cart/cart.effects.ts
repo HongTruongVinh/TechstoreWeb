@@ -6,7 +6,7 @@ import { map, switchMap } from 'rxjs/operators';
 
 import * as CartItemActions from './cart.actions';
 
-import { CartService } from '../../core/services/cart.service';
+import { CartService } from '../../core/services/api/cart.service';
 
 @Injectable()
 export class CartItemEffects {

@@ -1,0 +1,101 @@
+.show-invoice-btn {
+  cursor: pointer;
+
+  .tooltip {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+
+    min-height: 20px;
+    min-width: 100px;
+
+    font-size: larger;
+
+    padding: 6px 12px;
+    border-radius: 4px;
+    background: #4ab0c1;
+    color: #ffffff;
+    white-space: nowrap;
+
+    opacity: 0;
+    visibility: hidden;
+
+    transition: opacity 0.2s ease;
+
+    pointer-events: none;
+  }
+
+  &:hover .tooltip {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+.avatar-sm {
+  height: 3rem;
+  width: 3rem;
+}
+
+.avatar-xs {
+  height: 2rem;
+  width: 2rem;
+}
+
+.avatar-title {
+  align-items: center;
+  background-color: white;
+  color: white;
+  display: flex;
+  font-weight: 1px;
+  height: 100%;
+  justify-content: center;
+  width: 100%;
+}
+
+.progress-step-arrow {
+  height: 3.25rem;
+
+  .progress-bar {
+    position: relative;
+    overflow: initial;
+    font-size: .875rem;
+    color: #878a99;
+    background-color: #f3f6f9;
+    line-height: 3.25rem;
+    display: inline-block;
+
+    &::after {
+      content: "";
+      position: absolute;
+      border: 10px solid transparent;
+      bottom: 15px;
+      right: -20px;
+      z-index: 1;
+    }
+  }
+}
+
+.progress {
+  .progress-bar {
+    text-decoration: none;
+
+    &.active {
+      color: #ffffff;
+      background-color: #4ab0c1;
+
+      &::after {
+        border-right-color: transparent;
+        border-left-color: #4ab0c1;
+      }
+    }
+
+
+    &.pending:not(:nth-child(1)) {
+      &::after {
+        border-left-color: transparent;
+        border-right-color: #4ab0c1;
+      }
+    }
+  }
+}

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { OrderListItemModel } from '../../../../models/models/order/order-list-item.model';
-import { OrderService } from '../../../../core/services/order.service';
+import { ListItemOrderModel } from '../../../../models/models/order/list-item-order.model';
+import { OrderService } from '../../../../core/services/api/order.service';
 import { OrderCardComponent } from "../../../common/order-card/order-card.component";
 import { CommonModule } from '@angular/common';
 import { EOrderStatus } from '../../../../models/enum/etype_project.enum';
@@ -14,7 +14,7 @@ import { EOrderStatus } from '../../../../models/enum/etype_project.enum';
 })
 export class PurchesComponent {
   isLoading = false;
-  allOrders: OrderListItemModel[] = [];
+  allOrders: ListItemOrderModel[] = [];
   currentTab = 'allOrders';
 
   constructor(
@@ -28,7 +28,7 @@ export class PurchesComponent {
 
   loadData() {
     this.isLoading = true;
-    this.orderService.getUserOrders().subscribe((res) => {
+    this.orderService.getUserOrders(1, 2000).subscribe((res) => {
       if (res.retCode == 0) {
         if (res.data) {
           this.allOrders = res.data;

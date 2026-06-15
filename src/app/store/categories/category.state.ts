@@ -1,12 +1,12 @@
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
-import { CategoryModel } from '../../models/models/category/category.model';
+import { Category } from '../../models/models/category/category.model';
 
-export interface CategoryState extends EntityState<CategoryModel> {
+export interface CategoryState extends EntityState<Category> {
   loading: boolean;
 }
 
-export const categoryAdapter: EntityAdapter<CategoryModel> =
-  createEntityAdapter<CategoryModel>();
+export const categoryAdapter: EntityAdapter<Category> =
+  createEntityAdapter<Category>();
 
 export const initialState: CategoryState =
   categoryAdapter.getInitialState({

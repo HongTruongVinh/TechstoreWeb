@@ -1,9 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { RegisterRequestModel } from '../../../models/models/authentication/register-request.model';
-import { AuthenticationService } from '../../../core/services/auth.service';
-import { TokenStorageService } from '../../../core/services/token-storage.service';
-import { MessengerServices } from '../../../core/services/messenger.service';
+import { AuthenticationService } from '../../../core/services/api/auth.service';
+import { TokenStorageService } from '../../../core/services/ui/token-storage.service';
+import { MessengerServices } from '../../../core/services/ui/messenger.service';
 import { ERetCode } from '../../../models/enum/etype_project.enum';
 import { Validator } from '../../../library/share-function/validator';
 import { CommonModule } from '@angular/common';

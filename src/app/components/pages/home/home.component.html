@@ -80,7 +80,7 @@
     <h2 class="text-center mb-5 text-white">Sản phẩm nổi bật</h2>
     <div class="row g-4 list-product">
       <div class="col-lg-3 col-md-6" *ngFor="let product of featureProducts">
-        <app-product-card [product]="product" (viewDetails)="product.productId">
+        <app-product-card [product]="product" (viewDetails)="product.id">
         </app-product-card>
       </div>
     </div>
@@ -95,7 +95,7 @@
     <h2 class="text-center mb-5 pointer-cursor" (click)="onSearch(brandName1)">{{brandName1}}</h2>
     <div class="row g-4 list-product">
       <div class="col-lg-3 col-md-6" *ngFor="let product of brandProducts1">
-        <app-product-card [product]="product" (viewDetails)="product.productId">
+        <app-product-card [product]="product" (viewDetails)="product.id">
         </app-product-card>
       </div>
     </div>
@@ -110,7 +110,7 @@
     <h2 class="text-center mb-5 text-white pointer-cursor" (click)="onSearch(brandName2)">{{brandName2}}</h2>
     <div class="row g-4 list-product">
       <div class="col-lg-3 col-md-6" *ngFor="let product of brandProducts2">
-        <app-product-card [product]="product" (viewDetails)="product.productId">
+        <app-product-card [product]="product" (viewDetails)="product.id">
         </app-product-card>
       </div>
     </div>

@@ -6,7 +6,7 @@ import { map, switchMap } from 'rxjs/operators';
 
 import * as CategoryActions from './category.actions';
 
-import { CategoryService } from '../../core/services/category.service';
+import { CategoryService } from '../../core/services/api/category.service';
 
 @Injectable()
 export class CategoryEffects {
@@ -19,7 +19,7 @@ export class CategoryEffects {
       ofType(CategoryActions.loadCategories),
 
       switchMap(() =>
-        this.categoryService.getAllItems().pipe(
+        this.categoryService.fetchCategories().pipe(
           map(apiResponse  =>
             CategoryActions.loadCategoriesSuccess({ categories: apiResponse.data || [] })
           )

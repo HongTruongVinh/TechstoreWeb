@@ -6,12 +6,19 @@ export interface ApiResponseModel<T> {
   systemMessage?: string | null;
 }
 
-export interface PageResult<T>{
+export interface PagedResult<T> {
   currentPage: number;
-  pageCount: number;
   pageSize: number;
-  rowCount: number;
-  firstRowOnPage: number;
-  lastRowOnPage: number;
-  results?: T | null;
+  totalItems: number;
+  totalPages: number;
+  hasPreviousPage: boolean;
+  hasNextPage: boolean;
+  items: T[];
+}
+
+export interface PagedQuery{
+  page: number,
+  pageSize: number,
+  sortBy?: string,
+  descending?: boolean
 }

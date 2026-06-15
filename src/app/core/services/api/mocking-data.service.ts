@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, map, switchMap } from 'rxjs';
 import { TransferHttpService } from '../../transfer-http/transfer-http.service';
-import { LinkSettingsService } from '../link-settings.service';
+import { LinkSettingsService } from './link-settings.service';
 import { environment } from '../../../../environments/environment';
 
 
@@ -14,7 +14,7 @@ export class MockingDataService {
         private linkSettingsService: LinkSettingsService
     ) { }
 
-    PaymentSuccess(request: PaymentWebhookRequest) {
+    PaymentSuccess(request: PaymentForSnapshotWebhookRequest) {
         return this.linkSettingsService.getResLinkSetting('MockingDataAPI', 'PaymentHub')
             .pipe(
                 switchMap((apiUrl) => this.transferHttp.post(apiUrl, request)),
@@ -23,8 +23,8 @@ export class MockingDataService {
     }
 }
 
-export interface PaymentWebhookRequest {
-    paymentId: string;
+export interface PaymentForSnapshotWebhookRequest {
+    snapshotId: string;
     amount: number;
     transactionId: string;
 }

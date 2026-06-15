@@ -9,8 +9,9 @@ export enum EOrderStatus {
 }
 
 export enum EInvoiceStatus {
-    Paid,    // Đã thanh toán
-    Unpaid,  // Chưa thanh toán 
+    Unpaid, 
+    PartiallyPaid,
+    Paid, 
     Canceled,
     Refunded
 }
@@ -28,6 +29,15 @@ export enum EPaymentMethod
     COD,
     DomesticBank,
     Cash
+}
+
+export enum EShippingStatus
+{
+    Preparing,   // Đang chuẩn bị
+    Shipping,    // Đang giao hàng
+    Delivered,   // Đã giao hàng
+    Failed,      // Giao hàng thất bại
+    Canceled     // Đã hủy giao hàng
 }
 
 export enum EUserStatus

@@ -5,17 +5,14 @@ import { FooterComponent } from "./components/common/footer/footer.component";
 import { CategoryPanelComponent } from "./components/common/category-panel/category-panel.component";
 import { CommonModule } from '@angular/common';
 import { MobileMenuComponent } from "./components/common/mobile-menu/mobile-menu.component";
-import { DeviceService } from './core/services/device.service';
+import { DeviceService } from './core/services/ui/device.service';
 import { WidgetPanelComponent } from "./components/common/widget-panel/widget-panel.component";
-import { UiStateService } from './core/services/ui-state.service';
+import { UiStateService } from './core/services/ui/ui-state.service';
 import { LoadingComponent } from "./components/common/loading/loading.component";
 
 import { Store } from '@ngrx/store';
-import * as CategoryActions from './store/categories/category.actions';
 import { loadCartItem } from './store/cart/cart.actions';
-// import { CategoryService } from './core/services/category.service';
-import { BrandService } from './core/services/brand.service';
-import { TokenStorageService } from './core/services/token-storage.service';
+import { TokenStorageService } from './core/services/ui/token-storage.service';
 
 @Component({
   selector: 'app-root',
@@ -40,11 +37,10 @@ export class AppComponent {
   showWidgetPanel = true;
   istoggleCategory: boolean = false;
 
-  // private categoryService = inject(CategoryService);
-  private brandService = inject(BrandService);
   device = inject(DeviceService);
   private store = inject(Store);
   tks = inject(TokenStorageService);
+
   constructor(public uiState: UiStateService) { }
 
   ngOnInit(): void {
@@ -70,12 +66,6 @@ export class AppComponent {
   }
 
   loadStore() {
-    this.brandService.loadBrands();
-
-    this.store.dispatch(
-      CategoryActions.loadCategories()
-    );
-
     if(this.tks.isLoggedIn()){
       this.store.dispatch(
       loadCartItem()

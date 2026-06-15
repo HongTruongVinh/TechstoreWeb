@@ -40,7 +40,7 @@ export class ProductCardComponent {
   }
 
   buildProductUrl(product: ProductListItemModel): string {
-    return `${product.slug}-i.${product.productId}`;
+    return `${product.slug}-i.${product.id}`;
   }
 
   addToCart(product: any) {

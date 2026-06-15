@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { TokenStorageService } from '../services/token-storage.service';
+import { TokenStorageService } from '../services/ui/token-storage.service';
 
 // Auth Services
-import { AuthenticationService } from '../services/auth.service';
+import { AuthenticationService } from '../services/api/auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthGuard {

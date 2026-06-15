@@ -9,6 +9,7 @@ import { CreateOrderComponent } from './components/pages/orders/create-order/cre
 import { PurchesComponent } from './components/pages/user/purches/purches.component';
 import { AuthGuard } from './core/guards/auth.guard';
 import { OrderDetailComponent } from './components/pages/orders/order-detail/order-detail.component';
+import { OrderOverviewComponent } from './components/pages/orders/order-overview/order-overview.component';
 
 export const routes: Routes = [
     { path: '', component: HomeComponent },
@@ -28,5 +29,6 @@ export const routes: Routes = [
                 ],
                 
     },
-    { path: 'order-details/:id', component: OrderDetailComponent },
+    // { path: 'order-details/:id', component: OrderDetailComponent },
+    { path: 'order-details/:id', component: OrderOverviewComponent },
 ];

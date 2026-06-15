@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { CategoryModel } from '../../models/models/category/category.model';
+import { Category } from '../../models/models/category/category.model';
 
 export const loadCategories = createAction(
   '[Category] Load Categories'
@@ -7,5 +7,5 @@ export const loadCategories = createAction(
 
 export const loadCategoriesSuccess = createAction(
   '[Category] Load Categories Success',
-  props<{ categories: CategoryModel[] }>()
+  props<{ categories: Category[] }>()
 );

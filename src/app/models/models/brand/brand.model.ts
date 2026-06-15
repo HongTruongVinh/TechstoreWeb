@@ -1,5 +1,5 @@
 export interface BrandModel {
-    brandId: string;
+    id: string;
     name: string;
     description: string;
     iconImageUrl: string;

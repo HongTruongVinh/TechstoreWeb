@@ -2,10 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, HostListener, inject, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { TokenStorageService } from '../../../core/services/token-storage.service';
-import { DeviceService } from '../../../core/services/device.service';
+import { TokenStorageService } from '../../../core/services/ui/token-storage.service';
+import { DeviceService } from '../../../core/services/ui/device.service';
 import { LoginDialogResult } from '../../../models/models/authentication/login-result.model';
-import { AuthDialogService } from '../../../core/services/AuthDialogService';
+import { AuthDialogService } from '../../../core/services/ui/AuthDialogService';
 
 @Component({
   selector: 'app-navbar',

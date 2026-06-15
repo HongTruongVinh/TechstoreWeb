@@ -6,7 +6,7 @@
 .sticky-side-div {
   position: -webkit-sticky;
   position: sticky;
-  top: 1rem;
+  top: 6rem; // khi phần tử bắt đầu sticky, nó sẽ luôn cách mép trên màn hình 6rem.
 }
 
 .slide-image {
@@ -131,6 +131,11 @@
   }
 }
 
+.add-to-cart-animation{
+  max-width: 74px;
+  max-height: 74px;
+}
+
 /* ============================================
    CARD UTILITIES
    ============================================ */
@@ -146,8 +151,8 @@
    SAME PRODUCTS SECTION
    ============================================ */
 
-.same-products {
-  /* Inherits from Bootstrap classes */
+.related-products {
+  background-color: transparent;
 }
 
 /* ============================================
@@ -214,15 +219,6 @@
   border: none;
 }
 
-/* Flying cart animation element */
-.flying-item {
-  // width: 50px;
-  // height: 50px;
-  // background: red;
-  // position: fixed;
-  // top: 200px;
-  // left: 200px;
-}
 
 /* ============================================
    RESPONSIVE DESIGN

@@ -4,7 +4,7 @@ import { FullImageUrlPipe } from '../../../pipes/full-image-url.pipe';
 import { ThousandSeparatorPipe } from '../../../pipes/thousandSeparator.pipe';
 import { OrderStatusPipe } from '../../../pipes/order-status.pipe';
 import { DateToStringPipe } from '../../../pipes/DatePipe';
-import { OrderListItemModel } from '../../../models/models/order/order-list-item.model';
+import { ListItemOrderModel } from '../../../models/models/order/list-item-order.model';
 
 @Component({
   selector: 'app-order-card',
@@ -15,7 +15,7 @@ import { OrderListItemModel } from '../../../models/models/order/order-list-item
 })
 export class OrderCardComponent {
 
-  @Input() order!: OrderListItemModel;
+  @Input() order!: ListItemOrderModel;
   @Output() viewDetails = new EventEmitter<string>();
 
   constructor(private readonly router: Router) { }

@@ -1,15 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output, ElementRef, HostListener, Input, inject } from '@angular/core';
-import { CategoryModel } from '../../../models/models/category/category.model';
+import { Category } from '../../../models/models/category/category.model';
 import { BrandModel } from '../../../models/models/brand/brand.model';
 import { Router } from '@angular/router';
-import { CategoryService } from '../../../core/services/category.service';
-import { BrandService } from '../../../core/services/brand.service';
+import { CategoryService } from '../../../core/services/api/category.service';
+import { BrandService } from '../../../core/services/api/brand.service';
 import { ERetCode } from '../../../models/enum/etype_project.enum';
 import { FullImageUrlPipe } from "../../../pipes/full-image-url.pipe";
-import { UiStateService } from '../../../core/services/ui-state.service';
-import { Store } from '@ngrx/store';
-import * as CategorySelectors from '../../../store/categories/category.selectors';
+import { UiStateService } from '../../../core/services/ui/ui-state.service';
 
 @Component({
   selector: 'app-category-panel',
@@ -20,13 +18,12 @@ import * as CategorySelectors from '../../../store/categories/category.selectors
 })
 export class CategoryPanelComponent {
   hoveredCategoryId: string | null = null;
-  hoveredCategory: CategoryModel | undefined;
-  categories: CategoryModel[] = [];
-  brands: BrandModel[] = [];
+  hoveredCategory: Category | undefined;
+  categories!: Category[];
+  brands!: BrandModel[];
   isMobile: boolean = false;
-  categories$ = this.categoryService.categories$;
 
-  get selectedCategory(): CategoryModel | undefined {
+  get selectedCategory(): Category | undefined {
     return this.categories.find(c => c.id === (this.hoveredCategoryId ?? ''));
   }
   
@@ -34,9 +31,6 @@ export class CategoryPanelComponent {
 
   @Output()
   toggleCategories = new EventEmitter<void>();
-
-  private store = inject(Store);
-  categoriesStore$ = this.store.select(CategorySelectors.selectAllCategories);
 
   uiState = inject(UiStateService);
   constructor(
@@ -48,27 +42,15 @@ export class CategoryPanelComponent {
 
   ngOnInit(): void {
     // this.loadData();
-    this.load();
+
+    this.brands = this.brandService.getBrands();
+    this.categories = this.categoryService.getCategories();
+
     this.updateIsMobile();
     if (this.isMobile) {
       this.uiState.hideWidgetPanel();
       this.uiState.hideNavbar();
     }
-  }
-
-  load(){
-    // this.categoryService.categories$
-    // .subscribe(data => {
-    //   this.categories = data;
-    // });
-
-    this.categoriesStore$.subscribe(data => {
-      this.categories = data;
-    });
-
-    this.brandService.brands$.subscribe(data => {
-      this.brands = data;
-    })
   }
 
   ngOnDestroy(): void {
@@ -87,44 +69,18 @@ export class CategoryPanelComponent {
     this.updateIsMobile();
   }
 
-  loadData(): void {
-    this.categoryService.getAllItems().subscribe((res) => {
-      if (res.retCode == ERetCode.Successfull) {
-        if (res.data) {
-          this.categories = res.data;
-        } else {
-          this.categories = [];
-        }
-      } else {
-
-      }
-    })
-
-    this.brandService.getAllItems().subscribe((res) => {
-      if (res.retCode == ERetCode.Successfull) {
-        if (res.data) {
-          this.brands = res.data;
-        } else {
-          this.brands = [];
-        }
-      } else {
-
-      }
-    })
-  }
-
-  viewCategory(category: CategoryModel): void {
+  viewCategory(category: Category): void {
     //this.hoveredCategoryId = category.categoryId;
   }
 
-  onCategoryHover(category: CategoryModel): void {
+  onCategoryHover(category: Category): void {
     if (!this.isMobile) {
       this.hoveredCategoryId = category.id;
       this.hoveredCategory = category;
     }
   }
 
-  onCategoryClick(category: CategoryModel): void {
+  onCategoryClick(category: Category): void {
     if (this.isMobile) {
       this.hoveredCategoryId = this.hoveredCategoryId === category.id ? null : category.id;
     }

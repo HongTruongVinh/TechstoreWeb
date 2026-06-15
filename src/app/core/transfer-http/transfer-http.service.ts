@@ -6,7 +6,7 @@ import { catchError, map, Observable, throwError } from 'rxjs';
 import Swal from 'sweetalert2';
 import { ConfigForApp } from '../../library/share-function/config-app';
 import { EContentType } from '../../library/enum/econtenttype';
-import { TokenStorageService } from '../services/token-storage.service';
+import { TokenStorageService } from '../services/ui/token-storage.service';
 
 @Injectable({
   providedIn: 'root'

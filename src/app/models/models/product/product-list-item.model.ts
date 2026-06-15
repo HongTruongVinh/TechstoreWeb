@@ -1,5 +1,5 @@
 export interface ProductListItemModel {
-    productId: string;
+    id: string;
     productVariantId: string;
     productName: string;
     productVariantName: string;

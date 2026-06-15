@@ -8,7 +8,7 @@
     "GetBrand": "brands/{0}"
   },
   "Product": {
-    "GetCustomerProducts": "products",
+    "GetProductsFiltered": "products/filter",
     "SearchCustomerProducts": "products/search?keyword={0}&pageNumber={1}&pageSize={2}",
     "GetProductDetails": "products/{0}",
     "GetProductsByCategory": "products/category?categorySlug={0}&pageNumber={1}&pageSize={2}",
@@ -19,12 +19,12 @@
     "GetProductsByBrandName": "home/products?brandName={0}&page={1}&pageSize={2}"
   },
   "Order": {
-    "GetItem": "admin/orders/{0}",
-    "UserOrders": "orders",
+    "UserOrders": "orders?page={0}&pageSize={1}",
     "CreateCodOrder": "orders/cod-order",
     "CreatePrepayOrder": "orders/prepay-order",
-    "CancelOrder": "orders/cancel/{0}",
-    "OrderDetails": "orders/{0}"
+    "CancelOrder": "orders/{0}/cancel",
+    "OrderDetails": "orders/{0}",
+    "UpdateOrder": "orders/{0}"
   },
   "User": {
     "UpdateProfile": "Users",
@@ -63,10 +63,10 @@
     "GetInvoice": "invoices/{0}"
   },
   "Payment": {
-    "GetpaymentData": "payments/create-payment-data",
+    "GetpaymentData": "payments/create-payment-pre-order",
     "PaymentHub": "payments/hub"
   },
   "MockingDataAPI": {
-    "PaymentHub": "PaymentWebhook"
+    "PaymentHub": "PaymentWebhook/verify-payment-of-snapshot"
   }
 }

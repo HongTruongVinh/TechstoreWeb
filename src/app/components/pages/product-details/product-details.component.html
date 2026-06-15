@@ -143,8 +143,8 @@
                                 </div><!--end row-->
                             </div><!--end col-->
                         </div><!--end row-->
-                        <div class="mt-4 d-flex gap-2">
-                            <button type="button" class="btn btn-add-to-cart w-100" (mouseenter)="isHover = true"
+                        <div class="mt-4 d-flex justify-content-center align-items-center gap-2">
+                            <button *ngIf="!isShowAddToCardAnimation" type="button" class="btn btn-add-to-cart w-100" (mouseenter)="isHover = true"
                                 (mouseleave)="isHover = false" (click)="handleCartAction()">
 
                                 <ng-container *ngIf="!isHover; else hoverTemplate">
@@ -172,6 +172,7 @@
                                 </ng-template>
 
                             </button>
+                            <ng-lottie *ngIf="isShowAddToCardAnimation" ngClass="add-to-cart-animation" [options]="addToCartOptions" class=" qr-code-image"></ng-lottie>
                         </div>
                     </div><!--end col-->
                 </div><!--end col-->
@@ -250,12 +251,12 @@
 </div>
 }
 
-<section class="same-products py-5 bg-white">
+<section class="related-products py-5 bg-white">
     <div class="container">
         <h4 class="text-center mb-5">Các sản phẩm khác</h4>
         <div class="row g-4 list-product">
-            <div class="col-lg-3 col-md-6" *ngFor="let product of sameProducts">
-                <app-product-card [product]="product" (viewDetails)="product.productId">
+            <div class="col-lg-3 col-md-6" *ngFor="let product of relatedProducts">
+                <app-product-card [product]="product" (viewDetails)="product.id">
                 </app-product-card>
             </div>
         </div>
@@ -276,5 +277,3 @@
         </div>
     </div>
 </div>
-
-<div *ngIf="showAnim" @flyToCart class="flying-item"></div>

@@ -7,17 +7,17 @@ import { ThousandSeparatorPipe } from '../../../../pipes/thousandSeparator.pipe'
 import { FullImageUrlPipe } from '../../../../pipes/full-image-url.pipe';
 import { EPaymentMethod, ERetCode } from '../../../../models/enum/etype_project.enum';
 import { ActivatedRoute } from '@angular/router';
-import { TokenStorageService } from '../../../../core/services/token-storage.service';
-import { OrderService } from '../../../../core/services/order.service';
+import { TokenStorageService } from '../../../../core/services/ui/token-storage.service';
+import { OrderService } from '../../../../core/services/api/order.service';
 import { CustomerProductListItemModel } from '../../../../models/models/product/customer-product-list-item.model';
 import { User } from '../../../../models/models/user/user.model';
 import { CartItem } from '../../../../models/models/cart/cart-item.model';
-import { SessionStorageService } from '../../../../core/services/session-storage.service';
+import { SessionStorageService } from '../../../../core/services/ui/session-storage.service';
 import { OrderCreateModel, OrderItemCreateModel } from '../../../../models/models/order/cod-order-create.model';
-import { MessengerServices } from '../../../../core/services/messenger.service';
+import { MessengerServices } from '../../../../core/services/ui/messenger.service';
 import { PaymentDataModel } from '../../../../models/models/payment/payment-data.model';
 import { PaymentSignalrService } from '../../../../core/services/signalr/payment-signalr.service';
-import { MockingDataService, PaymentWebhookRequest } from '../../../../core/services/api/mocking-data.service';
+import { MockingDataService, PaymentForSnapshotWebhookRequest } from '../../../../core/services/api/mocking-data.service';
 
 @Component({
   selector: 'app-create-order',
@@ -119,7 +119,7 @@ export class CreateOrderComponent {
       customerName: [this.user.lastName + ' ' + this.user.firstName, Validators.required],
       customerPhoneNumber: [this.user.phoneNumber, Validators.required],
       customerEmail: [this.user.email],
-      customerAddress: [this.user.address, Validators.required],
+      customerAddress: ['số 123, đường ABC, phường XYZ, HCM', Validators.required],
       note: ['']
     });
 
@@ -189,10 +189,10 @@ export class CreateOrderComponent {
             this.paymentData = res.data;
           this.isLoadingQrCode = false;
 
-          this.paymentSignalrService.startConnection(this.paymentData.paymentId);
+          this.paymentSignalrService.startConnection(this.paymentData.snapshotId);
 
           this.paymentRequest = {
-            paymentId: this.paymentData.paymentId,
+            snapshotId: this.paymentData.snapshotId,
             amount: this.paymentData.amount,
             transactionId: 'mock-transaction-id'
           };
@@ -224,7 +224,7 @@ export class CreateOrderComponent {
     }
   }
 
-  paymentRequest? : PaymentWebhookRequest;
+  paymentRequest? : PaymentForSnapshotWebhookRequest;
   testSignalR(){
 
     if(this.isPaymentSuccess){

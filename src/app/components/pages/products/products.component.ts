@@ -2,13 +2,17 @@ import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { ProductCardComponent } from '../../common/product-card/product-card.component';
 import { ProductListItemModel } from '../../../models/models/product/product-list-item.model';
-import { CategoryModel } from '../../../models/models/category/category.model';
+import { Category } from '../../../models/models/category/category.model';
 import { BrandModel } from '../../../models/models/brand/brand.model';
-import { ProductService } from '../../../core/services/product.service';
+import { ProductService } from '../../../core/services/api/product.service';
 import { ActivatedRoute } from '@angular/router';
 import { BreadcrumbComponent, BreadcrumbItem } from "../../common/breadcrumb/breadcrumb.component";
 import { ERetCode } from '../../../models/enum/etype_project.enum';
 import { LoadingService } from '../../../core/services/loading/loading.service';
+import { PagedResult } from '../../../models/models/api-response.model';
+import { ProductSearchQuery } from '../../../models/models/product/product-search-query.model';
+import { CategoryService } from '../../../core/services/api/category.service';
+import { BrandService } from '../../../core/services/api/brand.service';
 
 @Component({
   selector: 'app-products',
@@ -26,114 +30,73 @@ export class ProductsComponent {
     { label: 'Trang chủ', url: '/' },
     { label: 'Tìm kiếm sản phẩm' }
   ];
-  title: string = 'Danh sách sản phẩm';
-  breadCrumbItems!: Array<{}>;
-  term: any;
+  title: string = '';
+  lastKeyword: string = '';
 
-  totalProducts = 0;
   products: ProductListItemModel[] = [];
-  page = 1;
-  pageSize = 12;
-  hasMore = false;
-
-  publicId?: string;
-  deleteId: any;
-  categories: CategoryModel[] = [];
+  categories: Category[] = [];
   brands: BrandModel[] = [];
-  selectedBrand!: BrandModel;
+
+  pagedResult?: PagedResult<ProductListItemModel>;
+  query: ProductSearchQuery = {
+    page: 1,
+    pageSize: 12,
+  }
 
   constructor(
     private readonly productService: ProductService,
+    private readonly categoryService: CategoryService,
+    private readonly brandService: BrandService,
     private readonly route: ActivatedRoute,
   ) { }
 
   ngOnInit(): void {
-
-    this.breadCrumbItems = [
-      { label: 'Quản lý', active: true },
-      { label: 'Sản phẩm', active: true }
-    ];
-
-
-    this.loadProducts();
-  }
-
-  loadProducts() {
+    this.categories = this.categoryService.getCategories();
+    this.brands = this.brandService.getBrands();
 
     this.route.paramMap.subscribe(params => {
       const keyword = params.get('keyword');
       const categorySlug = params.get('categorySlug');
       const brandSlug = params.get('brandSlug');
 
+      this.query = {
+        page: 1,
+        pageSize: 12
+      }
+
+      this.products = [];
+
+      this.query.keyword = keyword ?? undefined;
+
       if (keyword) {
         this.title = keyword;
-        this.productService.searchProducts(keyword, this.page, this.pageSize).subscribe((res) => {
-          if (res.retCode == ERetCode.Successfull) {
-            if (res.data) {
-              this.processData(res.data)
-            }
-          }
-        })
       }
-      else if (categorySlug) {
 
-        if (brandSlug === undefined || brandSlug === null) {
-          this.title = `Sản phẩm ${categorySlug}`;
-          this.productService.GetProductsByCategory(categorySlug, this.page, this.pageSize).subscribe((res) => {
-            if (res.retCode == ERetCode.Successfull) {
-              if (res.data) {
-                this.processData(res.data)
-              }
-            }
-          });
-        }
-        else {
-          this.title = `Sản phẩm ${categorySlug} - ${brandSlug}`;
-          this.productService.GetProductsByCategoryAndBrand(categorySlug, brandSlug, this.page, this.pageSize).subscribe((res) => {
-            if (res.retCode == ERetCode.Successfull) {
-              if (res.data) {
-                this.processData(res.data)
-              }
-            }
-          });
-        }
+      if (categorySlug) {
+        const category = this.categories.find(c => c.slug === categorySlug);
+        this.query.categoryId = category?.id;
+        this.title += ' ' + category?.name;
       }
-      else {
-        this.products = [];
+
+      if (brandSlug) {
+        const brand = this.brands.find(c => c.slug === brandSlug);
+        this.query.brandId = brand?.id;
+        this.title += ' ' + brand?.name;
       }
+
+      this.loadProducts();
     });
   }
 
-  processData(data: ProductListItemModel[]) {
-    const newProducts = data || [];
-
-    this.products = [...this.products, ...newProducts];
-
-    if (newProducts.length < this.pageSize) {
-      this.hasMore = false;
-    }
-    else {
-      this.hasMore = true;
-    }
-  }
-
-
-  selectedBrands: string[] = [];   // vì bindValue="id"
-  selectedCategory: string | null = null;
-
-
-
-  // no result 
-  updateNoResultDisplay() {
-    const noResultElement = document.querySelector('.noresult') as HTMLElement;
-    const paginationElement = document.getElementById('pagination-element') as HTMLElement
-    if (this.term && this.products.length === 0) {
-      noResultElement.style.display = 'block';
-      paginationElement.classList.add('d-none')
-    } else {
-      noResultElement.style.display = 'none';
-      paginationElement.classList.remove('d-none')
-    }
+  loadProducts() {
+    this.productService.loadProducts(this.query).subscribe((res) => {
+      if (res.retCode == ERetCode.Successfull) {
+        if (res.data) {
+          this.pagedResult = res.data;
+          this.products.push(...res.data.items)
+        }
+      }
+    })
   }
 
   tabs = [
@@ -145,7 +108,6 @@ export class ProductsComponent {
     { label: 'IPHONE 14 PRO CŨ', active: false },
     { label: 'IPHONE 14 PLUS CŨ', active: false }
   ];
-  sortType = 'price-desc';
 
   selectTab(tab: any) {
     this.tabs.forEach(t => t.active = false);
@@ -153,24 +115,35 @@ export class ProductsComponent {
     // Lọc sản phẩm theo tab
   }
 
+  sortType = 'price-desc';
   sort(type: string) {
-  this.sortType = type;
+    this.sortType = type;
+    this.query.page = 1;
+    this.query.pageSize = 12;
 
-  if (this.sortType === 'price-desc') {
-    this.products.sort((a, b) => b.price - a.price);
-  } 
-  else if (this.sortType === 'price-asc') {
-    this.products.sort((a, b) => a.price - b.price);
-  } 
-  else if (this.sortType === 'popular') {
-    this.products.sort((a, b) => b.soldCount - a.soldCount);
+    if (this.sortType === 'price-desc') {
+      this.query.descending = true;
+      this.query.sortBy = 'price';
+      this.sortType = 'price-desc';
+    }
+    else if (this.sortType === 'price-asc') {
+      this.query.descending = false;
+      this.query.sortBy = 'price';
+      this.sortType = 'price-asc';
+    }
+    else if (this.sortType === 'popular') {
+      this.query.descending = true;
+      this.query.sortBy = 'popular';
+      this.sortType = 'popular';
+    }
+    this.products = [];
+    this.loadProducts();
   }
-}
 
   loadingService = inject(LoadingService);
   showMore() {
     // this.loadingService.show();
-    this.page++;
+    this.query.page++;
     this.loadProducts();
   }
 }

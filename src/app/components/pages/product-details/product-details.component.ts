@@ -7,20 +7,20 @@ import { ThousandSeparatorPipe } from '../../../pipes/thousandSeparator.pipe';
 import { ProductDetailsModel, ProductVariantModel, ProductVariantOptionModel } from '../../../models/models/product/product-details';
 import { ActivatedRoute } from '@angular/router';
 import { Title } from '@angular/platform-browser';
-import { ProductService } from '../../../core/services/product.service';
+import { ProductService } from '../../../core/services/api/product.service';
 import { ERetCode } from '../../../models/enum/etype_project.enum';
 import { CartItemCreateModel } from '../../../models/models/cart/cart-item-create.model';
-import { TokenStorageService } from '../../../core/services/token-storage.service';
+import { TokenStorageService } from '../../../core/services/ui/token-storage.service';
 import { BreadcrumbComponent, BreadcrumbItem } from "../../common/breadcrumb/breadcrumb.component";
-import { trigger, transition, style, animate } from '@angular/animations';
+import { LottieComponent, AnimationOptions } from 'ngx-lottie';
 import { ProductCardComponent } from "../../common/product-card/product-card.component";
 import { ProductListItemModel } from '../../../models/models/product/product-list-item.model';
-import { AuthDialogService } from '../../../core/services/AuthDialogService';
+import { AuthDialogService } from '../../../core/services/ui/AuthDialogService';
 import { Store } from '@ngrx/store';
 import * as CartSelectors from '../../../store/cart/cart.selectors';
 import * as CartActions from '../../../store/cart/cart.actions';
-import { BehaviorSubject, combineLatest, map, Observable, switchMap } from 'rxjs';
-import { User } from '../../../models/models/user/user.model';
+import { BehaviorSubject, combineLatest, map } from 'rxjs';
+import { ProductSearchQuery } from '../../../models/models/product/product-search-query.model';
 
 @Component({
   selector: 'app-product-details',
@@ -32,21 +32,11 @@ import { User } from '../../../models/models/user/user.model';
     FullImageUrlPipe,
     ThousandSeparatorPipe,
     BreadcrumbComponent,
-    ProductCardComponent
+    ProductCardComponent,
+    LottieComponent
   ],
   templateUrl: './product-details.component.html',
   styleUrl: './product-details.component.scss',
-  animations: [
-    trigger('flyToCart', [
-      transition(':enter', [
-        style({ transform: 'scale(1)', opacity: 1 }),
-        animate('800ms ease-in', style({
-          transform: 'translate(300px, -200px) scale(0.2)',
-          opacity: 0
-        }))
-      ])
-    ])
-  ]
 })
 export class ProductDetailsComponent {
   breadcrumbItems: BreadcrumbItem[] = [
@@ -55,14 +45,19 @@ export class ProductDetailsComponent {
     { label: 'Chi tiết sản phẩm' }
   ];
 
-  showAnim = false;
   isHover: boolean = false;
 
   userId?: string;
   product?: ProductDetailsModel;
   selectedVariant?: ProductVariantModel;
   selectedOption$ = new BehaviorSubject<ProductVariantOptionModel | null>(null);
-  sameProducts: ProductListItemModel[] = [];
+  relatedProducts: ProductListItemModel[] = [];
+
+  addToCartOptions: AnimationOptions = {
+    path: '/assets/animations/add_to_cart_success.json',
+    loop: false,
+  };
+  isShowAddToCardAnimation = false;
 
 
   @ViewChild('slickModal') slickModal!: SlickCarouselComponent;
@@ -70,38 +65,6 @@ export class ProductDetailsComponent {
   authDialog = inject(AuthDialogService);
   tks = inject(TokenStorageService);
   private store = inject(Store);
-  // cartItems$ = this.store.select(CartSelectors.selectAllCartItems);
-
-  // isItemInCart$ = combineLatest({
-  //   option: this.selectedOption$,
-  //   entities: this.store.select(CartSelectors.selectCartItemEntities),
-  // loading: this.store.select(CartSelectors.selectCartItemLoading)
-  // }).pipe(
-  //   map(({ option, entities }) => {
-
-  //     if (!option) {
-  //       return false;
-  //     }
-
-  //     console.log("store: "+option.id);
-  //     // return !!entities[option.id];
-  //     return Object.values(entities)
-  //     .some(item =>
-  //     {
-  //       item?.productVariantOptionId === option.id;
-  //     }
-  //     );
-  //   })
-  // );
-
-  // isItemInCart$ = combineLatest([
-  //   this.selectedOption$,
-  //   this.store.select(CartSelectors.selectCartItemEntities)
-  // ]).pipe(
-  //   map(([option, entities]) =>
-  //     !!entities[option?.id ?? '']
-  //   )
-  // );
 
   isItemInCart$ = combineLatest([
     this.selectedOption$,
@@ -176,6 +139,8 @@ export class ProductDetailsComponent {
             this.selectedOption$.subscribe(data => {
               // console.log("slected: " + data?.id);
             })
+
+            this.loadRelatedProducts();
           }
         }
       } else {
@@ -216,15 +181,20 @@ export class ProductDetailsComponent {
       return;
     }
 
+    this.isShowAddToCardAnimation = true;
+
+    setTimeout(() => {
+      this.isShowAddToCardAnimation = false;
+    }, 3000);
+
+    this.isItemInCart$.subscribe(data => {
+      if(data === true) return;
+    })
+
     const newCartItem: CartItemCreateModel = {
       productVariantOptionId: selectedOption.id,
       quantity: 1
     };
-
-    this.showAnim = false; // reset
-    setTimeout(() => {
-      this.showAnim = true;
-    }, 0);
 
     this.store.dispatch(CartActions.addCartItem({ cartItem: newCartItem }));
   }
@@ -267,6 +237,28 @@ export class ProductDetailsComponent {
     ref.closed.subscribe(result => {
 
     });
+  }
+
+  loadRelatedProducts() {
+    if (this.product == undefined) return;
+
+    const productName = this.product.name.substring(0, 3);
+
+    if (!productName) return;
+
+    const query: ProductSearchQuery = {
+      page: 1,
+      pageSize: 8,
+      keyword: productName
+    }
+
+    this.productService.loadProducts(query).subscribe((res) => {
+      if (res.retCode == ERetCode.Successfull) {
+        if (res.data) {
+          this.relatedProducts = res.data.items;
+        }
+      }
+    })
   }
 
 }

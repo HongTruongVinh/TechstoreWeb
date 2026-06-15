@@ -1,5 +1,5 @@
 export interface PaymentDataModel {
-    paymentId: string;
+    snapshotId: string;
     amount: number;
     qrDataURL: string;
     createdAt: string;

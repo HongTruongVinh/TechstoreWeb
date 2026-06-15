@@ -6,12 +6,14 @@ import { ThousandSeparatorPipe } from '../../../../pipes/thousandSeparator.pipe'
 import { DateToStringPipe } from '../../../../pipes/DatePipe';
 import { FullImageUrlPipe } from '../../../../pipes/full-image-url.pipe';
 import { BreadcrumbComponent, BreadcrumbItem } from '../../../common/breadcrumb/breadcrumb.component';
-import { OrderService } from '../../../../core/services/order.service';
-import { InvoiceModel, OrderDetailModel, PaymentModel, QrcodeModel } from '../../../../models/models/order/order-detail.model';
+import { OrderService } from '../../../../core/services/api/order.service';
+import { InvoiceModel, OrderModel, PaymentModel, QrcodeModel } from '../../../../models/models/order/order.model';
 import { ActivatedRoute } from '@angular/router';
-import { EPaymentMethod, ERetCode } from '../../../../models/enum/etype_project.enum';
+import { EOrderStatus, EPaymentMethod, ERetCode } from '../../../../models/enum/etype_project.enum';
 import { OrderItemModel } from '../../../../models/models/order/order-item.model';
 import { OrderStatusPipe } from "../../../../pipes/order-status.pipe";
+import { CancelOrderModel } from '../../../../models/models/order/cancel-order.model';
+import { MessengerServices } from '../../../../core/services/ui/messenger.service';
 
 @Component({
   selector: 'app-order-detail',
@@ -22,7 +24,6 @@ import { OrderStatusPipe } from "../../../../pipes/order-status.pipe";
     ReactiveFormsModule,
     NgSelectModule,
     ThousandSeparatorPipe,
-    DateToStringPipe,
     FullImageUrlPipe,
     BreadcrumbComponent,
     OrderStatusPipe
@@ -39,41 +40,45 @@ export class OrderDetailComponent {
   
   isLoading: boolean = false;
 
-  orderDetail?: OrderDetailModel;
-  invoiceDetail?: InvoiceModel;
-  paymentDetail?: PaymentModel;
-  qrCodeDetail?: string;
-
+  order?: OrderModel;
+  invoice?: InvoiceModel;
+  payments?: PaymentModel[];
   orderItems?: OrderItemModel[];
-  discountCode: string = '';
-  subtotal: number = 0;
-  discount: number = 0;
-  totalPrice: number = 0;
+  
+  showCancelReasonSelection: boolean = false;
+  cancelReasons:{ reasonId: number, value: string }[] = [
+    { reasonId: 0, value: 'Không còn nhu cầu mua nữa' },
+    { reasonId: 1, value: 'Đặt nhầm sản phẩm' },
+    { reasonId: 2, value: 'Tôi muốn thay đổi địa chỉ và thông tin người nhận' },
+    { reasonId: 3, value: 'Lý do khác' },
+  ];
+  cancelReason: string = '';
+  selectedCancelReasonId: number = -1;
 
-  paymentMethods: { methodId: number, name: string }[] = [];
-  paymentMethodNames: Record<EPaymentMethod, string> = {
-    [EPaymentMethod.DomesticBank]: 'Ngân hàng nội địa',
-    [EPaymentMethod.COD]: 'Thanh toán khi nhận hàng (COD)',
-    [EPaymentMethod.Cash]: 'Tiền mặt'
-  };
+  // cancelReasons: string[] = [
+  //   'Không còn nhu cầu mua nữa',
+  //   'Đặt nhầm sản phẩm',
+  //   'Tôi muốn thay đổi địa chỉ giao hàng',
+  // ]
 
-  selectedpaymentMethodId: number = 0;
+  // paymentMethods: { methodId: number, name: string }[] = [];
+  // paymentMethodNames: Record<EPaymentMethod, string> = {
+  //   [EPaymentMethod.DomesticBank]: 'Ngân hàng nội địa',
+  //   [EPaymentMethod.COD]: 'Thanh toán khi nhận hàng (COD)',
+  //   [EPaymentMethod.Cash]: 'Tiền mặt'
+  // };
+
+  // selectedpaymentMethodId: number = 0;
 
   constructor(
     private location: Location,
     private readonly orderService: OrderService,
     private readonly route: ActivatedRoute,
-    private readonly formBuilder: FormBuilder
+    private readonly formBuilder: FormBuilder,
+    private readonly messengerServices: MessengerServices,
   ) { }
 
   ngOnInit(): void {
-
-    this.paymentMethods = Object.values(EPaymentMethod)
-      .filter(value => typeof value === 'number') // chỉ lấy các giá trị số
-      .map(value => ({
-        methodId: value as number,
-        name: this.paymentMethodNames[value as EPaymentMethod]
-      }));
 
     this.load();
   }
@@ -86,18 +91,12 @@ export class OrderDetailComponent {
       this.orderService.getOrderDetail(orderId).subscribe((res) => {
         if (res.retCode == ERetCode.Successfull) {
           if (res.data) {
-            this.orderDetail = res.data;
+            this.order = res.data;
 
-            this.selectedpaymentMethodId = this.orderDetail.paymentMethod;
+            this.invoice = this.order.invoice;
+            this.payments = this.order.invoice?.payments;
 
-            this.invoiceDetail = this.orderDetail.invoice!;
-            this.paymentDetail = this.orderDetail.payment!;
-            this.qrCodeDetail = this.orderDetail.qrCode!;
-
-            this.orderItems = this.orderDetail.items;
-            this.subtotal = this.orderDetail.totalPrice;
-            this.discount = this.orderDetail.discountAmount;
-            this.totalPrice = this.orderDetail.finalAmount;
+            this.orderItems = this.order.items;
 
 
             this.isLoading = false;
@@ -110,19 +109,46 @@ export class OrderDetailComponent {
       })
     });
 
-    this.selectedpaymentMethodId = EPaymentMethod.DomesticBank;
-  }
-
-  saveAction() {
-
   }
 
   CancelOrder() {
+    if(this.selectedCancelReasonId == -1 || this.order == undefined){
+      return;
+    }
+    
+    if (this.selectedCancelReasonId != 3) {
+      const selectedReason = this.cancelReasons.find(reason => reason.reasonId === this.selectedCancelReasonId);
+      if (selectedReason) {
+        this.cancelReason = selectedReason.value;
+      } else {
+        this.cancelReason = '';
+      }
+    }
 
+    const dataInsert: CancelOrderModel = {
+      reason: this.cancelReason,
+    }
+
+    this.orderService.cancelOrder(this.order.id, dataInsert).subscribe((res) => {
+      if (res.retCode == ERetCode.Successfull) {
+        if(this.order){
+          this.order.orderStatus = EOrderStatus.Canceled;
+        }
+      } else {
+        this.messengerServices.errorNotification(res.systemMessage??'');
+      }
+    });
+
+    this.selectedCancelReasonId = -1;
+    this.cancelReason = '';
+    this.showCancelReasonSelection = false;
   }
 
   goBack(): void {
     this.location.back();
   }
 
+  isOrderInProcessing(orderStatusId: number): boolean{
+    return [0,1,2].includes(orderStatusId);
+  }
 }

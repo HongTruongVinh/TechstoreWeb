@@ -2,15 +2,15 @@ import { CommonModule } from '@angular/common';
 import { Component, HostListener, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ProductCardComponent } from '../../common/product-card/product-card.component';
-import { CategoryModel } from '../../../models/models/category/category.model';
+import { Category } from '../../../models/models/category/category.model';
 import { ProductListItemModel } from '../../../models/models/product/product-list-item.model';
 import { Router } from '@angular/router';
-import { ProductService } from '../../../core/services/product.service';
+import { ProductService } from '../../../core/services/api/product.service';
 import { ERetCode } from '../../../models/enum/etype_project.enum';
 import { BrandModel } from '../../../models/models/brand/brand.model';
 import { CategoryPanelComponent } from "../../common/category-panel/category-panel.component";
-import { DeviceService } from '../../../core/services/device.service';
-import { HomeService } from '../../../core/services/home.service';
+import { DeviceService } from '../../../core/services/ui/device.service';
+import { HomeService } from '../../../core/services/api/home.service';
 
 @Component({
   selector: 'app-home',
@@ -141,22 +141,6 @@ export class HomeComponent {
         }
       }
     })
-
-    // this.homeService.getProductsByBrandName(this.brandName1).subscribe((res) => {
-    //   if (res.retCode == ERetCode.Successfull) {
-    //     if (res.data) {
-    //       this.brandProducts1 = res.data;
-    //     }
-    //   }
-    // })
-
-    // this.homeService.getProductsByBrandName(this.brandName2).subscribe((res) => {
-    //   if (res.retCode == ERetCode.Successfull) {
-    //     if (res.data) {
-    //       this.brandProducts2 = res.data;
-    //     }
-    //   }
-    // })
   }
 
   ngOnDestroy(): void {
