@@ -69,12 +69,9 @@ export class LoginComponent {
             if (data) {
               this.tokenStorageService.saveUser(data.user);
               this.tokenStorageService.saveToken(data.token);
-
-              // this.createCartSession();
               this.store.dispatch(loadCartItem());
 
               this.loginResult = { success: true };
-
               this.loginForm.reset();
               
               this.close();

@@ -121,27 +121,27 @@ export class ProductDetailsComponent {
       if (res.retCode === ERetCode.Successfull && res.data) {
         this.product = res.data;
 
-        if (this.product.galleryImageUrls?.length === 0) {
+        this.loadRelatedProducts();
+
+        const product = this.product;
+        if (product) {
+          product.variants[0].options.forEach(option => {
+            product.galleryImageUrls.push(option.imageUrl);
+          });
+
+          this.selectVariant(product.variants[0].id);
+          this.titleService.setTitle(product.name);
+
+          this.isItemInCart$.subscribe(data => {
+            // console.log("isItemInCart: " + data);
+          })
+          this.selectedOption$.subscribe(data => {
+            // console.log("slected: " + data?.id);
+          })
+        }
+
+        if (this.product.galleryImageUrls.length === 0) {
           this.product.galleryImageUrls = [this.product.mainImageUrl];
-
-          const product = this.product;
-          if (product) {
-            product.variants[0].options.forEach(option => {
-              product.galleryImageUrls.push(option.imageUrl);
-            });
-
-            this.selectVariant(product.variants[0].id);
-            this.titleService.setTitle(product.name);
-
-            this.isItemInCart$.subscribe(data => {
-              // console.log("isItemInCart: " + data);
-            })
-            this.selectedOption$.subscribe(data => {
-              // console.log("slected: " + data?.id);
-            })
-
-            this.loadRelatedProducts();
-          }
         }
       } else {
         // Handle error or product not found
@@ -188,7 +188,7 @@ export class ProductDetailsComponent {
     }, 3000);
 
     this.isItemInCart$.subscribe(data => {
-      if(data === true) return;
+      if (data === true) return;
     })
 
     const newCartItem: CartItemCreateModel = {
@@ -252,7 +252,7 @@ export class ProductDetailsComponent {
       keyword: productName
     }
 
-    this.productService.loadProducts(query).subscribe((res) => {
+    this.productService.getProducts(query).subscribe((res) => {
       if (res.retCode == ERetCode.Successfull) {
         if (res.data) {
           this.relatedProducts = res.data.items;

@@ -9,13 +9,50 @@
         </a>
       </div>
       <div class="search-container">
-        <div class="search-box">
-          <input type="text" placeholder="Tìm kiếm điện thoại, laptop, phụ kiện..." class="search-input" [(ngModel)]="searchQuery"
-            (keyup.enter)="onSearch()">
-          <button class="search-btn" (click)="onSearch()">
-            <i class="ri-search-line"></i>
-          </button>
-        </div>
+        <form [formGroup]="searchForm">
+
+          <div class="search-box">
+
+            <input type="text" class="search-input" placeholder="Tìm kiếm điện thoại, laptop, phụ kiện..."
+              formControlName="keyword" (keyup.enter)="onSearch()" (focus)="isSearching = true" (blur)="onBlur()">
+
+            <button type="button" class="search-btn" (click)="onSearch()">
+              <i class="ri-search-line"></i>
+            </button>
+
+          </div>
+
+          @if (isSearching && pagedResult?.items?.length) {
+
+          <div class="search-result">
+
+            @for (product of pagedResult!.items; track product.id) {
+
+            <div class="product-item" (click)="viewProductDetails(buildProductUrl(product))">
+
+              <img [src]="product.mainImageUrl | fullImageUrl" [alt]="product.productName" class="product-image">
+
+              <div class="product-info">
+
+                <div class="product-name">
+                  {{ product.productName }}
+                </div>
+
+                <div class="product-price">
+                  {{ product.price | number:'1.0-0' }} đ
+                </div>
+
+              </div>
+
+            </div>
+
+            }
+
+          </div>
+
+          }
+
+        </form>
       </div>
     </div>
 
@@ -34,10 +71,22 @@
         <span>Đăng nhập</span>
       </button>
       <button *ngIf="tks.isLoggedIn()" class="nav-btn login-btn" (click)="openCart()">
-        <i class="bi bi-cart"></i>
+      
+        <span class="cart-icon-wrapper ">
+          <i class="bi bi-cart"></i>
+      
+          @if ((totalQuantity$ | async); as quantity) {
+          @if (quantity > 0) {
+          <span class="cart-badge">
+            {{ quantity }}
+          </span>
+          }
+          }
+        </span>
+      
         <span>Giỏ hàng</span>
+      
       </button>
     </div>
   </div>
 </nav>
-

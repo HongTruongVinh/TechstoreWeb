@@ -109,6 +109,8 @@ export class CreateOrderComponent {
       phoneNumber: '',
       birthday: new Date(),
       address: '',
+      city: '',
+      district: '',
     }
 
     if (this.tokenStorageService.getUser() != null) {
@@ -119,7 +121,7 @@ export class CreateOrderComponent {
       customerName: [this.user.lastName + ' ' + this.user.firstName, Validators.required],
       customerPhoneNumber: [this.user.phoneNumber, Validators.required],
       customerEmail: [this.user.email],
-      customerAddress: ['số 123, đường ABC, phường XYZ, HCM', Validators.required],
+      customerAddress: [this.user.address, Validators.required],
       note: ['']
     });
 

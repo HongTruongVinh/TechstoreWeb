@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ProductListItemModel } from '../../../models/models/product/product-list-item.model';
 import { FullImageUrlPipe } from '../../../pipes/full-image-url.pipe';
+import { BuildProductUrlPipe } from '../../../pipes/product-url.pipe';
 
 @Component({
   selector: 'app-product-card',

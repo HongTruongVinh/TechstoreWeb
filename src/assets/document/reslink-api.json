@@ -8,11 +8,8 @@
     "GetBrand": "brands/{0}"
   },
   "Product": {
-    "GetProductsFiltered": "products/filter",
-    "SearchCustomerProducts": "products/search?keyword={0}&pageNumber={1}&pageSize={2}",
-    "GetProductDetails": "products/{0}",
-    "GetProductsByCategory": "products/category?categorySlug={0}&pageNumber={1}&pageSize={2}",
-    "GetProductsByCategoryAndBrand": "products/category-brand?categorySlug={0}&brandSlug={1}&pageNumber={2}&pageSize={3}"
+    "GetProducts": "products",
+    "GetProductDetails": "products/{0}"
   },
   "Home": {
     "GetFeatureProducts": "home/feature",

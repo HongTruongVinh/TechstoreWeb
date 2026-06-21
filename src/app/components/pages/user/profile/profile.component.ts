@@ -41,6 +41,8 @@ user!: User;
       phoneNumber: '',
       birthday: new Date(),
       address: '',
+      city: '',
+      district: '',
     }
 
     this.profileForm = this.formBuilder.group({

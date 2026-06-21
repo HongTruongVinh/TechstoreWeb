@@ -34,15 +34,14 @@
     <div class="col-lg-8">
         <div class="row g-0">
             <div class="col-lg-8">
-                <div class="card rounded-end-0">
-                    <div class="card-body p-4">
+                <div class="card rounded-end-0 card-options">
+                    <div class="card-body p-4 rounded-end-0">
                         <h4 class="text-capitalize mb-3">{{product.name}}</h4>
                         <div class="hstack gap-3 flex-wrap mb-4">
-                            <div class="text-muted"><b class="text-body fw-medium">{{product.soldCount ?
-                                    product.soldCount : 3.7}}</b> đã bán</div>
+                            <div class="text-muted"><b class="text-body fw-medium">{{product.soldCount}}</b> đã bán</div>
                             <div class="vr"></div>
-                            <div class="text-muted"><b class="text-body fw-medium">{{product.soldCount}}</b>
-                                trong kho</div>
+                            <div class="text-muted"><b class="text-body fw-medium">{{product.ratedCount}}</b>
+                                đánh giá</div>
                             <div class="vr"></div>
                             <div class="text-muted">Ngày ra mắt : <span
                                     class="text-body fw-medium">{{product.publishDate | date}}</span></div>
@@ -60,7 +59,7 @@
                         </div>
 
                         <div class="mt-4">
-                            <h5 class="fs-md mb-3">Colors :</h5>
+                            <h5 class="fs-md mb-3">Màu sắc :</h5>
                             <div class="d-flex flex-wrap gap-2">
                                 @for (option of selectedVariant.options; track option.id) {
                                 <div class="option-card d-flex align-items-center"
@@ -70,7 +69,7 @@
                                         class="thumb me-2">
                                     <div>
                                         <div>{{option.name}}</div>
-                                        <div class="price">{{selectedVariant.price | thousandSeparator}} ₫</div>
+                                        <div class="price">{{option.price | thousandSeparator}} ₫</div>
                                     </div>
                                 </div>
                                 }
@@ -181,7 +180,7 @@
                 <div class="card-body p-4">
                     <div>
                         <h5 class="fs-md mb-3">Chi tiết sản phẩm</h5>
-                        <!-- <p class="mb-2" [innerHTML]="selectedVariant.description"></p> -->
+                        <p class="mb-2" [innerHTML]="selectedVariant.description"></p>
                         Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quo ab quos repudiandae, magni rem
                         reprehenderit fugit voluptas tempore iste ipsam asperiores ratione maxime ducimus, dolorem
                         delectus

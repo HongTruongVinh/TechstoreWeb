@@ -89,7 +89,7 @@ export class ProductsComponent {
   }
 
   loadProducts() {
-    this.productService.loadProducts(this.query).subscribe((res) => {
+    this.productService.getProducts(this.query).subscribe((res) => {
       if (res.retCode == ERetCode.Successfull) {
         if (res.data) {
           this.pagedResult = res.data;
@@ -115,7 +115,7 @@ export class ProductsComponent {
     // Lọc sản phẩm theo tab
   }
 
-  sortType = 'price-desc';
+  sortType = '';
   sort(type: string) {
     this.sortType = type;
     this.query.page = 1;

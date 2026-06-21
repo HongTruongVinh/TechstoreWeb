@@ -6,4 +6,6 @@ export interface User {
   phoneNumber: string;
   birthday: Date;
   address: string;
+  city: string;
+  district: string;
 }

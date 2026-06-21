@@ -93,8 +93,8 @@
 
     &.pending:not(:nth-child(1)) {
       &::after {
-        border-left-color: transparent;
-        border-right-color: #4ab0c1;
+        border-right-color: transparent;
+        border-left-color: #4ab0c1;
       }
     }
   }

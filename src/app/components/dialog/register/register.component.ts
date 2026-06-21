@@ -60,6 +60,8 @@ export class RegisterComponent {
         firstName: this.registerForm.value.firstName,
         phoneNumber: this.registerForm.value.phoneNumber,
         address: this.registerForm.value.address,
+        city: "",
+        district: "",
         email: this.registerForm.value.email,
         password: this.registerForm.value.password,
       };

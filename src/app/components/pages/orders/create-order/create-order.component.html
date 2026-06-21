@@ -155,6 +155,11 @@
                                 <td class="text-end">-{{discount | thousandSeparator}}
                                 </td>
                             </tr>
+                            <tr>
+                                <td>Phí vận chuyển :</td>
+                                <td class="text-end">-{{shipping | thousandSeparator}}
+                                </td>
+                            </tr>
                             <tr class="border-top border-top-dashed">
                                 <th scope="row">Tổng (VND) :</th>
                                 <th class="text-end">{{totalPrice| thousandSeparator}} VND</th>
@@ -208,7 +213,7 @@
         <div class="d-flex justify-content-between gap-3">
             <button type="button" class="btn btn-secondary" (click)="backToCart()">Quay lại giỏ hàng</button>
             <button *ngIf="selectedpaymentMethodId === 0" type="submit" class="btn btn-primary" form="newOrderForm">Xác nhận đặt hàng</button>
-            <button *ngIf="selectedpaymentMethodId === 1 && paymentData === undefined" type="submit" class="btn btn-primary" form="newOrderForm">Tạo mã thanh toán</button>
+            <button *ngIf="selectedpaymentMethodId === 1 && paymentData === undefined" type="submit" class="btn btn-primary" form="newOrderForm">Nhận mã thanh toán</button>
         </div>
     </div>
 </div>

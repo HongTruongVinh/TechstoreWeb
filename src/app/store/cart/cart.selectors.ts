@@ -14,6 +14,7 @@ const {
 export const selectAllCartItems = selectAll;
 export const selectAllCartItemIds = selectIds;
 export const selectCartItemEntities = selectEntities;
+export const selectCartItemCount = selectTotal;
 
 export const selectCartItemLoading =
   createSelector(

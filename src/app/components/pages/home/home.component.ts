@@ -11,6 +11,7 @@ import { BrandModel } from '../../../models/models/brand/brand.model';
 import { CategoryPanelComponent } from "../../common/category-panel/category-panel.component";
 import { DeviceService } from '../../../core/services/ui/device.service';
 import { HomeService } from '../../../core/services/api/home.service';
+import { ProductSearchQuery } from '../../../models/models/product/product-search-query.model';
 
 @Component({
   selector: 'app-home',
@@ -126,18 +127,30 @@ export class HomeComponent {
       }
     })
 
-    this.productService.searchProducts(this.brandName1, 1, 16).subscribe((res) => {
+    const iphoneProductQuery: ProductSearchQuery = {
+      keyword: this.brandName1,
+      page: 1,
+      pageSize: 16
+    }
+
+    this.productService.getProducts(iphoneProductQuery).subscribe((res) => {
       if (res.retCode == ERetCode.Successfull) {
         if (res.data) {
-          this.brandProducts1 = res.data;
+          this.brandProducts1 = res.data.items;
         }
       }
     })
 
-    this.productService.searchProducts(this.brandName2, 1, 16).subscribe((res) => {
+    const samsungProductQuery: ProductSearchQuery = {
+      keyword: this.brandName2,
+      page: 1,
+      pageSize: 16
+    }
+
+    this.productService.getProducts(samsungProductQuery).subscribe((res) => {
       if (res.retCode == ERetCode.Successfull) {
         if (res.data) {
-          this.brandProducts2 = res.data;
+          this.brandProducts2 = res.data.items;
         }
       }
     })
