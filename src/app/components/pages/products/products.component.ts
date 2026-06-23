@@ -75,7 +75,7 @@ export class ProductsComponent {
       if (categorySlug) {
         const category = this.categories.find(c => c.slug === categorySlug);
         this.query.categoryId = category?.id;
-        this.title += ' ' + category?.name;
+        this.title = ' ' + category?.name;
       }
 
       if (brandSlug) {

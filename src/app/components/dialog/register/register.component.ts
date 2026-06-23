@@ -47,15 +47,23 @@ export class RegisterComponent {
       firstName: ['', [Validators.required]],
       phoneNumber: ['', [Validators.required]],
       address: ['', [Validators.required]],
-      email: [''],
+      email: ['', Validators.email],
       password: ['', [Validators.required]],
       confirmPassword: ['', [Validators.required]],
     });
   }
 
   registerAction(): void {
-    if (this.checkRegisterValidatetion() && this.registerForm.valid) {
-      const registerRequest: RegisterRequestModel = {
+    if (this.registerForm.invalid) {
+      this.registerForm.markAllAsTouched();
+      return;
+    }
+
+    if(!this.checkRegisterValidatetion()){
+      return;
+    }
+
+    const registerRequest: RegisterRequestModel = {
         lastName: this.registerForm.value.lastName,
         firstName: this.registerForm.value.firstName,
         phoneNumber: this.registerForm.value.phoneNumber,
@@ -93,8 +101,6 @@ export class RegisterComponent {
           this.isLoading = false;
         }
       });
-
-    }
   }
 
   private checkRegisterValidatetion(): boolean {

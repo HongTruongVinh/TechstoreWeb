@@ -32,15 +32,6 @@
                     <input formControlName="note" type="text" class="form-control" id="note" placeholder="Nhập ghi chú">
                 </div>
             </form>
-            <div class="d-flex align-items-center mb-3">
-                <label for="paymentMethod" class="form-label me-3 mb-0" style="width: 120px;">Phương
-                    thức thanh toán <span class="text-danger">*</span></label>
-                <select [(ngModel)]="selectedpaymentMethodId" class="form-select">
-                    <option *ngFor="let paymentMethod of paymentMethods" [ngValue]="paymentMethod.methodId">
-                        {{ paymentMethod.name }}
-                    </option>
-                </select>
-            </div>
         </div>
     </div>
 </div>
@@ -167,6 +158,25 @@
                         </tbody>
                     </table>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-2">
+    <div class="col-xxl-12">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="card-title mb-0">Phương thức thanh toán <span class="text-danger">*</span></h6>
+            </div>
+            <div class="card-body pt-4">
+                <div class="d-flex align-items-center">
+                <select [(ngModel)]="selectedpaymentMethodId" class="form-select">
+                    <option *ngFor="let paymentMethod of paymentMethods" [ngValue]="paymentMethod.methodId">
+                        {{ paymentMethod.name }}
+                    </option>
+                </select>
+            </div>
             </div>
         </div>
     </div>

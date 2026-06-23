@@ -8,37 +8,51 @@
                 <h4 class="fw-bold mt-2 mb-3">Đăng ký tài khoản</h4>
             </div>
             <form (ngSubmit)="registerAction()" [formGroup]="registerForm">
+
                 <div class="row mb-3">
                     <div class="col-6">
-                        <input type="text" class="form-control" placeholder="Nhập họ và tên đệm*" formControlName="lastName"
-                            name="lastName">
+                        <input type="text" class="form-control" formControlName="lastName"
+                            placeholder="Nhập họ và tên đệm *" [class.is-invalid]="registerForm.get('lastName')?.invalid &&
+                                            registerForm.get('lastName')?.touched">
                     </div>
                     <div class="col-6">
                         <input type="text" class="form-control" placeholder="Nhập tên *" formControlName="firstName"
-                            name="firstName">
+                            [class.is-invalid]="registerForm.get('firstName')?.invalid &&
+                                            registerForm.get('firstName')?.touched">
                     </div>
                 </div>
-                <input type="text" class="form-control mb-3" placeholder="Nhập số điện thoại *" formControlName="phoneNumber"
-                    name="phoneNumber">
-                <input type="email" class="form-control mb-3" placeholder="Nhập email (không bắt buộc)" formControlName="email"
-                    name="email">
+
+                <input type="text" class="form-control mb-3" formControlName="phoneNumber"
+                    placeholder="Nhập số điện thoại *" [class.is-invalid]="registerForm.get('phoneNumber')?.invalid &&
+                                            registerForm.get('phoneNumber')?.touched">
+
+                <input type="email" class="form-control mb-3" placeholder="Nhập email (không bắt buộc)"
+                    formControlName="email" name="email">
+
                 <input type="address" class="form-control mb-3" placeholder="Nhập địa chỉ *" formControlName="address"
-                    name="address">
+                    [class.is-invalid]="registerForm.get('address')?.invalid &&
+                                            registerForm.get('address')?.touched">
+                                            
                 <div class="position-relative mb-3">
-                    <input [type]="showPassword ? 'text' : 'password'" class="form-control mb-3" placeholder="Nhập mật khẩu *"
-                        formControlName="password" name="password">
+                    <input [type]="showPassword ? 'text' : 'password'" class="form-control mb-3"
+                        placeholder="Nhập mật khẩu *" formControlName="password" [class.is-invalid]="registerForm.get('password')?.invalid &&
+                                            registerForm.get('password')?.touched">
                     <i class="bi show-password-icon" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"
                         (click)="togglePassword()"></i>
                 </div>
+
                 <div class="position-relative mb-3">
-                    <input [type]="showPassword ? 'text' : 'password'" class="form-control mb-3" placeholder="Nhập lại mật khẩu *"
-                        formControlName="confirmPassword" name="confirmPassword">
+                    <input [type]="showPassword ? 'text' : 'password'" class="form-control mb-3"
+                        placeholder="Nhập lại mật khẩu *" formControlName="confirmPassword" [class.is-invalid]="registerForm.get('confirmPassword')?.invalid &&
+                                            registerForm.get('confirmPassword')?.touched">
                     <i class="bi show-password-icon" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"
                         (click)="togglePassword()"></i>
                 </div>
+
                 <div class="text-muted mb-2" style="font-size: 0.95rem;">
                     Bằng việc đăng kí này, bạn đã chấp nhận các chính sách của TechStore.
                 </div>
+                
                 <button type="submit" class="btn btn-danger w-100 mb-3">Đăng ký</button>
             </form>
             <div class="d-flex align-items-center my-3">

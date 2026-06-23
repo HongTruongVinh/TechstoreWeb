@@ -73,7 +73,7 @@ export class NavbarComponent {
     });
 
     this.searchForm.valueChanges.pipe(debounceTime(700), distinctUntilChanged(),).subscribe(value => {
-      this.query.keyword = value.keyword;
+      this.query.keyword = value.keyword.trim();
 
       this.productService.getProducts(this.query).subscribe((res) => {
         if (res.retCode == ERetCode.Successfull) {

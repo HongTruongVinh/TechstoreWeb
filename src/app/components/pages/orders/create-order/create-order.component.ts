@@ -54,7 +54,6 @@ export class CreateOrderComponent {
   listDiscountCodes: string[] = [];
   discountRate = 0;
   shipping: number = 0;
-  shippingRate: any = '65.00';
   tax: any;
   taxRate = 0;
   totalPrice: number = 0;

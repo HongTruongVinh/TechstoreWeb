@@ -8,10 +8,10 @@
       </div>
       <form (ngSubmit)="submit()" [formGroup]="loginForm">
         <input type="text" class="form-control mb-3" placeholder="Email hoặc SĐT" formControlName="loginIdentifier"
-          name="loginIdentifier">
+           [class.is-invalid]="loginForm.get('loginIdentifier')?.invalid && loginForm.get('loginIdentifier')?.touched">
         <div class="position-relative mb-3">
-          <input [type]="showPassword ? 'text' : 'password'" class="form-control pe-5" placeholder="Mật khẩu"
-            formControlName="password" name="password">
+          <input [type]="showPassword ? 'text' : 'password'" class="form-control pe-5" placeholder="Mật khẩu" formControlName="password" 
+           [class.is-invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
           <i class="bi show-password-icon" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'" (click)="togglePassword()"></i>
         </div>
         <label class="text-danger mb-2" *ngIf="loginfail"> Sai tên đăng nhập hoặc mật khẩu</label>
