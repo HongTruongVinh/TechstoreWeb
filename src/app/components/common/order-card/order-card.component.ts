@@ -5,11 +5,12 @@ import { ThousandSeparatorPipe } from '../../../pipes/thousandSeparator.pipe';
 import { OrderStatusPipe } from '../../../pipes/order-status.pipe';
 import { DateToStringPipe } from '../../../pipes/DatePipe';
 import { ListItemOrderModel } from '../../../models/models/order/list-item-order.model';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-order-card',
   standalone: true,
-  imports: [FullImageUrlPipe, ThousandSeparatorPipe, OrderStatusPipe, DateToStringPipe],
+  imports: [FullImageUrlPipe, ThousandSeparatorPipe, OrderStatusPipe, DateToStringPipe, CommonModule],
   templateUrl: './order-card.component.html',
   styleUrl: './order-card.component.scss'
 })

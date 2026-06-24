@@ -17,6 +17,7 @@
 
   <div class="d-flex mt-3 border-top pt-2 small align-items-center">
     <span>Cập nhật lúc: {{order.updatedAt | dateToString: "getDatetime"}}</span>
+    <p class="fs-md ms-4 mb-0" [ngClass]="order.orderStatus | orderStatus:'class'"> {{ order.orderStatus | orderStatus:'label' }} </p>
     <div class="ms-auto text-end">
       <span>Thành tiền:</span>
       <span class="fw-semibold final-amount">

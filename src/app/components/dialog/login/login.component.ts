@@ -48,18 +48,14 @@ export class LoginComponent {
 
   ngOnInit(): void {
     this.loginForm = this.formBuilder.group({
-      loginIdentifier: ['', [Validators.required]],     //  0123456001
-      password: ['', [Validators.required]],    //  Abcd1234
+      loginIdentifier: ['0123456001', [Validators.required]],     //  0123456001
+      password: ['Abcd1234', [Validators.required]],    //  Abcd1234
     });
   }
 
   submit() {
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
-      return;
-    }
-
-    if (this.checkLoginValidatetion()) {
       return;
     }
 
@@ -100,11 +96,6 @@ export class LoginComponent {
           this.isLoading = false;
         }
       });
-  }
-
-  private checkLoginValidatetion(): boolean {
-
-    return true;
   }
 
   openRegisterModal() {
