@@ -5,12 +5,14 @@
 
 export const environment = {
   production: false,
-  //baseUrl: 'https://techstoreapi-35j6.onrender.com/api/',
-  //urlUploadFile : 'https://techstoreapi-35j6.onrender.com/api/',
-  baseUrl: 'https://localhost:7081/api/',
-  urlUploadFile : 'https://localhost:7081/api/',
   imagesLink: 'https://res.cloudinary.com/dc8ijvcze/image/upload/v1747216196/',
-  baseHost: 'https://localhost:7081/',
+  baseUrl: 'https://techstorebe.onrender.com/api/',
+  urlUploadFile : 'https://techstorebe.onrender.com/api/',
+  baseHost: 'https://techstorebe.onrender.com/',
+  // baseUrl: 'https://localhost:7081/api/',
+  // urlUploadFile : 'https://localhost:7081/api/',
+  // baseHost: 'https://localhost:7081/',
+  // baseHost: 'https://localhost:7081/',
 };
 
 

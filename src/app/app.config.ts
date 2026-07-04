@@ -3,7 +3,7 @@ import {
   APP_INITIALIZER,
   inject
 } from '@angular/core';
-import { provideRouter, withInMemoryScrolling } from '@angular/router';
+import { provideRouter, withHashLocation, withInMemoryScrolling } from '@angular/router';
 
 import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
@@ -47,6 +47,8 @@ export function initializeApp() {
 
 export const appConfig: ApplicationConfig = {
   providers: [
+
+    // provideRouter(routes, withHashLocation()),
 
     provideRouter(routes,
       withInMemoryScrolling({
