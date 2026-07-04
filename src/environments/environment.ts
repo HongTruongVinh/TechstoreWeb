@@ -12,7 +12,6 @@ export const environment = {
   // baseUrl: 'https://localhost:7081/api/',
   // urlUploadFile : 'https://localhost:7081/api/',
   // baseHost: 'https://localhost:7081/',
-  // baseHost: 'https://localhost:7081/',
 };
 
 

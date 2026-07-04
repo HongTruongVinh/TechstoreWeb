@@ -192,8 +192,8 @@
             <div class="card-body pt-4">
                 <div class="d-flex align-items-center justify-content-center mb-3">
                     @if(paymentData && !isLoadingQrCode) {
-                        <img *ngIf="!isPaymentSuccess" [src]="paymentData.qrDataURL" alt="QR Code" class="img-fluid qr-code-image" (click)="testSignalR()">
-                        <!-- <img *ngIf="!isPaymentSuccess" [src]="paymentData.qrDataURL" alt="QR Code" class="img-fluid qr-code-image"> -->
+                        <!-- <img *ngIf="!isPaymentSuccess" [src]="paymentData.qrDataURL" alt="QR Code" class="img-fluid qr-code-image" (click)="testSignalR()"> -->
+                        <img *ngIf="!isPaymentSuccess" [src]="paymentData.qrDataURL" alt="QR Code" class="img-fluid qr-code-image">
                         <ng-lottie *ngIf="isPaymentSuccess" [options]="successOptions" class=" qr-code-image"></ng-lottie>
                         <div class="ms-4">
                             <p *ngIf="!isPaymentSuccess" class="mb-1 label-text">Vui lòng quét mã QR để thanh toán</p>
@@ -229,4 +229,4 @@
     </div>
 </div>
 
-<!-- <button *ngIf="paymentRequest" id="btnTest" class="btn btn-primary" (click)="testSignalR()">Test SignalR</button> -->
+<button *ngIf="paymentRequest" id="btnTest" class="btn btn-primary" (click)="testSignalR()">Test SignalR</button>
