@@ -288,34 +288,6 @@
   50% { transform: translateY(-20px); }
 }
 
-// Search Section
-.search-section {
-    border-radius: 10px;
-  .search-container {
-    display: flex;
-    justify-content: center;
-  }
-  
-  .input-group {
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    max-width: 600px; // Limit search width
-    width: 100%;
-    
-    .form-control {
-      border-right: none;
-      
-      &:focus {
-        border-color: #667eea;
-        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
-      }
-    }
-    
-    .btn {
-      border-left: none;
-    }
-  }
-}
-
 // Category Cards
 .category-card {
   transition: all 0.3s ease;
