@@ -48,13 +48,12 @@ export function initializeApp() {
 export const appConfig: ApplicationConfig = {
   providers: [
 
-    // provideRouter(routes, withHashLocation()),
-
     provideRouter(routes,
       withInMemoryScrolling({
         scrollPositionRestoration: 'top',
         anchorScrolling: 'enabled'
-      })
+      }),
+      // withHashLocation()
     ),
 
     provideHttpClient(

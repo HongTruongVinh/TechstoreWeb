@@ -35,7 +35,8 @@
                                 <div class="mb-3">
                                     <label for="firstName" class="form-label">Tên</label>
                                     <input formControlName="firstName" type="text" class="form-control" id="firstName"
-                                        placeholder="Nhập tên của bạn">
+                                        placeholder="Nhập tên của bạn" [class.is-invalid]="profileForm.get('firstName')?.invalid &&
+                                            profileForm.get('firstName')?.touched">
                                 </div>
                             </div>
                             <!--end col-->
@@ -43,7 +44,8 @@
                                 <div class="mb-3">
                                     <label for="lastnameInput" class="form-label">Họ và tên đệm</label>
                                     <input formControlName="lastName" type="text" class="form-control"
-                                        id="lastnameInput" placeholder="Nhập họ và tên đệm của bạn">
+                                        id="lastnameInput" placeholder="Nhập họ và tên đệm của bạn" [class.is-invalid]="profileForm.get('lastName')?.invalid &&
+                                            profileForm.get('lastName')?.touched">
                                 </div>
                             </div>
                             <!--end col-->
@@ -51,7 +53,8 @@
                                 <div class="mb-3">
                                     <label for="phonenumberInput" class="form-label">Số điện thoại</label>
                                     <input formControlName="phoneNumber" type="text" class="form-control"
-                                        id="phonenumberInput" placeholder="Nhập số điện thoại">
+                                        id="phonenumberInput" placeholder="Nhập số điện thoại" [class.is-invalid]="profileForm.get('phoneNumber')?.invalid &&
+                                            profileForm.get('phoneNumber')?.touched">
                                 </div>
                             </div>
                             <!--end col-->
@@ -67,7 +70,8 @@
                                 <div class="mb-3">
                                     <label for="cityInput" class="form-label">Địa chỉ</label>
                                     <input formControlName="address" type="text" class="form-control" id="cityInput"
-                                        placeholder="City">
+                                        placeholder="Địa chỉ" [class.is-invalid]="profileForm.get('address')?.invalid &&
+                                            profileForm.get('address')?.touched">
                                 </div>
                             </div>
                             <!--end col-->

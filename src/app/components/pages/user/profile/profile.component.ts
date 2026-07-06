@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TokenStorageService } from '../../../../core/services/ui/token-storage.service';
 import { MessengerServices } from '../../../../core/services/ui/messenger.service';
@@ -8,6 +8,7 @@ import { UserService } from '../../../../core/services/api/user.service';
 import { UserUpdateModel } from '../../../../models/models/user/user-update.model';
 import { ERetCode } from '../../../../models/enum/etype_project.enum';
 import { CommonModule } from '@angular/common';
+import { Validator } from '../../../../library/share-function/validator';
 
 @Component({
   selector: 'app-profile',
@@ -21,7 +22,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './profile.component.scss'
 })
 export class ProfileComponent {
-user!: User;
+  user!: User;
 
   constructor(
     private readonly router: Router,
@@ -46,11 +47,11 @@ user!: User;
     }
 
     this.profileForm = this.formBuilder.group({
-      firstName: [{ value: '', disabled: true }],
-      lastName: [{ value: '', disabled: true }],
-      phoneNumber: [{ value: '', disabled: true }],
+      firstName: [{ value: '', disabled: true }, Validators.required],
+      lastName: [{ value: '', disabled: true }, Validators.required],
+      phoneNumber: [{ value: '', disabled: true }, Validators.required],
       email: [{ value: '', disabled: true }],
-      address: [{ value: '', disabled: true }]
+      address: [{ value: '', disabled: true }, Validators.required]
     });
 
     this.loadData();
@@ -84,39 +85,65 @@ user!: User;
 
 
   updateProfileAction() {
+    if (this.profileForm.invalid) {
+      this.profileForm.markAllAsTouched();
+      return;
+    }
+
+    if (!this.checkRegisterValidatetion()) {
+      return;
+    }
+
     const user = this.tokenStorageService.getUser();
     var id = user?.id;
 
-    if (this.profileForm.valid) {
-      const dataInsert: UserUpdateModel = {
-        firstName: this.profileForm.value.firstName,
-        lastName: this.profileForm.value.lastName,
-        phoneNumber: this.profileForm.value.phoneNumber,
-        email: this.profileForm.value.email,
-        address: this.profileForm.value.address,
-      }
-      
-      this.userService.updateProfile(dataInsert).subscribe((res) => {
-          if (res.retCode == ERetCode.Successfull) {
-            var user = this.tokenStorageService.getUser();
-            if (user) {
-              user.firstName = dataInsert.firstName;
-              user.lastName = dataInsert.lastName;
-              user.phoneNumber = dataInsert.phoneNumber;
-              user.email = dataInsert.email;
-              user.address = dataInsert.address;
-              this.tokenStorageService.saveUser(user);
-              this.isEditMode = false;
-              this.loadData();
-            }
-            this.messengerService.successes("Cập nhật thành công");
-          } else {
-            this.messengerService.errorWithIssue();
-          }
-        });
+    const dataInsert: UserUpdateModel = {
+      firstName: this.profileForm.value.firstName,
+      lastName: this.profileForm.value.lastName,
+      phoneNumber: this.profileForm.value.phoneNumber,
+      email: this.profileForm.value.email,
+      address: this.profileForm.value.address,
+    }
+
+    this.userService.updateProfile(dataInsert).subscribe((res) => {
+      if (res.retCode == ERetCode.Successfull) {
+        var user = this.tokenStorageService.getUser();
+        if (user) {
+          user.firstName = dataInsert.firstName;
+          user.lastName = dataInsert.lastName;
+          user.phoneNumber = dataInsert.phoneNumber;
+          user.email = dataInsert.email;
+          user.address = dataInsert.address;
+          this.tokenStorageService.saveUser(user);
+          this.isEditMode = false;
+          this.loadData();
+        }
+        this.isEditMode = false;
+        this.messengerService.successes("Cập nhật thành công");
       } else {
         this.messengerService.errorWithIssue();
       }
+    });
+  }
+
+  private checkRegisterValidatetion(): boolean {
+
+    if (!Validator.isValidPassword(this.profileForm.value.password)) {
+      this.messengerService.warringWithMessage('Mật khẩu phải chứa ít nhất một chữ in hoa, một chữ số và không chứa ký tự đặc biệt');
+      return false;
+    }
+
+    if (!Validator.isValidVietnamPhone(this.profileForm.value.phoneNumber)) {
+      this.messengerService.warringWithMessage('Số điện thoại không hợp lệ, vui lòng nhập số điện thoại Việt Nam');
+      return false;
+    }
+
+    if (this.profileForm.value.email && !Validator.isValidEmail(this.profileForm.value.email)) {
+      this.messengerService.warringWithMessage('Email không hợp lệ, vui lòng kiểm tra lại');
+      return false;
+    }
+
+    return true;
   }
 
   /**
