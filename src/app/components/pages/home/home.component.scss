@@ -36,13 +36,9 @@
   
   // Main Hero Content
   .hero-main {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 0; // Allow flex item to shrink
-    //padding: 0 0.5rem; // Add small horizontal padding for better spacing
-  }
+  flex: 1;
+  display: block;
+}
 
   .hero-main-container {
     width: 100%;

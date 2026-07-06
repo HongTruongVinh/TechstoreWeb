@@ -10,8 +10,7 @@
         <!-- Hero Advertisement -->
         <div class="hero-advertisement">
           <div class="advertisement-card">
-            <!-- <img [src]="heroAdvertisementImageLink" alt="Siêu khuyến mãi" class="ad-image" /> -->
-             <img [src]="carouselSlides[0].imageUrl" class="ad-image">
+            <img [src]="heroAdvertisementImageLink" alt="Siêu khuyến mãi" class="ad-image" />
           </div>
         </div>
 
@@ -22,8 +21,7 @@
               <div class="carousel-slide" *ngFor="let slide of carouselSlides; let i = index">
                 <div class="slide-content">
                   <div class="slide-image">
-                    <!-- <img [src]="slide.imageUrl" alt="{{ slide.title }}" class="slide-img" /> -->
-                    <img [src]="heroAdvertisementImageLink" class="slide-img">
+                    <img [src]="slide.imageUrl" alt="{{ slide.title }}" class="slide-img" />
                   </div>
                 </div>
               </div>
