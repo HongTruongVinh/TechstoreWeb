@@ -77,6 +77,7 @@
 /// scss for searchbox
 /// /////////////////////////////////////////
 .search-container {
+  position: relative;
   flex: 1;
   max-width: 100%;
 }
@@ -142,26 +143,21 @@
   }
 }
 
+////////////////////////////////////////////
 .search-result {
+  position: absolute;
+  top: 75px;
+  left: 0;
+  right: 0;
 
-    position: absolute;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, .15);
 
-    top: 75px;
+  max-height: 450px;
+  overflow-y: auto;
 
-    background: white;
-
-    border-radius: 12px;
-
-    box-shadow: 0 5px 20px rgba(0,0,0,.15);
-
-    overflow: hidden;
-
-    max-height: 450px;
-    min-width: 550px;
-
-    overflow-y: auto;
-
-    z-index: 999;
+  z-index: 999;
 }
 
 .product-item {
@@ -198,15 +194,6 @@
 }
 
 .product-info {
-
-    flex: 1;
-
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-
     gap: 10px;
 }
 
