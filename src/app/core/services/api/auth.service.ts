@@ -7,6 +7,7 @@ import { ApiResponseModel } from '../../../models/models/api-response.model';
 import { LoginRequestModel } from '../../../models/models/authentication/login-request.model';
 import { RegisterRequestModel } from '../../../models/models/authentication/register-request.model';
 import { LoginResponeModel } from '../../../models/models/authentication/login-response.model';
+import { ChangePasswordRequestModel } from '../../../models/models/authentication/change-password-request.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
@@ -44,4 +45,17 @@ export class AuthenticationService {
       );
   }
 
+  changePassword(changePasswordRequest: ChangePasswordRequestModel) {
+    return this.linkSettingsService.getResLinkSetting('Authentication', 'ChangePassword')
+      .pipe(
+        switchMap((apiUrl) => {
+          if (!apiUrl) {
+            throw new Error('Không tìm thấy URL API cho ChangePassword');
+          }
+
+          return this.transferHttp.put(apiUrl, changePasswordRequest);
+        }),
+        map((res: ApiResponseModel<any>) => res)
+      );
+  }
 }

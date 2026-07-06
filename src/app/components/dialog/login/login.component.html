@@ -7,7 +7,7 @@
         <h4 class="fw-bold mt-2 mb-3">Đăng nhập tài khoản</h4>
       </div>
       <form (ngSubmit)="submit()" [formGroup]="loginForm">
-        <input type="text" class="form-control mb-3" placeholder="Email hoặc SĐT" formControlName="loginIdentifier"
+        <input type="text" class="form-control mb-3" placeholder="Số điện thoại" formControlName="loginIdentifier"
            [class.is-invalid]="loginForm.get('loginIdentifier')?.invalid && loginForm.get('loginIdentifier')?.touched">
         <div class="position-relative mb-3">
           <input [type]="showPassword ? 'text' : 'password'" class="form-control pe-5" placeholder="Mật khẩu" formControlName="password" 
@@ -15,7 +15,14 @@
           <i class="bi show-password-icon" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'" (click)="togglePassword()"></i>
         </div>
         <label class="text-danger mb-2" *ngIf="loginfail"> Sai tên đăng nhập hoặc mật khẩu</label>
-        <button type="submit" class="btn btn-danger w-100 mb-3">Đăng nhập</button>
+        <button type="submit" class="btn btn-danger w-100 mb-3" [disabled]="isLoading">
+          @if (isLoading) {
+          <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+          Đang đăng nhập...
+          } @else {
+          Đăng nhập
+          }
+        </button>
       </form>
       <div class="d-flex align-items-center my-3">
         <hr class="flex-grow-1">

@@ -48,7 +48,11 @@ export class RegisterComponent {
       phoneNumber: ['', [Validators.required]],
       address: ['', [Validators.required]],
       email: ['', Validators.email],
-      password: ['', [Validators.required]],
+      password: ['', [
+        Validators.required,
+        Validators.minLength(6),
+        Validators.maxLength(18)
+    ]],
       confirmPassword: ['', [Validators.required]],
     });
   }
@@ -62,6 +66,12 @@ export class RegisterComponent {
     if(!this.checkRegisterValidatetion()){
       return;
     }
+
+    if (this.registerForm.value.password.length > 18) {
+      this.messengerService.warringWithMessage('Mật khẩu không được vượt quá 18 ký tự.');
+      return;
+    }
+
 
     const registerRequest: RegisterRequestModel = {
         lastName: this.registerForm.value.lastName,

@@ -48,6 +48,7 @@
   "Authentication": {
     "RegisterUser": "authentication/register",
     "LoginNormalAccount": "authentication/login",
+    "ChangePassword": "authentication/change-password",
     "LoginWithGoogle": "authentication/login-google",
     "LoginWithFaceBook": "authentication/login-facebook"
   },

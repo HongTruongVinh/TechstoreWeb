@@ -9,6 +9,8 @@ import { UserUpdateModel } from '../../../../models/models/user/user-update.mode
 import { ERetCode } from '../../../../models/enum/etype_project.enum';
 import { CommonModule } from '@angular/common';
 import { Validator } from '../../../../library/share-function/validator';
+import { AuthenticationService } from '../../../../core/services/api/auth.service';
+import { ChangePasswordRequestModel } from '../../../../models/models/authentication/change-password-request.model';
 
 @Component({
   selector: 'app-profile',
@@ -23,12 +25,16 @@ import { Validator } from '../../../../library/share-function/validator';
 })
 export class ProfileComponent {
   user!: User;
+  oldPassword: string = '';
+  newPassword: string = '';
+  confirmPassword: string = '';
 
   constructor(
     private readonly router: Router,
     private formBuilder: FormBuilder,
     private readonly tokenStorageService: TokenStorageService,
     private readonly userService: UserService,
+    private readonly authService: AuthenticationService,
     private readonly messengerService: MessengerServices,
   ) { }
 
@@ -90,7 +96,7 @@ export class ProfileComponent {
       return;
     }
 
-    if (!this.checkRegisterValidatetion()) {
+    if (!this.checkProfileValidation()) {
       return;
     }
 
@@ -116,6 +122,7 @@ export class ProfileComponent {
           user.address = dataInsert.address;
           this.tokenStorageService.saveUser(user);
           this.isEditMode = false;
+          this.profileForm.disable(); // Vô hiệu hóa FormControl
           this.loadData();
         }
         this.isEditMode = false;
@@ -126,13 +133,7 @@ export class ProfileComponent {
     });
   }
 
-  private checkRegisterValidatetion(): boolean {
-
-    if (!Validator.isValidPassword(this.profileForm.value.password)) {
-      this.messengerService.warringWithMessage('Mật khẩu phải chứa ít nhất một chữ in hoa, một chữ số và không chứa ký tự đặc biệt');
-      return false;
-    }
-
+  private checkProfileValidation(): boolean {
     if (!Validator.isValidVietnamPhone(this.profileForm.value.phoneNumber)) {
       this.messengerService.warringWithMessage('Số điện thoại không hợp lệ, vui lòng nhập số điện thoại Việt Nam');
       return false;
@@ -144,6 +145,36 @@ export class ProfileComponent {
     }
 
     return true;
+  }
+
+  changePassword() {
+    if (!Validator.isValidPassword(this.oldPassword)) {
+      this.messengerService.warringWithMessage('Mật khẩu phải chứa ít nhất một chữ in hoa, một chữ số và không chứa ký tự đặc biệt');
+      return ;
+    }
+
+    if(this.newPassword != this.confirmPassword) {
+      this.messengerService.warringWithMessage('Mật khẩu mới và xác nhận mật khẩu không khớp');
+      return ;
+    }
+
+    if (this.newPassword.length > 18) {
+      this.messengerService.warringWithMessage('Mật khẩu không được vượt quá 18 ký tự.');
+      return;
+    }
+
+    const changePasswordRequest: ChangePasswordRequestModel = {
+      oldPassword: this.oldPassword,
+      newPassword: this.newPassword
+    };
+
+    this.authService.changePassword(changePasswordRequest).subscribe((res) => {
+      if (res.retCode == ERetCode.Successfull) {
+        this.messengerService.successes("Đổi mật khẩu thành công");
+      } else {
+        this.messengerService.errorNotification(res.systemMessage || "Đổi mật khẩu thất bại");
+      }
+    });
   }
 
   /**

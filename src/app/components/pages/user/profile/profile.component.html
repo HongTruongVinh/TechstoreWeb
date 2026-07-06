@@ -105,7 +105,7 @@
                                         <input [type]="fieldTextType ? 'text' : 'password'"
                                             class="form-control password-input" id="oldpasswordInput"
                                             placeholder="Enter current password"
-                                            pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}">
+                                            pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" [(ngModel)]="oldPassword" name="oldPassword" required>
                                         <button
                                             class="btn btn-link position-absolute top-0 end-0 text-decoration-none text-muted password-addon"
                                             type="button">
@@ -123,7 +123,7 @@
                                         <input [type]="fieldTextType1 ? 'text' : 'password'"
                                             class="form-control password-input" id="password-input"
                                             onpaste="return false" placeholder="Enter new password"
-                                            pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required>
+                                            pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"  [(ngModel)]="newPassword" name="newPassword" >
                                         <button
                                             class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon"
                                             type="button"><i class="ri-eye-fill align-middle"
@@ -139,7 +139,7 @@
                                     <label for="confirm-password-input" class="form-label">Nhập lại mật khẩu
                                         mới*</label>
                                     <div class="position-relative">
-                                        <input [type]="fieldTextType2 ? 'text' : 'password'"
+                                        <input [type]="fieldTextType2 ? 'text' : 'password'" [(ngModel)]="confirmPassword" name="confirmPassword"
                                             class="form-control password-input" onpaste="return false"
                                             id="confirm-password-input" placeholder="Confirm password"
                                             pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required>
@@ -157,7 +157,7 @@
                                     ?</a>
                                 <div class="">
 
-                                    <button type="submit" class="btn btn-success">Lưu thay đổi</button>
+                                    <button type="submit" class="btn btn-success" (click)="changePassword()">Lưu thay đổi</button>
                                 </div>
                             </div>
 
