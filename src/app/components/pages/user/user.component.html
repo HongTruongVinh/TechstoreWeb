@@ -2,12 +2,12 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-lg-3">
+    <div class="col-lg-3 col-md-4 col-sm-12">
       <!-- Sidebar -->
         <app-sidebar *ngIf="!device.isMobile()" ></app-sidebar>
     </div>
 
-    <div class="col-lg-9">
+    <div class="col-lg-9 col-md-8 col-sm-12">
       <!-- main content -->
        <router-outlet></router-outlet>
     </div>

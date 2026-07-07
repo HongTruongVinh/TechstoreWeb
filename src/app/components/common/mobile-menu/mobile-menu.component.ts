@@ -7,6 +7,9 @@ import { LoginDialogResult } from '../../../models/models/authentication/login-r
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthDialogService } from '../../../core/services/ui/AuthDialogService';
+import { Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { selectCartItemCount } from '../../../store/cart/cart.selectors';
 
 @Component({
   selector: 'app-mobile-menu',
@@ -23,6 +26,8 @@ export class MobileMenuComponent {
   @Output()
   login = new EventEmitter<void>();
 
+  totalQuantity$: Observable<number>;
+
   firstName: string = '';
 
   authDialog = inject(AuthDialogService);
@@ -30,7 +35,12 @@ export class MobileMenuComponent {
   constructor(
     private uiState: UiStateService,
     private readonly router: Router,
-  ) { }
+
+    private store: Store
+  ) {
+    this.totalQuantity$ = this.store.select(selectCartItemCount);
+
+  }
 
   ngOnInit() {
     const user = this.tks.getUser();
@@ -50,7 +60,7 @@ export class MobileMenuComponent {
 
   openLogin() {
     const ref = this.authDialog.openLogin();
-    
+
     ref.closed.subscribe(result => {
       const data = result as LoginDialogResult | undefined;
 

@@ -43,7 +43,8 @@
             </div>
 
             <!-- Giá và số lượng -->
-            <div class="d-flex align-items-center flex-wrap gap-4 mt-2">
+            <div class="d-flex align-items-center flex-wrap gap-4 mt-2  w-100 w-md-auto
+               justify-content-center justify-content-md-end">
 
                 <!-- Giá -->
                 <div class="text-end">
@@ -78,11 +79,17 @@
 </div>
 }
 
-<div *ngIf="selectedItems.length != 0" class="amount-section mb-3 p-3 shadow-sm rounded">
+@if (cartItems$ | async; as cartItems) {
+<div class="amount-section mb-3 p-3 shadow-sm rounded">
     <p class="amount-text mb-0 fw-bold">
         TỔNG TIỀN: <span class="text-danger">{{totalPrice$ | async | number | thousandSeparator}} ₫</span>
     </p>
-    <button type="button" class="btn" (click)="createOrder()">
-        Mua hàng ({{selectedItems.length}})
+    <button type="button" class="btn" (click)="createOrder()" [disabled]="selectedItems.length === 0">
+        @if (selectedItems.length > 0) {
+            Mua hàng ({{selectedItems.length}})
+        } @else {
+            Chọn sản phẩm để mua
+        }
     </button>
 </div>
+}

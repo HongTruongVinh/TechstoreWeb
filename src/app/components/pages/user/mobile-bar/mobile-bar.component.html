@@ -6,7 +6,20 @@
     </a>
 
     <a routerLink="/user/cart" routerLinkActive="active" (click)="cart()">
-        <span><i class="bi bi-cart"></i></span>
+        <!-- <span><i class="bi bi-cart"></i></span>
+        <small>Giỏ hàng</small> -->
+        <span class="cart-icon-wrapper ">
+            <i class="bi bi-cart"></i>
+
+            @if ((totalQuantity$ | async); as quantity) {
+            @if (quantity > 0) {
+            <span class="cart-badge">
+                {{ quantity }}
+            </span>
+            }
+            }
+        </span>
+
         <small>Giỏ hàng</small>
     </a>
 
