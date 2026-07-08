@@ -12,6 +12,7 @@ import { CategoryPanelComponent } from "../../common/category-panel/category-pan
 import { DeviceService } from '../../../core/services/ui/device.service';
 import { HomeService } from '../../../core/services/api/home.service';
 import { ProductSearchQuery } from '../../../models/models/product/product-search-query.model';
+import { CdkAriaLive } from "../../../../../node_modules/@angular/cdk/a11y/index";
 
 @Component({
   selector: 'app-home',
@@ -21,7 +22,7 @@ import { ProductSearchQuery } from '../../../models/models/product/product-searc
     FormsModule,
     ProductCardComponent,
     CategoryPanelComponent
-  ],
+],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })

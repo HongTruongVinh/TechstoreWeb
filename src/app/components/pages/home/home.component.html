@@ -7,10 +7,9 @@
     <!-- Main Hero Content (Carousel + Ad) -->
     <div class="hero-main">
       <div class="hero-main-container">
-        <!-- Hero Advertisement -->
-        <div class="hero-advertisement">
-          <div class="advertisement-card">
-            <img [src]="heroAdvertisementImageLink" alt="Siêu khuyến mãi" class="ad-image" />
+        <div class="hero-event">
+          <div class="event-card">
+            <img [src]="heroAdvertisementImageLink" alt="Siêu khuyến mãi" class="event-image" />
           </div>
         </div>
 
@@ -75,7 +74,7 @@
 
 
 <!-- Featured Products Section -->
-<section class="featured-products py-5">
+<section class="py-5">
   <div class="container">
     <h2 class="text-center mb-5 text-white">Sản phẩm nổi bật</h2>
     <div class="row g-4 list-product">
@@ -90,7 +89,7 @@
   </div>
 </section>
 
-<section class="iphone-products py-5 bg-white">
+<section class="py-5 bg-white">
   <div class="container">
     <h2 class="text-center mb-5 pointer-cursor" (click)="onSearch(brandName1)">{{brandName1}}</h2>
     <div class="row g-4 list-product">
@@ -105,7 +104,7 @@
   </div>
 </section>
 
-<section class="samsung-products py-5">
+<section class="py-5">
   <div class="container">
     <h2 class="text-center mb-5 text-white pointer-cursor" (click)="onSearch(brandName2)">{{brandName2}}</h2>
     <div class="row g-4 list-product">

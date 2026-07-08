@@ -49,25 +49,19 @@
     display: block;
 }
 
-  .hero-advertisement {
-    width: 100%;
-    //max-width: 600px;
+  .hero-event {
 
-    .advertisement-card {
+    .event-card {
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 0;
-      //border-radius: 15px;
-      overflow: hidden;
       box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid rgba(255, 255, 255, 0.15);
 
-      .ad-image {
+      .event-image {
         width: 100%;
-        height: 270px;
-        object-fit: cover;
+        height: auto;
         display: block;
       }
     }
@@ -75,15 +69,10 @@
   
   // Hero Carousel
   .hero-carousel {
-    width: 100%;
-    //max-width: 600px; // Increased max width for better space utilization
-    position: relative;
-    height: 300px; // Increased height since no text content
+    // position: relative;
     
     .carousel-container {
-      position: relative;
-      width: 100%;
-      height: 100%;
+      // position: relative;
       overflow: hidden;
       //border-radius: 15px;
       background: rgba(255, 255, 255, 0.1);
@@ -93,34 +82,27 @@
     
     .carousel-track {
       display: flex;
-      width: 100%;
-      height: 100%;
       transition: transform 0.5s ease-in-out;
     }
     
     .carousel-slide {
       min-width: 100%;
-      height: 100%;
+      height: auto;
       display: flex;
       align-items: center;
       justify-content: center;
       
       .slide-content {
-        width: 100%;
-        height: 100%;
         text-align: center;
         color: white;
         padding: 0;
         
         .slide-image {
-          width: 100%;
-          height: 100%;
           
           .slide-img {
             width: 100%;
-            height: 100%;
-            object-fit: cover;
-            //border-radius: 15px;
+        height: auto;
+        display: block;
           }
         }
       }
@@ -135,8 +117,8 @@
       gap: 0.5rem;
       
       .indicator {
-        width: 10px;
-        height: 10px;
+        width: clamp(8px, 1vw, 12px);
+        height: clamp(8px, 1vw, 12px);
         border-radius: 50%;
         border: none;
         background: rgba(255, 255, 255, 0.4);
@@ -161,8 +143,8 @@
       background: rgba(255, 255, 255, 0.2);
       border: none;
       color: white;
-      width: 40px;
-      height: 40px;
+      width: clamp(20px, 3vw, 40px);
+      height: clamp(20px, 3vw, 40px);
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -192,11 +174,11 @@
 
   // Promotions Section
   .promotions-section {
-    width: 240px; // Same width as category-sidebar for balance
+    width: clamp(200px, 20%, 240px); 
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
     border-radius: 15px;
-    padding: 1rem;
+    padding: clamp(0.5rem, 1vw, 0.75rem);
     border: 1px solid rgba(255, 255, 255, 0.2);
     
     .promotions-header {
@@ -221,12 +203,13 @@
     .promotions-grid {
       display: flex;
       flex-direction: column;
-      gap: 0.75rem;
+      gap: clamp(0.5rem, 1vw, 0.75rem);
+      overflow-y: auto;
       
       .promotion-item {
         background: rgba(255, 255, 255, 0.1);
         border-radius: 10px;
-        padding: 1rem;
+        padding: clamp(0.5rem, 1vw, 0.75rem);
         cursor: pointer;
         transition: all 0.3s ease;
         border: 1px solid transparent;
@@ -243,7 +226,7 @@
           
           i {
             color: #ffd700;
-            font-size: 2rem;
+            font-size: clamp(1.2rem, 2vw, 2rem);
           }
         }
         
@@ -253,24 +236,22 @@
           .promotion-title {
             color: white;
             font-weight: 600;
-            font-size: 0.9rem;
-            margin-bottom: 0.25rem;
+            font-size: clamp(0.8rem, 1.5vw, 0.9rem);
             display: block;
           }
           
           .promotion-description {
             color: rgba(255, 255, 255, 0.8);
-            font-size: 0.75rem;
-            margin-bottom: 0.5rem;
+            font-size: clamp(0.4rem, 1.2vw, 0.8rem);
             line-height: 1.3;
           }
           
           .promotion-discount {
             background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
             color: white;
-            padding: 0.25rem 0.5rem;
+            padding: clamp(0.25rem, 1.2vw, 0.5rem) clamp(0.5rem, 1.5vw, 0.75rem);
             border-radius: 15px;
-            font-size: 0.8rem;
+            font-size: clamp(0.6rem, 1.2vw, 0.75rem);
             font-weight: 600;
             display: inline-block;
           }
@@ -360,56 +341,13 @@
 // Responsive Design
 @media (max-width: 768px) {
   .hero-section {
-    min-height: 250px; // Reduced from 400px
+    // height: clamp(200px, 30vw, 250px); // Reduced from 400px
     text-align: center;
     margin-top: 0; // Remove margin-top as it's handled by layout
     
     .hero-content {
       flex-direction: column;
-      gap: 0.75rem; // Further reduced gap for mobile
-      min-height: 250px; // Reduced from 400px
-    }
-    
-    .category-sidebar {
-      width: 100%;
-      order: 2; // Move sidebar below main content on mobile
-      padding: 0.75rem; // Reduced padding
-      
-      .sidebar-header {
-        margin-bottom: 0.75rem; // Reduced margin
-        padding-bottom: 0.5rem; // Reduced padding
-        
-        .sidebar-title {
-          font-size: 0.9rem; // Reduced font size
-        }
-      }
-      
-      .sidebar-menu {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr); // 3 columns instead of 2
-        gap: 0.25rem; // Reduced gap
-        
-        .menu-item {
-          margin-bottom: 0;
-          padding: 0.5rem 0.25rem; // Reduced padding
-          
-          .menu-icon {
-            width: 30px; // Reduced from 35px
-            height: 30px; // Reduced from 35px
-            margin-right: 0.5rem; // Reduced margin
-            
-            i {
-              font-size: 0.9rem; // Reduced font size
-            }
-          }
-          
-          .menu-content {
-            .menu-title {
-              font-size: 0.8rem; // Reduced font size
-            }
-          }
-        }
-      }
+      gap: clamp(0.5rem, 2vw, 0.75rem); // Further reduced gap for mobile
     }
     
     .hero-main {
@@ -420,6 +358,11 @@
     .promotions-section {
       width: 100%;
       order: 3; // Move promotions below sidebar
+
+      // transform: scale(1, 0.7); // Reset any transform applied for desktop
+      // .promotions-header{
+      //   display: none;
+      // }
       
       .promotions-grid {
         display: flex;
@@ -441,13 +384,13 @@
           flex: 0 0 85%;
           min-width: 85%;
           scroll-snap-align: start;
-          padding: 0.9rem;
+          padding: clamp(0.5rem, 1vw, 0.75rem);
           
           .promotion-image {
-            margin-bottom: 0.5rem;
+            margin-bottom: clamp(0.5rem, 1vw, 0.75rem);
             
             i {
-              font-size: 1.6rem;
+              font-size: clamp(1rem, 2vw, 1.5rem); // Reduced icon size
             }
           }
           
@@ -470,7 +413,7 @@
     }
     
     .hero-carousel {
-      height: 250px; // Reduced height on mobile
+      height: clamp(200px, 30vw, 250px); // Reduced height on mobile
       max-width: 100%; // Full width on mobile
       
       .carousel-slide {
@@ -508,15 +451,6 @@
     }
     
   }
-  
-  .search-section {
-    .input-group {
-      .form-control {
-        font-size: 1rem;
-      }
-    }
-  }
-  
   .category-card,
   .product-card {
     margin-bottom: 1rem;
@@ -542,145 +476,145 @@
   }
 }
 
-@media (max-width: 576px) {
-  .hero-section {
-    padding: 2rem 0; // Reduced from 3rem
-    margin-top: 0; // Remove margin-top as it's handled by layout
+// @media (max-width: 576px) {
+//   .hero-section {
+//     padding: 2rem 0; // Reduced from 3rem
+//     margin-top: 0; // Remove margin-top as it's handled by layout
     
-    .hero-content {
-      gap: 0.5rem; // Further reduced gap for small mobile
-    }
+//     .hero-content {
+//       gap: 0.5rem; // Further reduced gap for small mobile
+//     }
     
-    .hero-carousel {
-      height: 220px; // Further reduced height on small mobile
-      max-width: 100%; // Full width on small mobile
-    }
+//     .hero-carousel {
+//       height: 220px; // Further reduced height on small mobile
+//       max-width: 100%; // Full width on small mobile
+//     }
     
-    .promotions-section {
-      .promotions-grid {
-        display: flex;
-        flex-direction: row;
-        gap: 0.5rem;
-        overflow-x: auto;
-        scroll-snap-type: x mandatory;
-        padding-bottom: 0.5rem;
-        -webkit-overflow-scrolling: touch;
-        touch-action: pan-x;
+//     .promotions-section {
+//       .promotions-grid {
+//         display: flex;
+//         flex-direction: row;
+//         gap: 0.5rem;
+//         overflow-x: auto;
+//         scroll-snap-type: x mandatory;
+//         padding-bottom: 0.5rem;
+//         -webkit-overflow-scrolling: touch;
+//         touch-action: pan-x;
 
-        &::-webkit-scrollbar {
-          display: none;
-        }
-        -ms-overflow-style: none;
-        scrollbar-width: none;
+//         &::-webkit-scrollbar {
+//           display: none;
+//         }
+//         -ms-overflow-style: none;
+//         scrollbar-width: none;
 
-        .promotion-item {
-          flex: 0 0 90%;
-          min-width: 90%;
-          scroll-snap-align: start;
-          padding: 0.5rem;
+//         .promotion-item {
+//           flex: 0 0 90%;
+//           min-width: 90%;
+//           scroll-snap-align: start;
+//           padding: 0.5rem;
           
-          .promotion-image {
-            i {
-              font-size: 1.25rem;
-            }
-          }
+//           .promotion-image {
+//             i {
+//               font-size: 1.25rem;
+//             }
+//           }
           
-          .promotion-content {
-            .promotion-title {
-              font-size: 0.75rem;
-            }
+//           .promotion-content {
+//             .promotion-title {
+//               font-size: 0.75rem;
+//             }
             
-            .promotion-description {
-              font-size: 0.65rem;
-            }
+//             .promotion-description {
+//               font-size: 0.65rem;
+//             }
             
-            .promotion-discount {
-              font-size: 0.65rem;
-              padding: 0.15rem 0.3rem;
-            }
-          }
-        }
-      }
+//             .promotion-discount {
+//               font-size: 0.65rem;
+//               padding: 0.15rem 0.3rem;
+//             }
+//           }
+//         }
+//       }
       
-      .carousel-slide {
-        .slide-content {
-          padding: 1rem;
+//       .carousel-slide {
+//         .slide-content {
+//           padding: 1rem;
           
-          .slide-text {
-            h3 {
-              font-size: 1.1rem; // Smaller font
-            }
+//           .slide-text {
+//             h3 {
+//               font-size: 1.1rem; // Smaller font
+//             }
             
-            p {
-              font-size: 0.8rem; // Smaller font
-            }
-          }
-        }
-      }
+//             p {
+//               font-size: 0.8rem; // Smaller font
+//             }
+//           }
+//         }
+//       }
       
-      .carousel-nav {
-        width: 30px; // Even smaller nav buttons
-        height: 30px;
+//       .carousel-nav {
+//         width: 30px; // Even smaller nav buttons
+//         height: 30px;
         
-        i {
-          font-size: 0.9rem;
-        }
-      }
-    }
+//         i {
+//           font-size: 0.9rem;
+//         }
+//       }
+//     }
     
-    .category-sidebar {
-      .sidebar-menu {
-        grid-template-columns: repeat(2, 1fr); // 2 columns on small screens
-        gap: 0.25rem;
+//     .category-sidebar {
+//       .sidebar-menu {
+//         grid-template-columns: repeat(2, 1fr); // 2 columns on small screens
+//         gap: 0.25rem;
         
-        .menu-item {
-          padding: 0.4rem 0.2rem; // Reduced padding
+//         .menu-item {
+//           padding: 0.4rem 0.2rem; // Reduced padding
           
-          .menu-icon {
-            width: 28px; // Reduced from 35px
-            height: 28px; // Reduced from 35px
-            margin-right: 0.5rem; // Reduced margin
+//           .menu-icon {
+//             width: 28px; // Reduced from 35px
+//             height: 28px; // Reduced from 35px
+//             margin-right: 0.5rem; // Reduced margin
             
-            i {
-              font-size: 0.8rem; // Reduced font size
-            }
-          }
+//             i {
+//               font-size: 0.8rem; // Reduced font size
+//             }
+//           }
           
-          .menu-content {
-            .menu-title {
-              font-size: 0.75rem; // Reduced font size
-            }
-          }
-        }
-      }
-    }
+//           .menu-content {
+//             .menu-title {
+//               font-size: 0.75rem; // Reduced font size
+//             }
+//           }
+//         }
+//       }
+//     }
 
-    .hero-advertisement .advertisement-card {
-      flex-direction: column;
-      align-items: stretch;
+//     .hero-advertisement .advertisement-card {
+//       flex-direction: column;
+//       align-items: stretch;
 
-      .ad-image {
-        width: 100%;
-        height: auto;
-      }
-    }
+//       .ad-image {
+//         width: 100%;
+//         height: auto;
+//       }
+//     }
     
-  }
+//   }
   
-  .product-card {
-    .product-info {
-      padding: 1rem;
+//   .product-card {
+//     .product-info {
+//       padding: 1rem;
       
-      .product-title {
-        font-size: 0.9rem;
-      }
+//       .product-title {
+//         font-size: 0.9rem;
+//       }
       
-      .current-price {
-        font-size: 1rem;
-      }
-    }
-  }
-}
+//       .current-price {
+//         font-size: 1rem;
+//       }
+//     }
+//   }
+// }
 
 // Animation classes
 .fade-in {

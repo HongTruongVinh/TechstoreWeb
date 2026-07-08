@@ -36,8 +36,10 @@
       <app-product-card [product]="product" (viewDetails)="product.productId"></app-product-card>
     </div> -->
     @for(product of products; track product.id) {
-    <div class="col-lg-3 col-md-4 col-sm-6 product-card"><app-product-card class="" [product]="product"
-        (viewDetails)="product.id"></app-product-card></div>
+    <div class="col-lg-3 col-md-4 col-sm-6 product-card">
+      <app-product-card class="" [product]="product"
+        (viewDetails)="product.id">
+      </app-product-card></div>
     }
   </div>
 
