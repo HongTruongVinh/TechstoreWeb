@@ -7,11 +7,9 @@
 }
 
 
-
 // Hero Section
 .hero-section {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  // min-height: 300px; // Reduced from 500px
   height: auto;
   overflow: visible;
   position: relative;
@@ -20,8 +18,7 @@
   
   .hero-content {
     display: flex;
-    gap: 5px; // Reduced gap for tighter layout
-    // min-height: 300px; // Reduced from 500px
+    gap: 5px; 
     align-items: stretch; //mọi phần tử con của .hero-content (category-panel, hero-main, promotions-section) sẽ co giãn để cùng cao bằng nhau, bằng chiều cao của hàng flex.
     overflow: visible;
   }
@@ -41,7 +38,6 @@
     align-items: center;
     justify-content: center;
     min-width: 0; // Allow flex item to shrink
-    //padding: 0 0.5rem; // Add small horizontal padding for better spacing
   }
 
   .hero-main-container {
@@ -69,12 +65,10 @@
   
   // Hero Carousel
   .hero-carousel {
-    // position: relative;
     
     .carousel-container {
-      // position: relative;
+      position: relative;
       overflow: hidden;
-      //border-radius: 15px;
       background: rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(10px);
       border: 1px solid rgba(255, 255, 255, 0.2);
@@ -285,6 +279,24 @@
   }
 }
 
+.product-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(220px,1fr));
+    gap: 1rem;
+    padding: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .product-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  }
+}
+
+@media (max-width: 478px) {
+  .product-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  }
+}
 
 // Promotional Banner
 .promotional-banner {
@@ -341,13 +353,12 @@
 // Responsive Design
 @media (max-width: 768px) {
   .hero-section {
-    // height: clamp(200px, 30vw, 250px); // Reduced from 400px
     text-align: center;
-    margin-top: 0; // Remove margin-top as it's handled by layout
+    margin-top: 0; 
     
     .hero-content {
       flex-direction: column;
-      gap: clamp(0.5rem, 2vw, 0.75rem); // Further reduced gap for mobile
+      gap: clamp(0.5rem, 2vw, 0.75rem); 
     }
     
     .hero-main {
@@ -357,12 +368,7 @@
     
     .promotions-section {
       width: 100%;
-      order: 3; // Move promotions below sidebar
-
-      // transform: scale(1, 0.7); // Reset any transform applied for desktop
-      // .promotions-header{
-      //   display: none;
-      // }
+      order: 3; // Move promotions below 
       
       .promotions-grid {
         display: flex;
@@ -413,8 +419,6 @@
     }
     
     .hero-carousel {
-      height: clamp(200px, 30vw, 250px); // Reduced height on mobile
-      max-width: 100%; // Full width on mobile
       
       .carousel-slide {
         .slide-content {
@@ -462,159 +466,7 @@
       text-align: center;
     }
   }
-
-  .list-product{
-    display: flex;
-    flex-wrap: nowrap; //hiển thị theo hàng ngang
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-
-    .col-lg-3 {
-      flex: 0 0 70%;
-      max-width: 50%;
-    }
-  }
 }
-
-// @media (max-width: 576px) {
-//   .hero-section {
-//     padding: 2rem 0; // Reduced from 3rem
-//     margin-top: 0; // Remove margin-top as it's handled by layout
-    
-//     .hero-content {
-//       gap: 0.5rem; // Further reduced gap for small mobile
-//     }
-    
-//     .hero-carousel {
-//       height: 220px; // Further reduced height on small mobile
-//       max-width: 100%; // Full width on small mobile
-//     }
-    
-//     .promotions-section {
-//       .promotions-grid {
-//         display: flex;
-//         flex-direction: row;
-//         gap: 0.5rem;
-//         overflow-x: auto;
-//         scroll-snap-type: x mandatory;
-//         padding-bottom: 0.5rem;
-//         -webkit-overflow-scrolling: touch;
-//         touch-action: pan-x;
-
-//         &::-webkit-scrollbar {
-//           display: none;
-//         }
-//         -ms-overflow-style: none;
-//         scrollbar-width: none;
-
-//         .promotion-item {
-//           flex: 0 0 90%;
-//           min-width: 90%;
-//           scroll-snap-align: start;
-//           padding: 0.5rem;
-          
-//           .promotion-image {
-//             i {
-//               font-size: 1.25rem;
-//             }
-//           }
-          
-//           .promotion-content {
-//             .promotion-title {
-//               font-size: 0.75rem;
-//             }
-            
-//             .promotion-description {
-//               font-size: 0.65rem;
-//             }
-            
-//             .promotion-discount {
-//               font-size: 0.65rem;
-//               padding: 0.15rem 0.3rem;
-//             }
-//           }
-//         }
-//       }
-      
-//       .carousel-slide {
-//         .slide-content {
-//           padding: 1rem;
-          
-//           .slide-text {
-//             h3 {
-//               font-size: 1.1rem; // Smaller font
-//             }
-            
-//             p {
-//               font-size: 0.8rem; // Smaller font
-//             }
-//           }
-//         }
-//       }
-      
-//       .carousel-nav {
-//         width: 30px; // Even smaller nav buttons
-//         height: 30px;
-        
-//         i {
-//           font-size: 0.9rem;
-//         }
-//       }
-//     }
-    
-//     .category-sidebar {
-//       .sidebar-menu {
-//         grid-template-columns: repeat(2, 1fr); // 2 columns on small screens
-//         gap: 0.25rem;
-        
-//         .menu-item {
-//           padding: 0.4rem 0.2rem; // Reduced padding
-          
-//           .menu-icon {
-//             width: 28px; // Reduced from 35px
-//             height: 28px; // Reduced from 35px
-//             margin-right: 0.5rem; // Reduced margin
-            
-//             i {
-//               font-size: 0.8rem; // Reduced font size
-//             }
-//           }
-          
-//           .menu-content {
-//             .menu-title {
-//               font-size: 0.75rem; // Reduced font size
-//             }
-//           }
-//         }
-//       }
-//     }
-
-//     .hero-advertisement .advertisement-card {
-//       flex-direction: column;
-//       align-items: stretch;
-
-//       .ad-image {
-//         width: 100%;
-//         height: auto;
-//       }
-//     }
-    
-//   }
-  
-//   .product-card {
-//     .product-info {
-//       padding: 1rem;
-      
-//       .product-title {
-//         font-size: 0.9rem;
-//       }
-      
-//       .current-price {
-//         font-size: 1rem;
-//       }
-//     }
-//   }
-// }
 
 // Animation classes
 .fade-in {

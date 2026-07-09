@@ -2,6 +2,7 @@
 <section class="hero-section bg-primary text-white">
   <div class="hero-content">
     <!-- Category Sidebar -->
+    <!-- <app-category-panel class="category-panel" *ngIf="!device.isMobile()"></app-category-panel> -->
     <app-category-panel class="category-panel" *ngIf="!device.isMobile()"></app-category-panel>
 
     <!-- Main Hero Content (Carousel + Ad) -->
@@ -75,47 +76,32 @@
 
 <!-- Featured Products Section -->
 <section class="py-5">
-  <div class="container">
-    <h2 class="text-center mb-5 text-white">Sản phẩm nổi bật</h2>
-    <div class="row g-4 list-product">
-      <div class="col-lg-3 col-md-6" *ngFor="let product of featureProducts">
-        <app-product-card [product]="product" (viewDetails)="product.id">
-        </app-product-card>
-      </div>
-    </div>
-    <!-- <div class="text-center mt-4">
-      <button class="btn btn-outline-primary btn-lg">Xem tất cả sản phẩm</button>
-    </div> -->
+  <h2 class="text-center mb-5 text-white">Sản phẩm nổi bật</h2>
+  <div class="product-grid">
+    @for(product of featureProducts; track product.id) {
+      <app-product-card [product]="product" (viewDetails)="product.id">
+      </app-product-card>
+    }
   </div>
 </section>
 
 <section class="py-5 bg-white">
-  <div class="container">
-    <h2 class="text-center mb-5 pointer-cursor" (click)="onSearch(brandName1)">{{brandName1}}</h2>
-    <div class="row g-4 list-product">
-      <div class="col-lg-3 col-md-6" *ngFor="let product of brandProducts1">
-        <app-product-card [product]="product" (viewDetails)="product.id">
-        </app-product-card>
-      </div>
-    </div>
-    <!-- <div class="text-center mt-4">
-      <button class="btn btn-outline-primary btn-lg">Xem tất cả sản phẩm</button>
-    </div> -->
+  <h2 class="text-center mb-5 pointer-cursor" (click)="onSearch(brandName1)">{{brandName1}}</h2>
+  <div class="product-grid">
+    @for(product of brandProducts1; track product.id) {
+    <app-product-card [product]="product" (viewDetails)="product.id">
+    </app-product-card>
+    }
   </div>
 </section>
 
 <section class="py-5">
-  <div class="container">
-    <h2 class="text-center mb-5 text-white pointer-cursor" (click)="onSearch(brandName2)">{{brandName2}}</h2>
-    <div class="row g-4 list-product">
-      <div class="col-lg-3 col-md-6" *ngFor="let product of brandProducts2">
-        <app-product-card [product]="product" (viewDetails)="product.id">
-        </app-product-card>
-      </div>
-    </div>
-    <!-- <div class="text-center mt-4">
-      <button class="btn btn-outline-primary btn-lg">Xem tất cả sản phẩm</button>
-    </div> -->
+  <h2 class="text-center mb-5 text-white pointer-cursor" (click)="onSearch(brandName2)">{{brandName2}}</h2>
+  <div class="product-grid">
+    @for(product of brandProducts2; track product.id) {
+    <app-product-card [product]="product" (viewDetails)="product.id">
+    </app-product-card>
+    }
   </div>
 </section>
 

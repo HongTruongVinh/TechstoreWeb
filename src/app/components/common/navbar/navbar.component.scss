@@ -77,10 +77,16 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      font-size: clamp(20px, 1.6vw, 28px);
+      font-size: clamp(2px, 1.6vw, 28px);
       font-weight: 800;
       letter-spacing: -0.5px;
     }
+  }
+}
+
+@media (max-width: 767.98px) {
+  .logo-text {
+    display: none;
   }
 }
 

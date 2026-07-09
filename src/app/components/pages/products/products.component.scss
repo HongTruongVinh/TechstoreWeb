@@ -1,7 +1,18 @@
-.product-card {
-  max-width: 50%;
+// .product-card {
+//   max-width: 50%;
+// }
+
+.product-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+    gap:1rem;
 }
 
+@media (max-width: 478px) {
+  .product-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  }
+}
 
 .btn-showmore {
   background-color: #e1edff;
