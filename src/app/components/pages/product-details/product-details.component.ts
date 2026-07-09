@@ -1,5 +1,5 @@
 import { CommonModule, Location } from '@angular/common';
-import { Component, inject, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, ViewChild } from '@angular/core';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { SlickCarouselModule, SlickCarouselComponent } from 'ngx-slick-carousel';
 import { FullImageUrlPipe } from '../../../pipes/full-image-url.pipe';
@@ -21,6 +21,7 @@ import * as CartSelectors from '../../../store/cart/cart.selectors';
 import * as CartActions from '../../../store/cart/cart.actions';
 import { BehaviorSubject, combineLatest, map } from 'rxjs';
 import { ProductSearchQuery } from '../../../models/models/product/product-search-query.model';
+import { ConvertPhotoUrl } from '../../../library/share-function/convert-image-url';
 
 @Component({
   selector: 'app-product-details',
@@ -61,6 +62,7 @@ export class ProductDetailsComponent {
 
 
   @ViewChild('slickModal') slickModal!: SlickCarouselComponent;
+  @ViewChild('showedImg') showedImg!: ElementRef<HTMLImageElement>;;
 
   authDialog = inject(AuthDialogService);
   tks = inject(TokenStorageService);
@@ -143,6 +145,10 @@ export class ProductDetailsComponent {
         if (this.product.galleryImageUrls.length === 0) {
           this.product.galleryImageUrls = [this.product.mainImageUrl];
         }
+
+        // if(this.slickModal) {
+        //   this.slickModal.slickGoTo(0);
+        // }
       } else {
         // Handle error or product not found
       }
@@ -165,6 +171,11 @@ export class ProductDetailsComponent {
     if (selectedVariant) {
       const selectedOption = selectedVariant.options.find(op => op.id === optionId);
       if (selectedOption) {
+
+        // if(this.showedImg) {
+        //   this.showedImg.nativeElement.src = ConvertPhotoUrl.convertPublicIdToUrl(selectedOption.imageUrl);
+        // }
+
         this.selectedOption$.next(selectedOption);
       }
     }
@@ -207,13 +218,13 @@ export class ProductDetailsComponent {
     const swiper = document.querySelectorAll('.swiperlist')
   }
 
-  slidePreview(id: any, event: any) {
+  slidePreview(index: any, event: any) {
     const swiper = document.querySelectorAll('.swiperlist')
     swiper.forEach((el: any) => {
       el.classList.remove('swiper-slide-thumb-active')
     })
     event.target.closest('.swiperlist').classList.add('swiper-slide-thumb-active')
-    this.slickModal.slickGoTo(id)
+    this.slickModal.slickGoTo(index)
   }
 
   showImageModal = false;

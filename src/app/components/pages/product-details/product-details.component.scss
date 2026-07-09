@@ -3,20 +3,46 @@
    ============================================ */
 
 /* Sticky container for left column */
-.sticky-side-div {
-  position: -webkit-sticky;
+.sticky-side-box {
   position: sticky;
+
   top: 6rem; // khi phần tử bắt đầu sticky, nó sẽ luôn cách mép trên màn hình 6rem.
 }
 
-.slide-image {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
+.product-thumbnail-slider {
+
+  .slide-inner {
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    overflow: hidden;
+
+    .slide-image {
+      display: block;
+      width: clamp(200px, 20vw, 600px);
+      height: auto;
+      object-fit: contain;
+    }
+  }
+
 }
 
-/* Product image slider wrapper */
+.product-nav-slider {
+  // display: flex;
+  // justify-content: center;
+  // gap: 1rem;
 
+  .nav-slide-item{
+
+  .img-fluid{
+    width: clamp(60px, 10vw, 200px);
+    height: auto;
+  }
+  }
+}
 
 /* Carousel navigation buttons */
 .slick-prev,
@@ -57,12 +83,12 @@
    ============================================ */
 
 /* Product variant and color options */
-.option-card {
+.option-card, .variant-card {
   display: flex;
   align-items: center;
-  gap: 10px;
-  min-width: 140px;
-  padding: 12px;
+  // gap: clamp(8px, 1vw, 12px);
+  width: clamp(150px, 22vw, 180px);
+  padding: clamp(2px, 1vw, 5px);
   border: 2px solid #ddd;
   border-radius: 8px;
   background: #fff;
@@ -92,13 +118,18 @@
     font-size: 0.9rem;
     font-weight: 600;
     color: #c53030;
+    display: block;
   }
+}
+
+.variant-card{
+  flex-direction: column;
 }
 
 /* Thumbnail images inside option cards */
 .thumb {
-  width: 40px;
-  height: 40px;
+  width: clamp(20px, 10vw, 40px);
+  height: auto;
   object-fit: cover;
   border-radius: 4px;
   flex-shrink: 0;
@@ -131,7 +162,7 @@
   }
 }
 
-.add-to-cart-animation{
+.add-to-cart-animation {
   max-width: 74px;
   max-height: 74px;
 }
@@ -147,7 +178,7 @@
   flex-direction: column;
 }
 
-.card-options{
+.card-options {
   height: 100%;
 }
 
@@ -225,54 +256,4 @@
 .btn-warning {
   background-image: linear-gradient(180deg, #ffb84d, #ff9933);
   border: none;
-}
-
-
-/* ============================================
-   RESPONSIVE DESIGN
-   ============================================ */
-
-@media (max-width: 1199.98px) {
-  .product-img-slider {
-    .carousel {
-      height: 350px;
-    }
-  }
-
-  .thumb {
-    width: 36px;
-    height: 36px;
-  }
-
-  .option-card {
-    min-width: 110px;
-  }
-
-  .sticky-side-div {
-    position: static;
-  }
-}
-
-@media (max-width: 575.98px) {
-  .product-img-slider {
-    .carousel {
-      height: 240px;
-    }
-
-    .product-nav-slider {
-      .swiper-slide {
-        margin-right: 0.35rem;
-      }
-    }
-  }
-
-  .product-price .current-price {
-    font-size: 1rem;
-  }
-
-  .option-card {
-    min-width: 100px;
-    padding: 8px;
-    font-size: 0.92rem;
-  }
 }

@@ -94,12 +94,14 @@ export class NavbarComponent {
     this.query.keyword = this.searchForm.value.keyword;
     if (this.query.keyword) {
       if (this.query.keyword.trim()) {
+        this.isSearching = false;
         this.router.navigate(['/tim-kiem', this.query.keyword.trim()]);
       }
     }
   }
 
   viewProductDetails(slugWithId: string) {
+    this.isSearching = false;
     this.router.navigate(['', slugWithId]);
   }
 

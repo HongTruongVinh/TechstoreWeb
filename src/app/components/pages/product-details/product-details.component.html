@@ -3,14 +3,13 @@
 @if(product && selectedVariant){
 <div class="row">
     <div class="col-lg-4">
-        <div class="card p-3 sticky-side-div">
-            <div class=""> <!-- class="product-img-slider" -->
-                <ngx-slick-carousel class="carousel swiper product-thumbnail-slider p-2 rounded custom-arrow"
+        <div class="card p-3 sticky-side-box">
+            <ngx-slick-carousel class="carousel swiper product-thumbnail-slider p-2 rounded"
                     [config]="slideConfig" #slickModal="slick-carousel" (afterChange)="slickChange($event)">
                     @for (i of product.galleryImageUrls; track $index) {
                     <div ngxSlickItem class="slide">
                         <div class="slide-inner">
-                            <img id="showed-img" [src]="i | fullImageUrl" alt="" class="slide-image"
+                            <img class="slide-image" #showedImg id="showed-img" [src]="i | fullImageUrl" alt="" 
                                 (click)="openImageModal(i)" />
                         </div>
                     </div>
@@ -27,7 +26,6 @@
                     </div>
                     }
                 </ngx-slick-carousel>
-            </div>
             <!-- end swiper nav slide -->
         </div>
     </div>
@@ -47,19 +45,19 @@
                                     class="text-body fw-medium">{{product.publishDate | date}}</span></div>
                         </div>
 
-                        <h6 class="fs-md mb-3">Các phiên bản khác:</h6>
+                        <h6 class="fs-md mb-3">Các phiên bản:</h6>
                         <div class="d-flex flex-wrap gap-2">
                             @for (variant of product.variants; track variant.id) {
-                            <div class="option-card" [ngClass]="{ 'selected': selectedVariant.id === variant.id }"
+                            <div class="variant-card" [ngClass]="{ 'selected': selectedVariant.id === variant.id }"
                                 (click)="selectVariant(variant.id)">
                                 <div>{{variant.name}}</div>
-                                <div class="price">{{variant.price | thousandSeparator}} ₫</div>
+                                <div class="price">{{variant.price | thousandSeparator}} </div>
                             </div>
                             }
                         </div>
 
                         <div class="mt-4">
-                            <h5 class="fs-md mb-3">Màu sắc :</h5>
+                            <h6 class="fs-md mb-3">Màu sắc:</h6>
                             <div class="d-flex flex-wrap gap-2">
                                 @for (option of selectedVariant.options; track option.id) {
                                 <div class="option-card d-flex align-items-center"
@@ -69,7 +67,7 @@
                                         class="thumb me-2">
                                     <div>
                                         <div>{{option.name}}</div>
-                                        <div class="price">{{option.price | thousandSeparator}} ₫</div>
+                                        <div class="price">{{option.price | thousandSeparator}} </div>
                                     </div>
                                 </div>
                                 }
