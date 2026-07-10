@@ -1,0 +1,12 @@
+{
+  "root": "dist/techstore/browser",
+  "routes": [
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": ".*",
+      "dest": "/index.html"
+    }
+  ]
+}
