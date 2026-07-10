@@ -6,7 +6,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { ThousandSeparatorPipe } from '../../../../pipes/thousandSeparator.pipe';
 import { FullImageUrlPipe } from '../../../../pipes/full-image-url.pipe';
 import { EPaymentMethod, ERetCode } from '../../../../models/enum/etype_project.enum';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TokenStorageService } from '../../../../core/services/ui/token-storage.service';
 import { OrderService } from '../../../../core/services/api/order.service';
 import { CustomerProductListItemModel } from '../../../../models/models/product/customer-product-list-item.model';
@@ -79,6 +79,7 @@ export class CreateOrderComponent {
   };
 
   constructor(
+    private readonly router: Router,
     private formBuilder: UntypedFormBuilder,
     private route: ActivatedRoute,
     private readonly tokenStorageService: TokenStorageService,
@@ -172,9 +173,10 @@ export class CreateOrderComponent {
     if (this.selectedpaymentMethodId === EPaymentMethod.COD) {
       this.orderService.createCodOrder(newOrder).subscribe((res) => {
         if (res.retCode == ERetCode.Successfull) {
-          alert("Tạo đơn hàng thành công");
+          this.messengerServices.successes("Đặt hàng thành công");
           this.sessionStorageService.clearOrder();
-          window.history.back();
+          this.router.navigate(['/user/purchase']);
+          // window.history.back();
         } else {
           //alert("Có lỗi xảy ra trong quá trình tạo đơn hàng: " + res.systemMessage);
           return;
@@ -211,6 +213,9 @@ export class CreateOrderComponent {
             .subscribe((data) => {
 
               this.isPaymentSuccess = true;
+              this.messengerServices.successes("Đặt hàng thành công");
+          this.sessionStorageService.clearOrder();
+              this.router.navigate(['/user/purchase']);
             });
 
             this.paymentSignalrService
