@@ -1,5 +1,5 @@
 {
-  "root": "dist/techstore/browser",
+  "root": "dist/techstore-web/browser",
   "routes": [
     {
       "handle": "filesystem"
