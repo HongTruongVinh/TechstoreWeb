@@ -212,6 +212,13 @@ export class CreateOrderComponent {
 
               this.isPaymentSuccess = true;
             });
+
+            this.paymentSignalrService
+            .paymentFailed$
+            .subscribe((data) => {
+
+              this.messengerServices.errorNotification(res.systemMessage || "Hệ thống xảy ra lỗi trong quá trình thanh toán. Vui lòng thử lại sau");
+            });
           }
           else{
             this.messengerServices.errorNotification(res.systemMessage || "Không nhận được dữ liệu thanh toán từ server");
@@ -232,11 +239,11 @@ export class CreateOrderComponent {
       return;
     }
 
-    if(this.paymentRequest){
-      this.mds.PaymentSuccess(this.paymentRequest).subscribe(res => {
-        console.log("Gửi yêu cầu thanh toán thành công");
-      });
-    }
+    // if(this.paymentRequest){
+    //   this.mds.PaymentSuccess(this.paymentRequest).subscribe(res => {
+    //     console.log("Gửi yêu cầu thanh toán thành công");
+    //   });
+    // }
   }
 
   checkDiscountCode() {

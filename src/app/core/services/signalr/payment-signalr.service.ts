@@ -8,15 +8,19 @@ import { environment } from '../../../../environments/environment';
     providedIn: 'root'
 })
 export class PaymentSignalrService {
-private baseHost = environment.baseHost;
+    private baseHost = environment.baseHost;
     private hubConnection?: signalR.HubConnection;
 
     // SOURCE
-  private paymentSuccessSource =
-    new Subject<any>();
+    private paymentSuccessSource =
+        new Subject<any>();
 
-  // OBSERVABLE
-  paymentSuccess$: Observable<any> = this.paymentSuccessSource.asObservable();
+    private paymentFailedSource =
+        new Subject<any>();
+
+    // OBSERVABLE
+    paymentSuccess$: Observable<any> = this.paymentSuccessSource.asObservable();
+    paymentFailed$: Observable<any> = this.paymentFailedSource.asObservable();
 
     constructor(
         private lss: LinkSettingsService
@@ -28,7 +32,7 @@ private baseHost = environment.baseHost;
                 throw new Error('Không tìm thấy URL API cho SignalR Hub');
             }
 
-            if(!apiUrl.startsWith('http')) {
+            if (!apiUrl.startsWith('http')) {
                 apiUrl = this.baseHost + apiUrl;
             }
 
@@ -37,6 +41,8 @@ private baseHost = environment.baseHost;
                 .withUrl(apiUrl)
                 .withAutomaticReconnect()
                 .build();
+
+            console.log('waiting for payment updates:', orderId);
 
             await this.hubConnection.start();
 
@@ -52,6 +58,15 @@ private baseHost = environment.baseHost;
                     console.log('Payment success:', data);
 
                     this.paymentSuccessSource.next(data);
+                });
+
+            this.hubConnection.on(
+                'PaymentFailed',
+                (data) => {
+
+                    console.log('Payment failed:', data);
+
+                    this.paymentFailedSource.next(data);
                 });
         });
     }

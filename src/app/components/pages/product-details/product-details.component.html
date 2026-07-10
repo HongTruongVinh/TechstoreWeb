@@ -179,7 +179,11 @@
                     <div>
                         <h5 class="fs-md mb-3">Chi tiết sản phẩm</h5>
                         <p class="mb-2" [innerHTML]="selectedVariant.description"></p>
-                        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quo ab quos repudiandae, magni rem
+                        @if(product.description.length > 100) {
+                            <p class="mb-2" [innerHTML]="product.description"></p>
+                        }
+                        @else {
+                            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quo ab quos repudiandae, magni rem
                         reprehenderit fugit voluptas tempore iste ipsam asperiores ratione maxime ducimus, dolorem
                         delectus
                         voluptatum cumque tenetur praesentium quam dolorum doloribus labore quis quidem atque. Ratione
@@ -222,6 +226,7 @@
                         sapiente error perferendis natus? Voluptates, adipisci quia? Esse vitae deleniti ut, dolores
                         porro
                         vel, debitis itaque consectetur consequuntur repellendus minus laudantium.
+                        }
                     </div>
                 </div>
             </div>
