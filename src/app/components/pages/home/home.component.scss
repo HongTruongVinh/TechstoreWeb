@@ -286,11 +286,6 @@
     padding: 0.5rem;
 }
 
-@media (max-width: 768px) {
-  .product-grid {
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  }
-}
 
 @media (max-width: 478px) {
   .product-grid {

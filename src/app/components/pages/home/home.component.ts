@@ -39,7 +39,10 @@ export class HomeComponent {
   brandName2 = "Samsung";
   brandProducts2: ProductListItemModel[] = [];
 
-  heroAdvertisementImageLink = "https://res.cloudinary.com/dc8ijvcze/image/upload/v1777281828/TechShop/images/advertisement/hero-advertisement/April30th.jpg";
+  // heroAdvertisementImageLink = "https://res.cloudinary.com/dc8ijvcze/image/upload/v1777281828/TechShop/images/advertisement/hero-advertisement/April30th.jpg";
+  heroAdvertisementImageLink = "https://res.cloudinary.com/dc8ijvcze/image/upload/v1777281828/TechShop/images/advertisement/hero-advertisement/WorldCup.png";
+
+
   // Carousel slides data
   carouselSlides = [
     {
