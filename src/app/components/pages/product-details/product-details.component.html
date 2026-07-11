@@ -186,9 +186,9 @@
                         <div class="card-body p-4">
                             <div>
                                 <h5 class="fs-md mb-3">Chi tiết sản phẩm</h5>
-                                <p class="mb-2" [innerHTML]="selectedVariant.description"></p>
+                                <div class="mb-2 description" [innerHTML]="selectedVariant.description"></div>
                                 @if(product.description.length > 100) {
-                                <p class="mb-2" [innerHTML]="product.description"></p>
+                                <div class="mb-2 description" [innerHTML]="product.description"></div>
                                 }
                                 @else {
                                 Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quo ab quos repudiandae, magni rem

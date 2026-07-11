@@ -184,6 +184,43 @@
 }
 
 /* ============================================
+    PRODUCT DESCRIPTION SECTION
+   ============================================ */
+
+.description {
+    overflow-x: auto;
+}
+
+// .description table {
+//     width: 100%;
+//     display: block;
+//     overflow-x: auto;
+// }
+
+.description table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.description td,
+.description th {
+    white-space: normal;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+}
+
+.product-description table,
+.product-description th,
+.product-description td {
+    border: 1px solid #dee2e6;
+}
+
+.product-description th,
+.product-description td {
+    padding: 8px 12px;
+}
+
+/* ============================================
    SAME PRODUCTS SECTION
    ============================================ */
 
