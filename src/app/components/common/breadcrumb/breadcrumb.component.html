@@ -4,15 +4,16 @@
             ← Quay lại |
         </span>
 
-        <li *ngFor="let item of items; let last = last" class="breadcrumb-item" [class.active]="last"
-            [attr.aria-current]="last ? 'page' : null">
-            <ng-container *ngIf="!last && item.url; else lastItem">
-                <a [routerLink]="item.url">{{ item.label }}</a>
-            </ng-container>
+        @for (item of items; track item; let last = $last) {
+            <li class="breadcrumb-item" [class.active]="last" [attr.aria-current]="last ? 'page' : null">
 
-            <ng-template #lastItem>
-                {{ item.label }}
-            </ng-template>
-        </li>
+                @if (!last && item.url) {
+                    <a [routerLink]="item.url">{{ item.label }}</a>
+                } @else {
+                    {{ item.label }}
+                }
+
+            </li>
+        }
     </ol>
 </nav>

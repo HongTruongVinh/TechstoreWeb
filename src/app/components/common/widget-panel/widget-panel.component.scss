@@ -136,6 +136,11 @@
         position: relative;
     }
 
+    .scroll-top-btn {
+        width: clamp(40px, 6vw, 50px);
+        height: clamp(40px, 6vw, 50px);
+    }
+
     .zalo-float img {
         width: 100%;
         height: auto;
