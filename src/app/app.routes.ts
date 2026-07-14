@@ -16,6 +16,7 @@ export const routes: Routes = [
     { path: 'danh-muc/:categorySlug', component: ProductsComponent },
     { path: 'tim-kiem/:keyword', component: ProductsComponent },
     { path: 'san-pham/:categorySlug/:brandSlug', component: ProductsComponent },
+    { path: 'san-pham/:categorySlug/:brandSlug/:priceFilterSlug', component: ProductsComponent },
     { path: ':slugWithId', component: ProductDetailsComponent },
     {
                 path: 'user',

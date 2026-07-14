@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { ProductCardComponent } from '../../common/product-card/product-card.component';
 import { ProductListItemModel } from '../../../models/models/product/product-list-item.model';
 import { Category } from '../../../models/models/category/category.model';
@@ -19,6 +20,7 @@ import { BrandService } from '../../../core/services/api/brand.service';
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
     ProductCardComponent,
     BreadcrumbComponent
   ],
@@ -36,6 +38,10 @@ export class ProductsComponent {
   products: ProductListItemModel[] = [];
   categories: Category[] = [];
   brands: BrandModel[] = [];
+  priceFilter = {
+    minPrice: '',
+    maxPrice: ''
+  };
 
   pagedResult?: PagedResult<ProductListItemModel>;
   query: ProductSearchQuery = {
@@ -58,6 +64,7 @@ export class ProductsComponent {
       const keyword = params.get('keyword');
       const categorySlug = params.get('categorySlug');
       const brandSlug = params.get('brandSlug');
+      const priceFilterSlug = params.get('priceFilterSlug');
 
       this.query = {
         page: 1,
@@ -79,10 +86,22 @@ export class ProductsComponent {
       }
 
       if (brandSlug) {
-        const brand = this.brands.find(c => c.slug === brandSlug);
-        this.query.brandId = brand?.id;
-        this.title += ' ' + brand?.name;
+        if (brandSlug != 'tat-ca') {
+          const brand = this.brands.find(c => c.slug === brandSlug);
+          this.query.brandId = brand?.id;
+          this.title += ' ' + brand?.name;
+        }
       }
+
+      if (priceFilterSlug) {
+        const priceFilter = this.parsePriceFilter(priceFilterSlug);
+
+        this.query.minPrice = priceFilter?.minPrice;
+        this.query.maxPrice = priceFilter?.maxPrice;
+      }
+
+      this.priceFilter.minPrice = this.query.minPrice ?? '';
+      this.priceFilter.maxPrice = this.query.maxPrice ?? '';
 
       this.loadProducts();
     });
@@ -145,5 +164,56 @@ export class ProductsComponent {
     // this.loadingService.show();
     this.query.page++;
     this.loadProducts();
+  }
+
+  hasActivePriceFilter(): boolean {
+    return !!(this.query.minPrice || this.query.maxPrice);
+  }
+
+  applyPriceFilter() {
+    this.query.page = 1;
+    this.query.pageSize = 12;
+    this.query.minPrice = this.priceFilter.minPrice.trim() || undefined;
+    this.query.maxPrice = this.priceFilter.maxPrice.trim() || undefined;
+    this.products = [];
+    this.loadProducts();
+  }
+
+  clearPriceFilter() {
+    this.priceFilter.minPrice = '';
+    this.priceFilter.maxPrice = '';
+    this.query.page = 1;
+    this.query.pageSize = 12;
+    this.query.minPrice = undefined;
+    this.query.maxPrice = undefined;
+    this.products = [];
+    this.loadProducts();
+  }
+
+  parsePriceFilter(slug: string) {
+    if (slug.includes('-den-')) {
+      const result = slug.replace('gia-tu-', '').split('-den-');
+
+      return {
+        minPrice: result[0],
+        maxPrice: result[1]
+      };
+    }
+
+    if (slug.endsWith('-tro-len')) {
+      return {
+        minPrice: slug.replace('gia-tu-', '').replace('-tro-len', ''),
+        maxPrice: ''
+      };
+    }
+
+    if (slug.endsWith('-tro-xuong')) {
+      return {
+        minPrice: '',
+        maxPrice: slug.replace('gia-tu-', '').replace('-tro-xuong', '')
+      };
+    }
+
+    return null;
   }
 }

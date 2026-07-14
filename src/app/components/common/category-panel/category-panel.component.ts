@@ -8,6 +8,8 @@ import { BrandService } from '../../../core/services/api/brand.service';
 import { ERetCode } from '../../../models/enum/etype_project.enum';
 import { FullImageUrlPipe } from "../../../pipes/full-image-url.pipe";
 import { UiStateService } from '../../../core/services/ui/ui-state.service';
+import { PriceFilter } from '../../../models/models/product/price-fillter.model';
+import { SessionStorageService } from '../../../core/services/ui/session-storage.service';
 
 @Component({
   selector: 'app-category-panel',
@@ -21,6 +23,7 @@ export class CategoryPanelComponent {
   hoveredCategory: Category | undefined;
   categories!: Category[];
   brands!: BrandModel[];
+  priceFilters!: PriceFilter[];
   isMobile: boolean = false;
 
   get selectedCategory(): Category | undefined {
@@ -37,7 +40,7 @@ export class CategoryPanelComponent {
     private elementRef: ElementRef,
     private router: Router,
     private readonly categoryService: CategoryService,
-    private readonly brandService: BrandService
+    private readonly brandService: BrandService,
   ) { }
 
   ngOnInit(): void {
@@ -45,7 +48,7 @@ export class CategoryPanelComponent {
 
     this.brands = this.brandService.getBrands();
     this.categories = this.categoryService.getCategories();
-
+    this.priceFilters = this.categoryService.getPriceFilters();
     this.updateIsMobile();
     if (this.isMobile) {
       this.uiState.hideWidgetPanel();
@@ -91,13 +94,39 @@ export class CategoryPanelComponent {
     this.hoveredCategory = undefined;
   }
 
-  viewProducts(categorySlug: string, brandSlug?: string): void {
+  searchProducts(categorySlug: string, brandSlug?: string, minPrice?: number, maxPrice?: number): void {
     this.toggleCategories.emit();
+
     if (brandSlug) {
       this.router.navigate(['/san-pham', categorySlug, brandSlug]);
     } else {
-      this.router.navigate(['/danh-muc', categorySlug]);
+      if(minPrice !== undefined && maxPrice !== undefined){
+        // this.router.navigate(['/san-pham', categorySlug, 'tat-ca', `${minPrice}-${maxPrice}`]);
+        this.router.navigate(['/san-pham', categorySlug, 'tat-ca', 'gia-tu-' + `${minPrice}-den-${maxPrice}`]);
+      }
+      else if(minPrice !== undefined && maxPrice == undefined){
+        this.router.navigate(['/san-pham', categorySlug, 'tat-ca', 'gia-tu-' + `${minPrice}-tro-len`]);
+      }
+      else if(minPrice == undefined && maxPrice !== undefined){
+        this.router.navigate(['/san-pham', categorySlug, 'tat-ca', 'gia-tu-' + `${maxPrice}-tro-xuong`]);
+      }
+      else{
+        this.router.navigate(['/danh-muc', categorySlug]);
+      }
+      // this.router.navigate(['/danh-muc', categorySlug]);
     }
+
+    // if (minPrice !== undefined && maxPrice !== undefined) {
+    //   if (brandSlug) {
+    //     this.router.navigate(['/san-pham', categorySlug, brandSlug, `${minPrice}-${maxPrice}`]);
+    //   }
+    //   else {
+    //     this.router.navigate(['/san-pham', categorySlug, 'tat-ca', `${minPrice}-${maxPrice}`]);
+    //     //this.router.navigate(['/san-pham', categorySlug, 'tat-ca', 'gia-tu-' + `${minPrice}-den-${maxPrice}`]);
+    //   }
+    // } else {
+    //   this.router.navigate(['/san-pham', categorySlug]);
+    // }
   }
 
   @HostListener('document:click', ['$event'])

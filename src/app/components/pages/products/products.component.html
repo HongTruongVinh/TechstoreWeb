@@ -29,6 +29,37 @@
       <i class="bi bi-eye"></i> Phổ biến
     </button>
   </div>
+  <div class="price-filter-card mb-4">
+    <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
+      <span class="fw-bold">Lọc theo giá</span>
+      @if (hasActivePriceFilter()) {
+        <span class="badge bg-primary-subtle text-primary">Đang áp dụng</span>
+      }
+    </div>
+
+    <div class="row g-2 align-items-end">
+      <div class="col-12 col-sm-5">
+        <label class="form-label small mb-1" for="min-price">Giá thấp nhất</label>
+        <div class="input-group">
+          <span class="input-group-text">₫</span>
+          <input id="min-price" type="number" min="0" class="form-control" placeholder="Từ" [value]="priceFilter.minPrice" (input)="priceFilter.minPrice = $any($event.target).value">
+        </div>
+      </div>
+
+      <div class="col-12 col-sm-5">
+        <label class="form-label small mb-1" for="max-price">Giá cao nhất</label>
+        <div class="input-group">
+          <span class="input-group-text">₫</span>
+          <input id="max-price" type="number" min="0" class="form-control" placeholder="Đến" [value]="priceFilter.maxPrice" (input)="priceFilter.maxPrice = $any($event.target).value">
+        </div>
+      </div>
+
+      <div class="col-12 col-sm-2 d-flex gap-2">
+        <button type="button" class="btn btn-primary flex-fill" (click)="applyPriceFilter()">Áp dụng</button>
+        <button type="button" class="btn btn-outline-secondary" (click)="clearPriceFilter()">Xóa</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Grid sản phẩm -->
   <div class="product-grid">

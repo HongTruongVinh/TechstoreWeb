@@ -16,16 +16,23 @@
     <div class="category-panel" *ngIf="!isMobile && hoveredCategory">
         <div class="panel-content">
             <div class="panel-header" >
-                <h5 class="panel-title" (click)="viewProducts(hoveredCategory.slug)">{{ hoveredCategory.name }} <small class="text-decoration-underline fs-6">Xem tất cả</small></h5>
+                <h5 class="panel-title" (click)="searchProducts(hoveredCategory.slug)">{{ hoveredCategory.name }} <small class="text-decoration-underline fs-6">Xem tất cả</small></h5>
             </div>
             <div class="brands-list">
-                <div class="brand-item" *ngFor="let brand of brands" (click)="viewProducts(hoveredCategory.slug, brand.slug)">
+                <div class="brand-item" *ngFor="let brand of brands" (click)="searchProducts(hoveredCategory.slug, brand.slug)">
                     <img [src]="brand.iconImageUrl | fullImageUrl" [alt]="brand.name" class="brand-logo">
                     <span class="brand-name">{{ brand.name }}</span>
                 </div>
                 <div *ngIf="brands.length === 0" class="no-brands">
                     <p>Chưa có thương hiệu</p>
                 </div>
+            </div>
+            <div class="brands-list">
+                @for(priceFilter of priceFilters; track priceFilter.label) {
+                    <div class="brand-item" (click)="searchProducts(hoveredCategory.slug, undefined, priceFilter.minPrice, priceFilter.maxPrice)">
+                        <span class="brand-name">{{ priceFilter.label }}</span>
+                    </div>
+                }
             </div>
         </div>
     </div>
@@ -36,11 +43,11 @@
                 <div class="brand-panel-header">{{ selectedCategory.name }}</div>
                 <div class="panel-content">
                     <div class="brands-list">
-                        <div class="brand-item mt-2" (click)="viewProducts(selectedCategory.slug)">
+                        <div class="brand-item mt-2" (click)="searchProducts(selectedCategory.slug)">
                             <span class="brand-name">Xem tất cả></span>
                         </div>
                         <div class="brand-item" *ngFor="let brand of brands"
-                            (click)="viewProducts(selectedCategory.slug, brand.slug)">
+                            (click)="searchProducts(selectedCategory.slug, brand.slug)">
                             <img [src]="brand.iconImageUrl | fullImageUrl" [alt]="brand.name" class="brand-logo">
                             <span class="brand-name">{{ brand.name }}</span>
                         </div>

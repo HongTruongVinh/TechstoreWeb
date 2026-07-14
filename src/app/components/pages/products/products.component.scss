@@ -1,6 +1,24 @@
-// .product-card {
-//   max-width: 50%;
-// }
+.price-filter-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 1rem 1.1rem;
+  background: #fff;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.04);
+}
+
+.price-filter-card .form-control {
+  border-left: 0;
+}
+
+.price-filter-card .input-group-text {
+  background: #f8fafc;
+  color: #475569;
+}
+
+.price-filter-card .btn-primary {
+  background: #2563eb;
+  border-color: #2563eb;
+}
 
 .product-grid{
     display:grid;
