@@ -1,6 +1,6 @@
 <div class="category-menu" (mouseleave)="onCategoryLeave()">
     <div class="menu-column">
-        <div class="menu-item"  *ngFor="let category of categories" 
+        <div class="menu-item" *ngFor="let category of categories"
             (click)="viewCategory(category); onCategoryClick(category)" (mouseenter)="onCategoryHover(category)"
             [class.active]="hoveredCategoryId === category.id">
             <div class="menu-icon">
@@ -15,25 +15,51 @@
     <!-- Brands panel Panel for desktop -->
     <div class="category-panel" *ngIf="!isMobile && hoveredCategory">
         <div class="panel-content">
-            <div class="panel-header" >
-                <h5 class="panel-title" (click)="searchProducts(hoveredCategory.slug)">{{ hoveredCategory.name }} <small class="text-decoration-underline fs-6">Xem tất cả</small></h5>
+
+            <div class="panel-header">
+                <h5 class="panel-title" (click)="searchProducts(hoveredCategory.slug)">
+                    {{ hoveredCategory.name }}
+                    <small class="text-decoration-underline fs-6">Xem tất cả</small>
+                </h5>
             </div>
-            <div class="brands-list">
-                <div class="brand-item" *ngFor="let brand of brands" (click)="searchProducts(hoveredCategory.slug, brand.slug)">
-                    <img [src]="brand.iconImageUrl | fullImageUrl" [alt]="brand.name" class="brand-logo">
-                    <span class="brand-name">{{ brand.name }}</span>
-                </div>
-                <div *ngIf="brands.length === 0" class="no-brands">
-                    <p>Chưa có thương hiệu</p>
-                </div>
-            </div>
-            <div class="brands-list">
-                @for(priceFilter of priceFilters; track priceFilter.label) {
-                    <div class="brand-item" (click)="searchProducts(hoveredCategory.slug, undefined, priceFilter.minPrice, priceFilter.maxPrice)">
-                        <span class="brand-name">{{ priceFilter.label }}</span>
+
+            <!-- Thương hiệu -->
+            <div class="filter-section">
+                <h6 class="section-title">Các thương hiệu</h6>
+
+                <div class="brands-list">
+                    <div class="brand-item" *ngFor="let brand of brands"
+                        (click)="searchProducts(hoveredCategory.slug, brand.slug)">
+                        <img [src]="brand.iconImageUrl | fullImageUrl" [alt]="brand.name" class="brand-logo">
+                        <span class="brand-name">{{ brand.name }}</span>
                     </div>
-                }
+
+                    <div *ngIf="brands.length === 0" class="no-brands">
+                        <p>Chưa có thương hiệu</p>
+                    </div>
+                </div>
             </div>
+
+            <!-- Phân khúc giá -->
+            <div class="filter-section">
+                <h6 class="section-title">Phân khúc giá</h6>
+
+                <div class="brands-list">
+                    @for (priceFilter of priceFilters; track priceFilter.label) {
+                    <div class="brand-item" (click)="searchProducts(
+                            hoveredCategory.slug,
+                            undefined,
+                            priceFilter.minPrice,
+                            priceFilter.maxPrice
+                         )">
+                        <span class="brand-name">
+                            {{ priceFilter.label }}
+                        </span>
+                    </div>
+                    }
+                </div>
+            </div>
+
         </div>
     </div>
 
