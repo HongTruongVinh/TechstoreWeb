@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { TransferHttpService } from "../../transfer-http/transfer-http.service";
 import { firstValueFrom, map, switchMap } from "rxjs";
-import { ApiResponseModel } from "../../../models/models/api-response.model";
+import { ApiResponse } from "../../../models/models/api-response.model";
 import { LinkSettingsService } from "./link-settings.service";
 
 import { Category } from "../../../models/models/category/category.model";
@@ -31,14 +31,14 @@ export class CategoryService {
 
                     return this.transferHttp.get(apiUrl);
                 }),
-                map((res: ApiResponseModel<Category[]>) => res)
+                map((res: ApiResponse<Category[]>) => res)
             );
     }
 
     loadCategories(): Promise<void> {
         return firstValueFrom(this.fetchCategories())
             .then(res => {
-                if (res.retCode === ERetCode.Successfull && res.data) {
+                if (res.data) {
                     this.categories = res.data;
                 }
             });

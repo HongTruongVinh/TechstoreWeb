@@ -42,7 +42,7 @@ export class CartItemEffects {
             if (!apiResponse.data) {
 
               return CartItemActions.addCartItemFailure({
-                error: apiResponse.systemMessage ?? 'Add failed'
+                error: apiResponse.message ?? 'Add failed'
               });
             }
 
@@ -69,7 +69,7 @@ export class CartItemEffects {
             if (!apiResponse.data) {
 
               return CartItemActions.removeCartItemsFailure({
-                error: apiResponse.systemMessage ?? 'Remove failed'
+                error: apiResponse.message ?? 'Remove failed'
               });
             }
 

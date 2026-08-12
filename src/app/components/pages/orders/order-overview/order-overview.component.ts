@@ -84,16 +84,12 @@ export class OrderOverviewComponent {
   loadOrderDetails(orderId: string) {
     this.isLoading = true;
     this.orderService.getOrderDetail(orderId).subscribe((res) => {
-      if (res.retCode == ERetCode.Successfull) {
-        if (res.data) {
-          this.order = res.data;
-          this.isLoading = false;
-        } else {
-
-        }
+      if (res.data) {
+        this.order = res.data;
       } else {
-        this.isLoading = false;
+        this.messengerService.errorNotification(res.message);
       }
+      this.isLoading = false;
     })
   }
 
@@ -129,12 +125,12 @@ export class OrderOverviewComponent {
     }
 
     this.orderService.cancelOrder(this.order.id, dataInsert).subscribe((res) => {
-      if (res.retCode == ERetCode.Successfull) {
+      if (res.success == true) {
         if (this.order) {
           this.order.orderStatus = EOrderStatus.Canceled;
         }
       } else {
-        this.messengerService.errorNotification(res.systemMessage ?? '');
+        this.messengerService.errorNotification(res.message);
       }
     });
 
@@ -173,7 +169,7 @@ export class OrderOverviewComponent {
     }
 
     this.orderService.updateOrder(this.order.id, model).subscribe((res) => {
-      if (res.retCode == ERetCode.Successfull) {
+      if (res.success == true) {
         Swal.fire({
           title: 'Thông báo',
           text: 'Cập nhật thành công',
@@ -188,7 +184,7 @@ export class OrderOverviewComponent {
             this.showCancelReasonSelection = false;
           });
       } else {
-        this.messengerService.errorNotification(res.systemMessage ?? '');
+        this.messengerService.errorNotification(res.message);
       }
     });
   }

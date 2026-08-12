@@ -14,6 +14,7 @@ import { PagedResult } from '../../../models/models/api-response.model';
 import { ProductSearchQuery } from '../../../models/models/product/product-search-query.model';
 import { CategoryService } from '../../../core/services/api/category.service';
 import { BrandService } from '../../../core/services/api/brand.service';
+import { MessengerServices } from '../../../core/services/ui/messenger.service';
 
 @Component({
   selector: 'app-products',
@@ -54,6 +55,7 @@ export class ProductsComponent {
     private readonly categoryService: CategoryService,
     private readonly brandService: BrandService,
     private readonly route: ActivatedRoute,
+    private readonly messengerService: MessengerServices
   ) { }
 
   ngOnInit(): void {
@@ -109,12 +111,13 @@ export class ProductsComponent {
 
   loadProducts() {
     this.productService.getProducts(this.query).subscribe((res) => {
-      if (res.retCode == ERetCode.Successfull) {
-        if (res.data) {
+      if (res.data) {
           this.pagedResult = res.data;
           this.products.push(...res.data.items)
         }
-      }
+        else {
+          this.messengerService.errorNotification(res.message ?? '');
+        }
     })
   }
 

@@ -4,6 +4,7 @@ import { OrderService } from '../../../../core/services/api/order.service';
 import { OrderCardComponent } from "../../../common/order-card/order-card.component";
 import { CommonModule } from '@angular/common';
 import { EOrderStatus } from '../../../../models/enum/etype_project.enum';
+import { MessengerServices } from '../../../../core/services/ui/messenger.service';
 
 @Component({
   selector: 'app-purches',
@@ -18,7 +19,8 @@ export class PurchesComponent {
   currentTab = 'allOrders';
 
   constructor(
-    private orderService: OrderService
+    private orderService: OrderService,
+    private readonly messengerService: MessengerServices,
   ) { }
 
   ngOnInit(): void {
@@ -29,16 +31,14 @@ export class PurchesComponent {
   loadData() {
     this.isLoading = true;
     this.orderService.getUserOrders(1, 2000).subscribe((res) => {
-      if (res.retCode == 0) {
-        if (res.data) {
+      if (res.data) {
           this.allOrders = res.data;
           this.isLoading = false;
         } else {
           this.allOrders = [];
+          this.messengerService.errorNotification(res.message ?? '');
         }
-      } else {
         this.isLoading = false;
-      }
     })
   }
 

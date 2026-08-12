@@ -172,7 +172,7 @@ export class CreateOrderComponent {
 
     if (this.selectedpaymentMethodId === EPaymentMethod.COD) {
       this.orderService.createCodOrder(newOrder).subscribe((res) => {
-        if (res.retCode == ERetCode.Successfull) {
+        if (res.success == true) {
           this.messengerServices.successes("Đặt hàng thành công");
           this.sessionStorageService.clearOrder();
           this.router.navigate(['/user/purchase']);
@@ -187,7 +187,7 @@ export class CreateOrderComponent {
       this.isClickedGenerateQrCode = true;
       this.isLoadingQrCode = true;
       this.orderService.createPrepayOrder(newOrder).subscribe((res) => {
-        if (res.retCode == ERetCode.Successfull) {
+        if (res.success == true) {
           if(res.data) {
             this.paymentData = res.data;
           this.isLoadingQrCode = false;
@@ -222,15 +222,15 @@ export class CreateOrderComponent {
             .paymentFailed$
             .subscribe((data) => {
 
-              this.messengerServices.errorNotification(res.systemMessage || "Hệ thống xảy ra lỗi trong quá trình thanh toán. Vui lòng thử lại sau");
+              this.messengerServices.errorNotification(res.message || "Hệ thống xảy ra lỗi trong quá trình thanh toán. Vui lòng thử lại sau");
             });
           }
           else{
-            this.messengerServices.errorNotification(res.systemMessage || "Không nhận được dữ liệu thanh toán từ server");
+            this.messengerServices.errorNotification(res.message || "Không nhận được dữ liệu thanh toán từ server");
           }
 
         } else {
-          this.messengerServices.errorNotification(res.systemMessage || "Có lỗi xảy ra trong quá trình tạo đơn hàng");
+          this.messengerServices.errorNotification(res.message || "Có lỗi xảy ra trong quá trình tạo đơn hàng");
           return;
         }
       });

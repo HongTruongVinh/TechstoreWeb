@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, firstValueFrom, map, switchMap } from 'rxjs';
 import { TransferHttpService } from '../../transfer-http/transfer-http.service';
 import { LinkSettingsService } from './link-settings.service';
-import { ApiResponseModel } from '../../../models/models/api-response.model';
+import { ApiResponse } from '../../../models/models/api-response.model';
 
 import { BrandModel as Brand } from '../../../models/models/brand/brand.model';
 import { ERetCode } from '../../../models/enum/etype_project.enum';
@@ -22,14 +22,14 @@ export class BrandService {
         return this.linkSettingsService.getResLinkSetting('Brand', 'GetBrands')
             .pipe(
                 switchMap((apiUrl) => this.transferHttp.get(apiUrl)),
-                map((res: ApiResponseModel<Brand[]>) => res)
+                map((res: ApiResponse<Brand[]>) => res)
             );
     }
 
     loadBrands(): Promise<void> {
         return firstValueFrom(this.fetchBrands())
             .then(res => {
-                if (res.retCode === ERetCode.Successfull && res.data) {
+                if (res.data) {
                     this.brands = res.data;
                 }
             });

@@ -2,7 +2,7 @@ import { Injectable, signal } from '@angular/core';
 import { map, switchMap } from 'rxjs';
 import { TransferHttpService } from '../../transfer-http/transfer-http.service';
 import { LinkSettingsService } from './link-settings.service';
-import { ApiResponseModel } from '../../../models/models/api-response.model';
+import { ApiResponse } from '../../../models/models/api-response.model';
 
 import { LoginRequestModel } from '../../../models/models/authentication/login-request.model';
 import { RegisterRequestModel } from '../../../models/models/authentication/register-request.model';
@@ -27,7 +27,7 @@ export class AuthenticationService {
 
           return this.transferHttp.post(apiUrl, loginRequestModel);
         }),
-        map((res: ApiResponseModel<LoginResponeModel>) => res)
+        map((res: ApiResponse<LoginResponeModel>) => res)
       );
   }
 
@@ -41,7 +41,7 @@ export class AuthenticationService {
 
           return this.transferHttp.post(apiUrl, registerRequestModel);
         }),
-        map((res: ApiResponseModel<any>) => res)
+        map((res: ApiResponse<any>) => res)
       );
   }
 
@@ -55,7 +55,7 @@ export class AuthenticationService {
 
           return this.transferHttp.put(apiUrl, changePasswordRequest);
         }),
-        map((res: ApiResponseModel<any>) => res)
+        map((res: ApiResponse<any>) => res)
       );
   }
 }

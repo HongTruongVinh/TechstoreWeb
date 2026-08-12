@@ -22,6 +22,7 @@ import * as CartActions from '../../../store/cart/cart.actions';
 import { BehaviorSubject, combineLatest, map } from 'rxjs';
 import { ProductSearchQuery } from '../../../models/models/product/product-search-query.model';
 import { ConvertPhotoUrl } from '../../../library/share-function/convert-image-url';
+import { MessengerServices } from '../../../core/services/ui/messenger.service';
 
 @Component({
   selector: 'app-product-details',
@@ -87,6 +88,7 @@ export class ProductDetailsComponent {
     private readonly titleService: Title,
     private readonly productService: ProductService,
     private readonly tss: TokenStorageService,
+    private readonly messengerService: MessengerServices,
   ) { }
 
   ngOnInit(): void {
@@ -120,7 +122,7 @@ export class ProductDetailsComponent {
 
   loadProductDetails(id: string) {
     this.productService.getProductDetails(id).subscribe((res) => {
-      if (res.retCode === ERetCode.Successfull && res.data) {
+      if (res.data) {
         this.product = res.data;
 
         this.loadRelatedProducts();
@@ -150,7 +152,7 @@ export class ProductDetailsComponent {
         //   this.slickModal.slickGoTo(0);
         // }
       } else {
-        // Handle error or product not found
+        this.messengerService.errorNotification(res.message ?? '');
       }
     });
   }
@@ -264,10 +266,8 @@ export class ProductDetailsComponent {
     }
 
     this.productService.getProducts(query).subscribe((res) => {
-      if (res.retCode == ERetCode.Successfull) {
-        if (res.data) {
+      if (res.data) {
           this.relatedProducts = res.data.items;
-        }
       }
     })
   }

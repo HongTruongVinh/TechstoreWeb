@@ -3,7 +3,7 @@ import { TransferHttpService } from "../../transfer-http/transfer-http.service";
 import { LinkSettingsService } from "./link-settings.service";
 import { map, Observable, switchMap } from "rxjs";
 import { CartItemCreateModel } from "../../../models/models/cart/cart-item-create.model";
-import { ApiResponseModel } from "../../../models/models/api-response.model";
+import { ApiResponse } from "../../../models/models/api-response.model";
 import { CartItem } from "../../../models/models/cart/cart-item.model";
 
 
@@ -20,15 +20,15 @@ export class CartService {
         return this.linkSettingsService.getResLinkSetting('Cart', 'GetAllItems', pageNumber, pageSize)
             .pipe(
                 switchMap((apiUrl) => this.transferHttp.get(apiUrl)),
-                map((res: ApiResponseModel<CartItem[]>) => res)
+                map((res: ApiResponse<CartItem[]>) => res)
             );
     }
 
-    addCartItem(model: CartItemCreateModel): Observable<ApiResponseModel<CartItem>> {
+    addCartItem(model: CartItemCreateModel): Observable<ApiResponse<CartItem>> {
         return this.linkSettingsService.getResLinkSetting('Cart', 'AddItemToCart')
             .pipe(
                 switchMap((apiUrl) => this.transferHttp.post(apiUrl, model)),
-                map((res: ApiResponseModel<CartItem>) => res)
+                map((res: ApiResponse<CartItem>) => res)
             );
     }
 
@@ -46,7 +46,7 @@ export class CartService {
         return this.linkSettingsService.getResLinkSetting('Cart', 'RemoveItemFromCart')
             .pipe(
                 switchMap((apiUrl) => this.transferHttp.put(apiUrl, itemIds)),
-                map((res: ApiResponseModel<CartItem[]>) => res)
+                map((res: ApiResponse<CartItem[]>) => res)
             );
     }
 }

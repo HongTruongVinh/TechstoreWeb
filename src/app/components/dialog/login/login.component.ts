@@ -68,7 +68,7 @@ export class LoginComponent {
 
       this.authenticationService.loginNormalAccount(loginRequest).subscribe({
         next: (res) => {
-          if (res.retCode == ERetCode.LoginSuccess) {
+          if (res.success == true) {
             const data = res.data;
             if (data) {
               this.tokenStorageService.saveUser(data.user);
@@ -81,12 +81,8 @@ export class LoginComponent {
               this.close();
             }
           }
-          else if (res.retCode == ERetCode.LoginError) {
-            this.loginfail = true;
-            // this.messengerService.errorNotification('Sai mật khẩu hoặc tài khoản');
-          }
           else {
-            this.messengerService.errorNotification(res.systemMessage ?? '');
+            this.loginfail = true;
           }
         },
         error: (error) => {

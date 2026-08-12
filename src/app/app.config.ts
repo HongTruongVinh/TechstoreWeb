@@ -16,8 +16,6 @@ import { loadingInterceptor } from './core/services/loading/loading.interceptor'
 // import store
 import { provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
-import { categoryReducer } from './store/categories/category.reducer';
-import { CategoryEffects } from './store/categories/category.effects';
 import { cartItemReducer } from './store/cart/cart.reducer';
 import { CartItemEffects } from './store/cart/cart.effects';
 import { CategoryService } from './core/services/api/category.service';

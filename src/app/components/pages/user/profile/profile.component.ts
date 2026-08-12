@@ -112,7 +112,7 @@ export class ProfileComponent {
     }
 
     this.userService.updateProfile(dataInsert).subscribe((res) => {
-      if (res.retCode == ERetCode.Successfull) {
+      if (res.success == true) {
         var user = this.tokenStorageService.getUser();
         if (user) {
           user.firstName = dataInsert.firstName;
@@ -128,7 +128,7 @@ export class ProfileComponent {
         this.isEditMode = false;
         this.messengerService.successes("Cập nhật thành công");
       } else {
-        this.messengerService.errorWithIssue();
+        this.messengerService.errorNotification(res.message || "Cập nhật thất bại");
       }
     });
   }
@@ -169,10 +169,10 @@ export class ProfileComponent {
     };
 
     this.authService.changePassword(changePasswordRequest).subscribe((res) => {
-      if (res.retCode == ERetCode.Successfull) {
+      if (res.success == true) {
         this.messengerService.successes("Đổi mật khẩu thành công");
       } else {
-        this.messengerService.errorNotification(res.systemMessage || "Đổi mật khẩu thất bại");
+        this.messengerService.errorNotification(res.message || "Đổi mật khẩu thất bại");
       }
     });
   }

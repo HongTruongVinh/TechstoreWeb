@@ -2,11 +2,11 @@ import { Injectable } from "@angular/core";
 import { TransferHttpService } from "../../transfer-http/transfer-http.service";
 import { LinkSettingsService } from "./link-settings.service";
 import { map, switchMap } from "rxjs";
-import { ApiResponseModel } from "../../../models/models/api-response.model";
 
 import { ProductListItemModel } from "../../../models/models/product/product-list-item.model";
 import { ProductDetailsModel } from "../../../models/models/product/product-details";
 import { Category } from "../../../models/models/category/category.model";
+import { ApiResponse } from "../../../models/models/api-response.model";
 
 
 
@@ -28,7 +28,7 @@ export class HomeService {
 
                     return this.transferHttp.get(apiUrl);
                 }),
-                map((res: ApiResponseModel<ProductListItemModel[]>) => res)
+                map((res: ApiResponse<ProductListItemModel[]>) => res)
             );
     }
 
@@ -43,7 +43,7 @@ export class HomeService {
 
                     return this.transferHttp.get(apiUrl);
                 }),
-                map((res: ApiResponseModel<ProductListItemModel[]>) => res)
+                map((res: ApiResponse<ProductListItemModel[]>) => res)
             );
     }
 

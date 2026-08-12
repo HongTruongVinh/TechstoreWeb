@@ -1,9 +1,8 @@
-export interface ApiResponseModel<T> {
-  partnerCode?: string | null;
-  retCode: string | number | null;
-  data?: T | null;
-  statusCode: number;
-  systemMessage?: string | null;
+
+export interface ApiResponse<T> {
+  success: boolean;
+  message: string;
+  data: T | null;
 }
 
 export interface PagedResult<T> {

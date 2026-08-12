@@ -88,7 +88,7 @@ export class RegisterComponent {
 
       this.authenticationService.registerAccount(registerRequest).subscribe({
         next: (res) => {
-          if (res.retCode == ERetCode.Successfull) {
+          if (res.success == true) {
             const data = res.data;
             if (data) {
               this.tokenStorageService.saveUser(data.user);
@@ -101,7 +101,7 @@ export class RegisterComponent {
             }
           }
           else {
-            this.messengerService.warringWithMessage(res.systemMessage ?? 'có lỗi xảy ra, vui lòng thử lại');
+            this.messengerService.warringWithMessage(res.message ?? 'có lỗi xảy ra, vui lòng thử lại');
           }
         },
         error: (error) => {

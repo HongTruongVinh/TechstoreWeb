@@ -89,23 +89,17 @@ export class OrderDetailComponent {
       const orderId = params.get('id')!;
       this.isLoading = true;
       this.orderService.getOrderDetail(orderId).subscribe((res) => {
-        if (res.retCode == ERetCode.Successfull) {
-          if (res.data) {
-            this.order = res.data;
+        if (res.data) {
+          this.order = res.data;
 
-            this.invoice = this.order.invoice;
-            this.payments = this.order.invoice?.payments;
+          this.invoice = this.order.invoice;
+          this.payments = this.order.invoice?.payments;
 
-            this.orderItems = this.order.items;
-
-
-            this.isLoading = false;
-          } else {
-
-          }
+          this.orderItems = this.order.items;
         } else {
-          this.isLoading = false;
+
         }
+          this.isLoading = false;
       })
     });
 
@@ -130,12 +124,12 @@ export class OrderDetailComponent {
     }
 
     this.orderService.cancelOrder(this.order.id, dataInsert).subscribe((res) => {
-      if (res.retCode == ERetCode.Successfull) {
+      if (res.success == true) {
         if(this.order){
           this.order.orderStatus = EOrderStatus.Canceled;
         }
       } else {
-        this.messengerServices.errorNotification(res.systemMessage??'');
+        this.messengerServices.errorNotification(res.message??'');
       }
     });
 

@@ -124,11 +124,9 @@ export class HomeComponent {
   loadData(): void {
 
     this.homeService.getFeaturedProducts().subscribe((res) => {
-      if (res.retCode == ERetCode.Successfull) {
-        if (res.data) {
+      if (res.data) {
           this.featureProducts = res.data;
         }
-      }
     })
 
     const iphoneProductQuery: ProductSearchQuery = {
@@ -138,11 +136,9 @@ export class HomeComponent {
     }
 
     this.productService.getProducts(iphoneProductQuery).subscribe((res) => {
-      if (res.retCode == ERetCode.Successfull) {
-        if (res.data) {
+      if (res.data) {
           this.brandProducts1 = res.data.items;
         }
-      }
     })
 
     const samsungProductQuery: ProductSearchQuery = {
@@ -152,11 +148,9 @@ export class HomeComponent {
     }
 
     this.productService.getProducts(samsungProductQuery).subscribe((res) => {
-      if (res.retCode == ERetCode.Successfull) {
-        if (res.data) {
+      if (res.data) {
           this.brandProducts2 = res.data.items;
         }
-      }
     })
   }
 

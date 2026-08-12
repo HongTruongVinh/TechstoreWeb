@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { TransferHttpService } from "../../transfer-http/transfer-http.service";
 import { map, switchMap } from "rxjs";
 import { LinkSettingsService } from "./link-settings.service";
-import { ApiResponseModel } from "../../../models/models/api-response.model";
+import { ApiResponse } from "../../../models/models/api-response.model";
 import { UserUpdateModel } from "../../../models/models/user/user-update.model";
 
 @Injectable({ providedIn: 'root' })
@@ -24,7 +24,7 @@ export class UserService {
         
                             return this.transferHttp.put(apiUrl, model);
                         }),
-                        map((res: ApiResponseModel<boolean>) => res)
+                        map((res: ApiResponse<boolean>) => res)
                     );
     }
 }

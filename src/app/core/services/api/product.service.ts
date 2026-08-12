@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { TransferHttpService } from "../../transfer-http/transfer-http.service";
 import { LinkSettingsService } from "./link-settings.service";
 import { map, switchMap } from "rxjs";
-import { ApiResponseModel, PagedResult } from "../../../models/models/api-response.model";
+import { ApiResponse, PagedResult } from "../../../models/models/api-response.model";
 
 import { ProductListItemModel } from "../../../models/models/product/product-list-item.model";
 import { ProductDetailsModel } from "../../../models/models/product/product-details";
@@ -29,7 +29,7 @@ export class ProductService {
 
                     return this.transferHttp.get(apiUrl);
                 }),
-                map((res: ApiResponseModel<ProductListItemModel[]>) => res)
+                map((res: ApiResponse<ProductListItemModel[]>) => res)
             );
     }
 
@@ -44,7 +44,7 @@ export class ProductService {
 
                     return this.transferHttp.get(apiUrl);
                 }),
-                map((res: ApiResponseModel<ProductDetailsModel>) => res)
+                map((res: ApiResponse<ProductDetailsModel>) => res)
             );
     }
 
@@ -59,7 +59,7 @@ export class ProductService {
 
                     return this.transferHttp.get(apiUrl);
                 }),
-                map((res: ApiResponseModel<PagedResult<ProductListItemModel>>) => res)
+                map((res: ApiResponse<PagedResult<ProductListItemModel>>) => res)
             );
     }
 }

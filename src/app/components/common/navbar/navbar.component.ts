@@ -16,6 +16,7 @@ import { ERetCode } from '../../../models/enum/etype_project.enum';
 import { FullImageUrlPipe } from "../../../pipes/full-image-url.pipe";
 import { Store } from '@ngrx/store';
 import { selectCartItemCount } from '../../../store/cart/cart.selectors';
+import { MessengerServices } from '../../../core/services/ui/messenger.service';
 
 @Component({
   selector: 'app-navbar',
@@ -60,10 +61,11 @@ export class NavbarComponent {
     private readonly router: Router,
     private fb: UntypedFormBuilder,
     private readonly productService: ProductService,
+    private readonly messengerService: MessengerServices,
     private store: Store
-  ) { 
+  ) {
     this.totalQuantity$ = this.store.select(selectCartItemCount);
-    
+
   }
 
   ngOnInit(): void {
@@ -76,10 +78,11 @@ export class NavbarComponent {
       this.query.keyword = value.keyword.trim();
 
       this.productService.getProducts(this.query).subscribe((res) => {
-        if (res.retCode == ERetCode.Successfull) {
-          if (res.data) {
-            this.pagedResult = res.data;
-          }
+        if (res.data) {
+          this.pagedResult = res.data;
+        }
+        else {
+          this.messengerService.errorNotification(res.message ?? '');
         }
       })
     });
@@ -113,7 +116,7 @@ export class NavbarComponent {
 
   onBlur() {
     setTimeout(() => {
-        this.isSearching = false;
+      this.isSearching = false;
     }, 150);
   }
 

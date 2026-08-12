@@ -121,10 +121,10 @@
                                                                     class="old-price text-muted text-decoration-line-through">{{
                                                                     selectedVariant.price | thousandSeparator }} ₫</span>
                                                             </div>
-                                                            <div *ngIf="selectedVariant.salePrice == 0"
-                                                                class="product-price">
-                                                                <span class="current-price fw-bold text-danger">{{
-                                                                    selectedVariant.price | thousandSeparator }} ₫</span>
+                                                            <div *ngIf="selectedVariant.salePrice == 0" class="product-price">
+                                                                <span class="current-price fw-bold text-danger">
+                                                                    {{ (selectedOption$ | async)?.price | thousandSeparator }} ₫
+                                                                </span>
                                                             </div>
                                                         </div>
                                                     </div>

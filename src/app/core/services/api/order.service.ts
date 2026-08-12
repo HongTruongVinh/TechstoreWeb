@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { TransferHttpService } from "../../transfer-http/transfer-http.service";
 import { map, switchMap } from "rxjs";
-import { ApiResponseModel } from "../../../models/models/api-response.model";
+import { ApiResponse} from "../../../models/models/api-response.model";
 
 import { ListItemOrderModel } from "../../../models/models/order/list-item-order.model";
 import { LinkSettingsService } from "./link-settings.service";
@@ -33,7 +33,7 @@ export class OrderService {
 
                     return this.transferHttp.get(apiUrl);
                 }),
-                map((res: ApiResponseModel<ListItemOrderModel[]>) => res)
+                map((res: ApiResponse<ListItemOrderModel[]>) => res)
             );
     }
 
@@ -47,7 +47,7 @@ export class OrderService {
                     }
                     return this.transferHttp.get(apiUrl);
                 }),
-                map((res: ApiResponseModel<OrderModel>) => res)
+                map((res: ApiResponse<OrderModel>) => res)
             );
     }
 
@@ -61,7 +61,7 @@ export class OrderService {
                     }
                     return this.transferHttp.post(apiUrl, newOrder);
                 }),
-                map((res: ApiResponseModel<string>) => res)
+                map((res: ApiResponse<string>) => res)
             );
     }
 
@@ -75,7 +75,7 @@ export class OrderService {
                     }
                     return this.transferHttp.post(apiUrl, newOrder);
                 }),
-                map((res: ApiResponseModel<PaymentDataModel>) => res)
+                map((res: ApiResponse<PaymentDataModel>) => res)
             );
     }
 
@@ -89,7 +89,7 @@ export class OrderService {
                     }
                     return this.transferHttp.put(apiUrl, model);
                 }),
-                map((res: ApiResponseModel<boolean>) => res)
+                map((res: ApiResponse<boolean>) => res)
             );
     }
 
@@ -103,7 +103,7 @@ export class OrderService {
                     }
                     return this.transferHttp.put(apiUrl, model);
                 }),
-                map((res: ApiResponseModel<boolean>) => res)
+                map((res: ApiResponse<boolean>) => res)
             );
     }
 }
