@@ -6,14 +6,14 @@
 export const environment = {
   production: false,
   imagesLink: 'https://res.cloudinary.com/dc8ijvcze/image/upload/v1747216196/',
-  // baseUrl: 'https://techstorebe.onrender.com/api/',
-  // urlUploadFile : 'https://techstorebe.onrender.com/api/',
-  // baseHost: 'https://techstorebe.onrender.com/',
-  baseUrl: 'https://localhost:7081/api/',
-  urlUploadFile : 'https://localhost:7081/api/',
-  baseHost: 'https://localhost:7081/',
+  baseUrl: 'https://techstorebe.onrender.com/api/',
+  urlUploadFile : 'https://techstorebe.onrender.com/api/',
+  baseHost: 'https://techstorebe.onrender.com/',
+  // baseUrl: 'https://localhost:7081/api/',
+  // urlUploadFile : 'https://localhost:7081/api/',
+  // baseHost: 'https://localhost:7081/',
 };
-
+//direct api calls to the server
 
 //ng serve --host 0.0.0.0 --port 4200
 // export const environment = {
