@@ -64,6 +64,10 @@
     "GetpaymentData": "payments/create-payment-pre-order",
     "PaymentHub": "payments/hub"
   },
+  "Voucher": {
+    "GetVoucherByCode": "vouchers/{0}",
+    "GetVouchers": "vouchers"
+  },
   "MockingDataAPI": {
     "PaymentHub": "PaymentWebhook/verify-payment-of-snapshot"
   }

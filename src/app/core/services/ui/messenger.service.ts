@@ -1,5 +1,7 @@
 import { Injectable } from "@angular/core";
 import Swal from "sweetalert2";
+import { EAlertType } from "../../../library/enum/ealerttype";
+
 
 @Injectable({ providedIn: 'root' })
 export class MessengerServices {
@@ -21,6 +23,48 @@ export class MessengerServices {
     });
   }
 
+  showAlert(alertType: EAlertType, title: string, text: string) {
+    switch (alertType) {
+      case EAlertType.success:
+        Swal.fire({
+          title: title,
+          text: text,
+          icon: EAlertType.success,
+          confirmButtonColor: '#7af58f',
+          showCancelButton: false,
+        });
+        break;
+      
+      case EAlertType.error:
+        Swal.fire({
+          title: title,
+          text: text,
+          icon: EAlertType.error,
+          confirmButtonColor: '#5c6066',
+          showCancelButton: false,
+        });
+        break;
+
+      case EAlertType.warning:
+        Swal.fire({
+          title: title,
+          text: text,
+          icon: EAlertType.warning,
+          confirmButtonColor: '#cbf96e',
+          showCancelButton: false,
+        });
+        break;
+      case EAlertType.info:
+        Swal.fire({
+          title: title,
+          text: text,
+          icon: EAlertType.info,
+          confirmButtonColor: '#4b93ff',
+          showCancelButton: false,
+        });
+        break;
+    }
+  }
 
   successes(messenger: string) {
     return Swal.fire({

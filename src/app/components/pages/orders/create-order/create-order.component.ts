@@ -5,7 +5,7 @@ import { LottieComponent, AnimationOptions } from 'ngx-lottie';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ThousandSeparatorPipe } from '../../../../pipes/thousandSeparator.pipe';
 import { FullImageUrlPipe } from '../../../../pipes/full-image-url.pipe';
-import { EPaymentMethod, ERetCode } from '../../../../models/enum/etype_project.enum';
+import { EDiscountType, EPaymentMethod, ERetCode } from '../../../../models/enum/etype_project.enum';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TokenStorageService } from '../../../../core/services/ui/token-storage.service';
 import { OrderService } from '../../../../core/services/api/order.service';
@@ -18,6 +18,10 @@ import { MessengerServices } from '../../../../core/services/ui/messenger.servic
 import { PaymentDataModel } from '../../../../models/models/payment/payment-data.model';
 import { PaymentSignalrService } from '../../../../core/services/signalr/payment-signalr.service';
 import { MockingDataService, PaymentForSnapshotWebhookRequest } from '../../../../core/services/api/mocking-data.service';
+import { IdempotencyService } from '../../../../core/services/api/idempotency-key.sẻvice';
+import { Voucher } from '../../../../models/models/voucher/voucher.model';
+import { VoucherService } from '../../../../core/services/api/voucher.service';
+import { EAlertType } from '../../../../library/enum/ealerttype';
 
 @Component({
   selector: 'app-create-order',
@@ -30,7 +34,7 @@ import { MockingDataService, PaymentForSnapshotWebhookRequest } from '../../../.
     ThousandSeparatorPipe,
     FullImageUrlPipe,
     LottieComponent
-],
+  ],
   templateUrl: './create-order.component.html',
   styleUrl: './create-order.component.scss'
 })
@@ -51,8 +55,6 @@ export class CreateOrderComponent {
   subtotal: number = 0;
   discount: number = 0;
   discountCode: string = '';
-  listDiscountCodes: string[] = [];
-  discountRate = 0;
   shipping: number = 0;
   tax: any;
   taxRate = 0;
@@ -60,6 +62,8 @@ export class CreateOrderComponent {
 
   user!: User;
   paymentData?: PaymentDataModel;
+  voucher?: Voucher | null = null;
+  vouchers: Voucher[] = [];
 
   paymentMethods: { methodId: number, name: string }[] = [];
   paymentMethodNames: Record<EPaymentMethod, string> = {
@@ -68,7 +72,7 @@ export class CreateOrderComponent {
     [EPaymentMethod.Cash]: 'Tiền mặt'
   };
   selectedpaymentMethodId: number = 1;
- 
+
   successOptions: AnimationOptions = {
     path: '/assets/animations/tick.json',
     loop: false,
@@ -85,8 +89,10 @@ export class CreateOrderComponent {
     private readonly tokenStorageService: TokenStorageService,
     private readonly sessionStorageService: SessionStorageService,
     private readonly orderService: OrderService,
+    private readonly VoucherService: VoucherService,
     private readonly paymentSignalrService: PaymentSignalrService,
     private readonly messengerServices: MessengerServices,
+    private readonly idempotencyService: IdempotencyService,
     private readonly mds: MockingDataService
   ) { }
 
@@ -130,20 +136,43 @@ export class CreateOrderComponent {
   }
 
   loadData() {
-    invoiceTime: Date.UTC(Date.now());
+    // this.messengerServices.warringWithMessage("Website được xây dựng với mục đích học tập, nên sẽ không có sản phẩm thực tế, vui lòng không chuyển khoản để đặt hàng");
+
     this.orderItems = [];
 
     this.orderItems = this.sessionStorageService.getOrderItems() || [];
 
+    this.calculateTotalPrice();
+
+    this.VoucherService.GetVouchers().subscribe((res) => {
+      if (res.data) {
+        this.vouchers = res.data;
+        this.vouchers = this.vouchers.filter(voucher => voucher.code !== "D99");
+      }
+    });
+  }
+
+  calculateTotalPrice(Voucher?: Voucher) {
     this.subtotal = this.orderItems.reduce((sum, item) => {
       return sum + item.totalPrice;
     }, 0);
 
-    this.totalPrice = this.subtotal;
+    if (Voucher) {
+      if (Voucher.discountType === EDiscountType.Percentage) {
+        this.totalPrice = this.subtotal - (this.subtotal * Voucher.discountValue);
+      } else if (Voucher.discountType === EDiscountType.FixedAmount) {
+        this.totalPrice = this.subtotal - Voucher.discountValue;
+      }
+
+      this.discount = this.subtotal - this.totalPrice;
+    } else {
+      this.totalPrice = this.subtotal;
+      this.discount = 0;
+    }
   }
 
   saveAction() {
-    if(!this.validation()){
+    if (!this.validation()) {
       return;
     }
 
@@ -152,8 +181,7 @@ export class CreateOrderComponent {
       const orderItem: OrderItemCreateModel = {
         orderId: '',
         productVariantOptionId: item.productVariantOptionId,
-        quantity: item.quantity,
-        discount: 0,
+        quantity: item.quantity
       };
       orderItems.push(orderItem);
     }
@@ -188,44 +216,45 @@ export class CreateOrderComponent {
       this.isLoadingQrCode = true;
       this.orderService.createPrepayOrder(newOrder).subscribe((res) => {
         if (res.success == true) {
-          if(res.data) {
+          if (res.data) {
             this.paymentData = res.data;
-          this.isLoadingQrCode = false;
+            this.isLoadingQrCode = false;
 
-          this.paymentSignalrService.startConnection(this.paymentData.snapshotId);
+            this.paymentSignalrService.startConnection(this.paymentData.snapshotId);
 
-          this.paymentRequest = {
-            snapshotId: this.paymentData.snapshotId,
-            amount: this.paymentData.amount,
-            transactionId: 'mock-transaction-id'
-          };
-        
-          // setTimeout(() => {
-          //   if(this.paymentRequest){
-          //     this.mds.PaymentSuccess(this.paymentRequest).subscribe(res => {
-          //       console.log("Gửi yêu cầu thanh toán thành công");
-          //     });
-          //   }
-          // }, 5000); // 5 giây
+            this.paymentRequest = {
+              snapshotId: this.paymentData.snapshotId,
+              amount: this.paymentData.amount,
+              transactionId: 'mock-transaction-id'
+            };
 
-          this.paymentSignalrService
-            .paymentSuccess$
-            .subscribe((data) => {
-
-              this.isPaymentSuccess = true;
-              this.messengerServices.successes("Đặt hàng thành công");
-          this.sessionStorageService.clearOrder();
-              this.router.navigate(['/user/purchase']);
-            });
+            // setTimeout(() => {
+            //   if(this.paymentRequest){
+            //     this.mds.PaymentSuccess(this.paymentRequest).subscribe(res => {
+            //       console.log("Gửi yêu cầu thanh toán thành công");
+            //     });
+            //   }
+            // }, 5000); // 5 giây
 
             this.paymentSignalrService
-            .paymentFailed$
-            .subscribe((data) => {
+              .paymentSuccess$
+              .subscribe((data) => {
 
-              this.messengerServices.errorNotification(res.message || "Hệ thống xảy ra lỗi trong quá trình thanh toán. Vui lòng thử lại sau");
-            });
+                this.isPaymentSuccess = true;
+                this.messengerServices.successes("Đặt hàng thành công");
+                this.sessionStorageService.clearOrder();
+                this.idempotencyService.clearOrderKey();
+                this.router.navigate(['/user/purchase']);
+              });
+
+            this.paymentSignalrService
+              .paymentFailed$
+              .subscribe((data) => {
+
+                this.messengerServices.errorNotification(res.message || "Hệ thống xảy ra lỗi trong quá trình thanh toán. Vui lòng thử lại sau");
+              });
           }
-          else{
+          else {
             this.messengerServices.errorNotification(res.message || "Không nhận được dữ liệu thanh toán từ server");
           }
 
@@ -237,10 +266,10 @@ export class CreateOrderComponent {
     }
   }
 
-  paymentRequest? : PaymentForSnapshotWebhookRequest;
-  testSignalR(){
+  paymentRequest?: PaymentForSnapshotWebhookRequest;
+  testSignalR() {
 
-    if(this.isPaymentSuccess){
+    if (this.isPaymentSuccess) {
       return;
     }
 
@@ -251,15 +280,51 @@ export class CreateOrderComponent {
     // }
   }
 
-  checkDiscountCode() {
-  if (!this.discountCode) {
-    alert('Vui lòng nhập mã ưu đãi');
-    return;
+  selectVoucher() {
+    this.checkDiscountCode();
   }
 
-  // TODO: gọi API kiểm tra mã
-  console.log('Kiểm tra mã:', this.discountCode);
-}
+  removeVoucher(): void {
+    this.discountCode = '';
+    this.voucher = null;
+    this.calculateTotalPrice();
+  }
+
+  checkDiscountCode() {
+    if (!this.discountCode) {
+      this.removeVoucher();
+      return;
+    }
+
+    this.VoucherService.CheckVoucher(this.discountCode, this.orderItems).subscribe({
+      next: (res) => {
+        if (res.data) {
+          this.voucher = res.data;
+          this.calculateTotalPrice(this.voucher);
+        }
+      },
+
+      error: (error) => {
+        const message = error.error?.message || 'Mã ưu đãi không hợp lệ hoặc đã hết hạn';
+
+        this.messengerServices.showAlert(EAlertType.warning, 'Thông báo', message);
+        this.removeVoucher();
+      }
+    });
+  }
+
+  getDiscountText(voucher: Voucher): string {
+    switch (voucher.discountType) {
+      case EDiscountType.Percentage:
+        return `Giảm ${voucher.discountValue * 100}%`;
+
+      case EDiscountType.FixedAmount:
+        return `Giảm ${voucher.discountValue.toLocaleString('vi-VN')}đ`;
+
+      default:
+        return '';
+    }
+  }
 
   goToCheckout() {
 
@@ -275,7 +340,7 @@ export class CreateOrderComponent {
 
   }
 
-  validation(): boolean{
+  validation(): boolean {
     if (this.newOrderForm.invalid) {
       this.messengerServices.warringWithMessage("Vui lòng điền đầy đủ thông tin khách hàng");
       return false;
@@ -294,7 +359,7 @@ export class CreateOrderComponent {
     return true;
   }
 
-  backToCart(){
+  backToCart() {
     this.sessionStorageService.clearOrder();
     window.history.back();
   }

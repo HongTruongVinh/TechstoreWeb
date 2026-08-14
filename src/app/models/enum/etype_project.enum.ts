@@ -103,3 +103,17 @@ export enum ERetCode
 
     NoPermission
 }
+
+export enum EDiscountType
+{
+    Percentage,
+    FixedAmount
+}
+
+export enum EVoucherStatus
+{
+    Draft,
+    Active,
+    Expired,
+    Disabled
+}

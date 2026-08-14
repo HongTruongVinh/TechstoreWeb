@@ -1,50 +1,44 @@
-<div class="row">
-    <div class="d-flex align-items-center flex-wrap gap-2 mb-3">
-        <ul class="nav nav-pills arrow-navtabs nav-secondary gap-2 flex-grow-1 order-2 order-lg-1" role="tablist">
+<div class="wrapper">
+    <div class="order-tabs-wrapper">
+        <ul class="nav nav-pills arrow-navtabs nav-secondary gap-2" role="tablist">
             <li class="nav-item" role="presentation">
-                <a class="nav-link active" data-bs-toggle="tab" href="javascript:void(0);"
-                    [class.active]="currentTab === 'allOrders'" (click)="changeTab('allOrders')" role="tab"
-                    aria-selected="true">
+                <a class="nav-link" [class.active]="currentTab === 'allOrders'" (click)="changeTab('allOrders')" role="tab">
                     Tất cả ({{ allOrders.length }})
                 </a>
             </li>
+    
             <li class="nav-item" role="presentation">
-                <a class="nav-link" data-bs-toggle="tab" href="javascript:void(0);"
-                    [class.active]="currentTab === 'pending'" (click)="changeTab('pending')" role="tab"
-                    aria-selected="false" tabindex="-1">
+                <a class="nav-link" [class.active]="currentTab === 'pending'" (click)="changeTab('pending')" role="tab">
                     Chờ xác nhận ({{ pendingOrders.length }})
                 </a>
             </li>
+    
             <li class="nav-item" role="presentation">
-                <a class="nav-link" data-bs-toggle="tab" href="javascript:void(0);"
-                    [class.active]="currentTab === 'processing'" (click)="changeTab('processing')" role="tab"
-                    aria-selected="false" tabindex="-1">
+                <a class="nav-link" [class.active]="currentTab === 'processing'" (click)="changeTab('processing')"
+                    role="tab">
                     Đang xử lý ({{ processingOrders.length }})
                 </a>
             </li>
+    
             <li class="nav-item" role="presentation">
-                <a class="nav-link" data-bs-toggle="tab" href="javascript:void(0);"
-                    [class.active]="currentTab === 'delivering'" (click)="changeTab('delivering')" role="tab"
-                    aria-selected="false" tabindex="-1">
+                <a class="nav-link" [class.active]="currentTab === 'delivering'" (click)="changeTab('delivering')"
+                    role="tab">
                     Vận chuyển ({{ deliveringOrders.length }})
                 </a>
             </li>
+    
             <li class="nav-item" role="presentation">
-                <a class="nav-link" data-bs-toggle="tab" href="javascript:void(0);"
-                    [class.active]="currentTab === 'completed'" (click)="changeTab('completed')" role="tab"
-                    aria-selected="false" tabindex="-1">
+                <a class="nav-link" [class.active]="currentTab === 'completed'" (click)="changeTab('completed')" role="tab">
                     Hoàn thành
                 </a>
             </li>
+    
             <li class="nav-item" role="presentation">
-                <a class="nav-link" data-bs-toggle="tab" href="javascript:void(0);"
-                    [class.active]="currentTab === 'canceled'" (click)="changeTab('canceled')" role="tab" aria-selected="false"
-                    tabindex="-1">
+                <a class="nav-link" [class.active]="currentTab === 'canceled'" (click)="changeTab('canceled')" role="tab">
                     Đã hủy
                 </a>
             </li>
         </ul>
-
     </div>
     <div class="tab-content">
         <div [hidden]="currentTab !== 'allOrders'" class="tab-pane active" id="allOrders" role="tabpanel">

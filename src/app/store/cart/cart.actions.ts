@@ -29,9 +29,13 @@ export const addCartItemFailure = createAction(
 );
 
 
+// export const removeCartItems = createAction(
+//   '[CartItem] Remove CartItems',
+//   props<{ cartItemIds: string[] }>()
+// );
+
 export const removeCartItems = createAction(
-  '[CartItem] Remove CartItems',
-  props<{ cartItemIds: string[] }>()
+  '[CartItem] Remove CartItems'
 );
 
 export const removeCartItemsSuccess = createAction(
@@ -55,4 +59,8 @@ export const updateCartItemQuantity = createAction(
 export const toggleSelectItem = createAction(
   '[CartItem] Toggle Select Item',
   props<{ cartItemId: string }>()
+);
+
+export const toggleSelectAllItems = createAction(
+  '[CartItem] Toggle Select All Items'
 );

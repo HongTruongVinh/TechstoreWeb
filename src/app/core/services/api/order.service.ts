@@ -13,13 +13,15 @@ import { PrepayOrderResult } from "../../../models/models/order/prepay-order-res
 import { PaymentDataModel } from "../../../models/models/payment/payment-data.model";
 import { CancelOrderModel } from "../../../models/models/order/cancel-order.model";
 import { UpdateOrderModel } from "../../../models/models/order/update-order.model";
+import { IdempotencyService } from "./idempotency-key.sẻvice";
 
 @Injectable({ providedIn: 'root' })
 export class OrderService {
 
     constructor(
         private transferHttp: TransferHttpService,
-        private linkSettingsService: LinkSettingsService
+        private linkSettingsService: LinkSettingsService,
+        private idempotencyService: IdempotencyService
     ) { }
 
     getUserOrders(page: number, pageSize: number) {
@@ -73,7 +75,7 @@ export class OrderService {
                     if (!apiUrl) {
                         throw new Error('Không tìm thấy URL API cho Tạo đơn hàng Prepay');
                     }
-                    return this.transferHttp.post(apiUrl, newOrder);
+                    return this.transferHttp.post(apiUrl, newOrder, this.idempotencyService.getOrderKey());
                 }),
                 map((res: ApiResponse<PaymentDataModel>) => res)
             );

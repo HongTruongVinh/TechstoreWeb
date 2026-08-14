@@ -79,5 +79,16 @@ export const cartItemReducer = createReducer(
     };
   }),
 
-  
+  on(CartItemActions.toggleSelectAllItems, (state) => {
+    const allItemIds = Object.keys(state.entities);
+
+    const allSelected =
+      allItemIds.length > 0 &&
+      allItemIds.every(id => state.selectedItemIds.includes(id));
+
+    return {
+      ...state,
+      selectedItemIds: allSelected ? [] : allItemIds
+    };
+  }),
 );

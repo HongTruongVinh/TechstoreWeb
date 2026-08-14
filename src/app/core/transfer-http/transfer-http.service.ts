@@ -23,7 +23,7 @@ export class TransferHttpService {
   }
 
   get<T>(url: string, contentType?: EContentType) {
-    return this.mapshare(this.http.get<T>(this.Host + url, this.jwt(contentType)));
+    return this.mapshare(this.http.get<T>(this.Host + url, this.buildHeader(undefined, contentType)));
   }
 
   // getFile(url: string, contentType?: EContentType) {
@@ -52,150 +52,132 @@ export class TransferHttpService {
   //     .pipe(map((res: any) => res));
   // }
 
-  post(url: string, body: any, contentType?: EContentType) {
-    
-
-//     console.log(body);
-//     this.mapshare(this.http.post(this.Host + url, body, this.jwt(contentType))).subscribe({
-//   next: (res) => {
-//     console.log(res);
-//     if (res.retCode == 0) {
-//       const data = res.data;
-//       if (data) {
-//         // xử lý dữ liệu
-//       }
-//     }
-//   },
-//   error: (err) => {
-//     console.error('API lỗi:', err);
-//   }
-// });
-
-    return this.mapshare(this.http.post(this.Host + url, body, this.jwt(contentType)));
+  post(url: string, body: any, idempotencyKey?: string, contentType?: EContentType) {
+    return this.mapshare(this.http.post(this.Host + url, body, this.buildHeader(idempotencyKey, contentType)));
   }
 
   // postUpload(url: string, body: FormData) {
   //   return (this.mapshare(this.http.post(this.Host + url, body, this.jwtUploadFile())));
   // }
 
-  put(url: string, body: any, contentType?: EContentType) {
-    return this.mapshare(this.http.put(this.Host + url, body, this.jwt(contentType)));
+  put(url: string, body: any, idempotencyKey?: string, contentType?: EContentType) {
+    return this.mapshare(this.http.put(this.Host + url, body, this.buildHeader(idempotencyKey, contentType)));
   }
 
-  putUrl(url: string, contentType?: EContentType) {
-    const options = this.jwt(contentType);
+  putUrl(url: string, idempotencyKey?: string, contentType?: EContentType) {
+    const options = this.buildHeader(idempotencyKey, contentType);
     return this.mapshare(this.http.put(this.Host + url, null, options));
   }
 
-  delete(url: string, contentType?: EContentType) {
-    return this.mapshare(this.http.delete(this.Host + url, this.jwt(contentType)));
+  delete(url: string, idempotencyKey?: string, contentType?: EContentType) {
+    return this.mapshare(this.http.delete(this.Host + url, this.buildHeader(idempotencyKey, contentType)));
   }
 
   private mapshare(data: Observable<any>) {
     return data.pipe(
-      map(res => res),
-      catchError(async (error) => this.handleAuthError(error))
+      catchError((error: HttpErrorResponse) =>
+        this.handleAuthError(error)
+      )
     );
   }
 
   private handleAuthError(error: HttpErrorResponse) {
-    if (!navigator.onLine) {
-      Swal.fire({
-        title: 'Có lỗi xảy ra?',
-        text: 'Lỗi về đường truyền internet vui lòng kiểm tra lại',
-        icon: 'question',
-        iconColor: '#1ea6d3',
-        confirmButtonColor: '#4b93ff',
-        showCancelButton: true,
-      });
-      return throwError(() => error);
-    }
-    
-    // handle your auth error or rethrow
-    if (error.status === 401) {
-      ConfigForApp.isLoadingButton = false;
-      // this.notification.error('Thông báo lỗi!', 'Code 401: ' + error.statusText + '<br>' + error.error.messenger.message);
-      // this.router.navigate(['/error']);
-      localStorage.removeItem('currentUser');
+    ConfigForApp.isLoadingButton = false;
+
+    // Không có mạng
+    if (!navigator.onLine || error.status === 0) {
+      this.showError(
+        'Không thể kết nối đến máy chủ',
+        'Vui lòng kiểm tra kết nối Internet và thử lại.'
+      );
+
       return throwError(() => error);
     }
 
-    if (error.status === 400) {
-      ConfigForApp.isLoadingButton = false;
-      // this.notification.error('Thông báo lỗi!', 'Thông số truyền vào không có hoặc không đúng <br> Code 400: ' + error.message);
-      // this.router.navigate(['/error']);
-      Swal.fire({
-        title: 'Có lỗi xảy ra?',
-        text: `${error.message}- thông số truyền vào có vẻ không đúng`,
-        icon: 'question',
-        iconColor: '#1ea6d3',
-        confirmButtonColor: '#4b93ff',
-        showCancelButton: true,
-      });
-      return throwError(() => error);
-    }
-
-    if (error.status === 500) {
-      ConfigForApp.isLoadingButton = false;
-      if (error.error.messenger == null || undefined) {
-
-        Swal.fire({
-          title: 'Có lỗi xảy ra?',
-          text: `${error.message}`,
-          icon: 'question',
-          iconColor: '#1ea6d3',
-          confirmButtonColor: '#4b93ff',
-          showCancelButton: true,
-        });
+    switch (error.status) {
+      case 400:
+        // Bad Request
+        // Không nên Swal ở interceptor.
+        // Để component/service xử lý error.error.message.
         return throwError(() => error);
 
-      } else {
-        Swal.fire({
-          title: 'Có lỗi xảy ra?',
-          text: `${error.error.messenger.message}`,
-          icon: 'question',
-          iconColor: '#1ea6d3',
-          confirmButtonColor: '#4b93ff',
-          showCancelButton: true,
-        });
+      case 401:
+        // Unauthorized
+        localStorage.removeItem('currentUser');
+
         return throwError(() => error);
-      }
-    } else if (error.status === 0) {
-      ConfigForApp.isLoadingButton = false;
-      Swal.fire({
-        title: 'Có lỗi xảy ra?',
-        text: `${error.message}`,
-        icon: 'question',
-        iconColor: '#1ea6d3',
-        confirmButtonColor: '#4b93ff',
-        showCancelButton: true,
-      });
-      return throwError(() => error);
+
+      case 403:
+        // Forbidden
+        this.showError(
+          'Không có quyền truy cập',
+          this.getServerMessage(error) ||
+          'Bạn không có quyền thực hiện thao tác này.'
+        );
+
+        return throwError(() => error);
+
+      case 404:
+        // Not Found
+        // Để component xử lý nếu đây là lỗi nghiệp vụ.
+        return throwError(() => error);
+
+      case 409:
+        // Conflict
+        // Ví dụ voucher hết lượt, sản phẩm đã thay đổi...
+        // Để component xử lý message từ server.
+        return throwError(() => error);
+
+      case 422:
+        // Unprocessable Entity
+        return throwError(() => error);
+
+      case 429:
+        // Too Many Requests
+        this.showError(
+          'Thao tác quá nhanh',
+          'Vui lòng chờ một chút rồi thử lại.'
+        );
+
+        return throwError(() => error);
+
+      default:
+        if (error.status >= 500) {
+          this.showError(
+            'Có lỗi xảy ra',
+            this.getServerMessage(error) ||
+            'Hệ thống đang gặp sự cố. Vui lòng thử lại sau.'
+          );
+        }
+
+        return throwError(() => error);
     }
-    return throwError(() => error);
   }
 
-  private jwt(contentType?: EContentType) {
+  private showError(title: string, text: string): void {
+    Swal.fire({
+      title,
+      text,
+      icon: 'error',
+      iconColor: '#d31e1e',
+      confirmButtonColor: '#e76767',
+      showCancelButton: true,
+    });
+  }
+
+  private getServerMessage(error: HttpErrorResponse): string | null {
+    return error.error?.message
+      ?? error.error?.messenger?.message
+      ?? error.message
+      ?? null;
+  }
+
+  private buildHeader(idempotencyKey?: string, contentType?: EContentType) {
     // create authorization header with jwt token
     const sContent: string = this.contentType(contentType === undefined ? EContentType.json : contentType);
     let httpHeaders = new HttpHeaders({
       'Content-Type': sContent,
     });
-
-    // if (LocalStorageConfig.GetUser() != null) {
-    //   // tslint:disable-next-line: prefer-const
-    //   let currentUser = LocalStorageConfig.GetUser();
-    //   const returnToken = currentUser.token;
-    //   if (currentUser && returnToken) {
-    //     httpHeaders = new HttpHeaders(
-    //       {
-    //         // tslint:disable-next-line: object-literal-key-quotes
-    //         'Authorization': 'Bearer ' + returnToken,
-    //         'Content-Type': sContent
-    //       },
-    //     );
-    //   }
-    // }
 
     if (this.tokenStorageService.getUser() != null) {
       const currentUser = this.tokenStorageService.getUser();
@@ -209,6 +191,10 @@ export class TransferHttpService {
           },
         );
       }
+    }
+
+    if (idempotencyKey) {
+      httpHeaders = httpHeaders.set('Idempotency-Key', idempotencyKey);
     }
 
     return { headers: httpHeaders };

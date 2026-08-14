@@ -108,20 +108,83 @@
                             placeholder="Nhập mã ưu đãi" />
 
                         <button class="btn btn-primary" type="button" (click)="checkDiscountCode()">
-                            Kiểm tra mã
+                            Áp dụng
                         </button>
                     </div>
                 </div>
-
-
+                <span class="text-muted fw-medium mb-3 d-block">
+                    Nhập mã D99 để nhận giảm giá 99.99% (Mục đích cho việc thử nghiệm chuyển khoản với số tiền thấp)
+                </span>
                 <div class="d-flex align-items-center mb-3">
-                    <label for="paymentMethod" class="form-label me-3 mb-0" style="width: 120px;">Chọn mã:</label>
-                    <select [(ngModel)]="discountCode" class="form-select">
-                        <option *ngFor="let discountCode of listDiscountCodes" [value]="discountCode">
-                            {{ discountCode }}
-                        </option>
-                    </select>
+                    <div class="flex-grow-1">
+                        <select [(ngModel)]="discountCode" class="form-select" (change)="selectVoucher()">
+                            <option value="">-- Chọn mã ưu đãi --</option>
+                            <option *ngFor="let voucher of vouchers" [value]="voucher.code">
+                                {{ voucher.code }}
+                            </option>
+                        </select>
+                        <div *ngIf="voucher" class="voucher-card mt-3">
+                            <div class="voucher-card-left">
+                                <div class="voucher-icon">
+                                    <i class="bi bi-ticket-perforated"></i>
+                                </div>
+                            </div>
+                
+                            <div class="voucher-card-content flex-grow-1">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div>
+                                        <span class="voucher-code">
+                                            {{ voucher.code }}
+                                        </span>
+                
+                                        <span class="badge bg-success-subtle text-success ms-2">
+                                            Đã chọn
+                                        </span>
+                                    </div>
+                
+                                    <button type="button" class="btn btn-sm btn-link text-danger p-0" (click)="removeVoucher()">
+                                        Bỏ chọn
+                                    </button>
+                                </div>
+                
+                                <div class="voucher-description mt-1">
+                                    {{ voucher.description }}
+                                </div>
+                
+                                <div class="voucher-info mt-3">
+                                    <div class="voucher-info-item">
+                                        <span class="text-muted">Ưu đãi</span>
+                                        <strong>
+                                            {{ getDiscountText(voucher) }}
+                                        </strong>
+                                    </div>
+                
+                                    <div class="voucher-info-item" *ngIf="voucher.maxDiscountAmount > 0">
+                                        <span class="text-muted">Giảm tối đa</span>
+                                        <strong>
+                                            {{ voucher.maxDiscountAmount | number:'1.0-0' }}đ
+                                        </strong>
+                                    </div>
+                
+                                    <div class="voucher-info-item">
+                                        <span class="text-muted">Đơn tối thiểu</span>
+                                        <strong>
+                                            {{ voucher.minOrderPrice | number:'1.0-0' }}đ
+                                        </strong>
+                                    </div>
+                
+                                    <div class="voucher-info-item">
+                                        <span class="text-muted">Hạn sử dụng</span>
+                                        <strong>
+                                            {{ voucher.endDate | date:'dd/MM/yyyy' }}
+                                        </strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+                
             </div>
         </div>
     </div>

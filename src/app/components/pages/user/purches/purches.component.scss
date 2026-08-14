@@ -1,7 +1,7 @@
 // ===============================
 // 🌈 General Layout
 // ===============================
-.row {
+.wrapper {
   margin-top: 1rem;
 }
 
@@ -9,6 +9,39 @@
 // ===============================
 // 🧭 Tabs Navigation
 // ===============================
+.order-tabs-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    scrollbar-width: thin;
+
+    &::-webkit-scrollbar {
+        height: 5px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: #adb5bd;
+        border-radius: 10px;
+    }
+
+    .nav {
+        display: flex;
+        flex-wrap: nowrap;
+        white-space: nowrap;
+        width: max-content;
+        min-width: 100%;
+    }
+
+    .nav-item {
+        flex: 0 0 auto;
+    }
+}
+
 .nav-pills.arrow-navtabs {
   .nav-link {
     color: #6c757d;

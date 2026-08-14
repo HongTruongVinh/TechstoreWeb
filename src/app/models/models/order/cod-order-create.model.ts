@@ -16,5 +16,4 @@ export interface OrderItemCreateModel {
     orderId?: string;
     productVariantOptionId: string;
     quantity: number;
-    discount: number;
 }   

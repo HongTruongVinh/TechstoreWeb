@@ -29,3 +29,82 @@
   color: #28a745;
   font-weight: bold;
 }
+
+/////////
+/// Voucher Card
+/////////
+.voucher-card {
+    display: flex;
+    align-items: stretch;
+
+    border: 1px solid #dbeafe;
+    border-radius: 10px;
+    background: #f8fbff;
+
+    overflow: hidden;
+}
+
+.voucher-card-left {
+    width: 70px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #eaf3ff;
+
+    border-right: 1px dashed #b8d4f5;
+}
+
+.voucher-icon {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #0d6efd;
+    color: white;
+
+    font-size: 20px;
+}
+
+.voucher-card-content {
+    padding: 16px 18px;
+}
+
+.voucher-code {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #0d6efd;
+}
+
+.voucher-description {
+    color: #495057;
+    font-size: 14px;
+}
+
+.voucher-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+}
+
+.voucher-info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    font-size: 13px;
+}
+
+.voucher-info-item strong {
+    color: #212529;
+}
+////
+/// end Voucher Card
+/// 

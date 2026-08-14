@@ -7,12 +7,16 @@ import { map, switchMap } from 'rxjs/operators';
 import * as CartItemActions from './cart.actions';
 
 import { CartService } from '../../core/services/api/cart.service';
+import { selectSelectedItemIds } from './cart.selectors';
+import { concatLatestFrom } from '@ngrx/operators';
+import { Store } from '@ngrx/store';
 
 @Injectable()
 export class CartItemEffects {
 
   private actions$ = inject(Actions);
   private cartService = inject(CartService);
+  private store = inject(Store);
 
   loadCartItems$ = createEffect(() =>
     this.actions$.pipe(
@@ -55,30 +59,56 @@ export class CartItemEffects {
     )
   );
 
+  // removeCartItems$ = createEffect(() =>
+  //   this.actions$.pipe(
+
+  //     ofType(CartItemActions.removeCartItems),
+
+  //     switchMap(action =>
+
+  //       this.cartService.removeItems(action.cartItemIds).pipe(
+
+  //         map(apiResponse => {
+
+  //           if (!apiResponse.data) {
+
+  //             return CartItemActions.removeCartItemsFailure({
+  //               error: apiResponse.message ?? 'Remove failed'
+  //             });
+  //           }
+
+  //           return CartItemActions.removeCartItemsSuccess({
+  //             cartItemIds: action.cartItemIds
+  //           });
+  //         })
+  //       )
+  //     )
+  //   )
+  // );
+
   removeCartItems$ = createEffect(() =>
-    this.actions$.pipe(
+  this.actions$.pipe(
+    ofType(CartItemActions.removeCartItems),
 
-      ofType(CartItemActions.removeCartItems),
+    concatLatestFrom(() =>
+      this.store.select(selectSelectedItemIds)
+    ),
 
-      switchMap(action =>
-
-        this.cartService.removeItems(action.cartItemIds).pipe(
-
-          map(apiResponse => {
-
-            if (!apiResponse.data) {
-
-              return CartItemActions.removeCartItemsFailure({
-                error: apiResponse.message ?? 'Remove failed'
-              });
-            }
-
-            return CartItemActions.removeCartItemsSuccess({
-              cartItemIds: action.cartItemIds
+    switchMap(([action, selectedItemIds]) =>
+      this.cartService.removeItems(selectedItemIds).pipe(
+        map(apiResponse => {
+          if (!apiResponse.data) {
+            return CartItemActions.removeCartItemsFailure({
+              error: apiResponse.message ?? 'Remove failed'
             });
-          })
-        )
+          }
+
+          return CartItemActions.removeCartItemsSuccess({
+            cartItemIds: selectedItemIds
+          });
+        })
       )
     )
-  );
+  )
+);
 }
