@@ -9,6 +9,7 @@ import { Validator } from '../../../library/share-function/validator';
 import { CommonModule } from '@angular/common';
 import { Dialog, DialogRef } from '@angular/cdk/dialog';
 import { LoginComponent } from '../login/login.component';
+import { EAlertType } from '../../../library/enum/ealerttype';
 
 @Component({
   selector: 'app-register',
@@ -72,7 +73,6 @@ export class RegisterComponent {
       return;
     }
 
-
     const registerRequest: RegisterRequestModel = {
         lastName: this.registerForm.value.lastName,
         firstName: this.registerForm.value.firstName,
@@ -100,11 +100,10 @@ export class RegisterComponent {
 
             }
           }
-          else {
-            this.messengerService.warringWithMessage(res.message ?? 'có lỗi xảy ra, vui lòng thử lại');
-          }
         },
         error: (error) => {
+          const message = error.error?.message || 'Có lỗi xảy ra trong quá trình đăng ký. Vui lòng thử lại.';
+          this.messengerService.showAlert(EAlertType.warning, 'Thông báo', message);
           this.isLoading = false;
         },
         complete: () => {

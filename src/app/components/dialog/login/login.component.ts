@@ -87,6 +87,7 @@ export class LoginComponent {
         },
         error: (error) => {
           this.isLoading = false;
+          this.loginfail = true;
         },
         complete: () => {
           this.isLoading = false;
