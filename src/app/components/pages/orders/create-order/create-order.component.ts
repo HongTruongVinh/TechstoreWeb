@@ -64,6 +64,7 @@ export class CreateOrderComponent {
   paymentData?: PaymentDataModel;
   voucher?: Voucher | null = null;
   vouchers: Voucher[] = [];
+  isApplyVoucher: boolean = false;
 
   paymentMethods: { methodId: number, name: string }[] = [];
   paymentMethodNames: Record<EPaymentMethod, string> = {
@@ -280,6 +281,10 @@ export class CreateOrderComponent {
     // }
   }
 
+  onDiscountCodeChange(): void {
+    this.isApplyVoucher = false;
+  }
+
   selectVoucher() {
     this.checkDiscountCode();
   }
@@ -287,6 +292,7 @@ export class CreateOrderComponent {
   removeVoucher(): void {
     this.discountCode = '';
     this.voucher = null;
+    this.isApplyVoucher = false;
     this.calculateTotalPrice();
   }
 
@@ -301,6 +307,7 @@ export class CreateOrderComponent {
         if (res.data) {
           this.voucher = res.data;
           this.calculateTotalPrice(this.voucher);
+          this.isApplyVoucher = true;
         }
       },
 

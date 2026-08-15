@@ -104,11 +104,15 @@
                     </label>
 
                     <div class="input-group">
-                        <input [(ngModel)]="discountCode" type="text" class="form-control me-1" id="discountCode"
+                        <input [(ngModel)]="discountCode" (ngModelChange)="onDiscountCodeChange()" type="text" class="form-control me-1" id="discountCode"
                             placeholder="Nhập mã ưu đãi" />
 
-                        <button class="btn btn-primary" type="button" (click)="checkDiscountCode()">
-                            Áp dụng
+                        <button class="btn btn-primary" type="button" (click)="checkDiscountCode()" [disabled]="isApplyVoucher">
+                            @if (isApplyVoucher) {
+                                Đang áp dụng
+                            } @else {
+                                Áp dụng
+                            }
                         </button>
                     </div>
                 </div>
