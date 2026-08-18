@@ -47,6 +47,22 @@ export const selectSelectedItems = createSelector(
     items.filter(item => selectedIds.includes(item.id))
 );
 
+export const selectAllItemsSelected = createSelector(
+  selectAllCartItemIds,
+  selectSelectedItemIds,
+  (itemIds, selectedIds) =>
+    itemIds.length > 0 && itemIds.every(id => selectedIds.includes(String(id)))
+);
+
+export const selectSomeItemsSelected = createSelector(
+  selectAllCartItemIds,
+  selectSelectedItemIds,
+  (itemIds, selectedIds) => {
+    const selectedCount = itemIds.filter(id => selectedIds.includes(String(id))).length;
+    return selectedCount > 0 && selectedCount < itemIds.length;
+  }
+);
+
 export const selectTotalPrice = createSelector(
   selectSelectedItems,
   items =>

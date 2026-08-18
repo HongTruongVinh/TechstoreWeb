@@ -1,4 +1,4 @@
-<nav class="mobile-menu">
+<nav class="mobile-menu" [class.mobile-menu--hidden]="menuHidden">
 
   <a href="#" routerLinkActive="active">
     <span><i class="bi bi-house"></i></span>
@@ -10,10 +10,10 @@
     <small>Danh mục</small>
   </a>
 
-  <a routerLinkActive="active" (click)="contact()">
+  <!-- <a routerLinkActive="active" (click)="contact()">
     <span><i class="bi bi-telephone"></i></span>
     <small>Liên hệ</small>
-  </a>
+  </a> -->
 
   <a *ngIf="tks.isLoggedIn()" routerLinkActive="active" (click)="openCart()">
     <span class="cart-icon-wrapper ">
@@ -34,6 +34,11 @@
   <a *ngIf="!tks.isLoggedIn()" routerLinkActive="active" (click)="openLogin()">
     <span><i class="bi bi-person"></i></span>
     <small>Đăng nhập</small>
+  </a>
+
+  <a routerLinkActive="active" (click)="openPersonalZone()">
+    <span><i class="bi bi-person"></i></span>
+    <small>Tôi</small>
   </a>
 
 </nav>

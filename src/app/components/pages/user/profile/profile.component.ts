@@ -6,7 +6,7 @@ import { MessengerServices } from '../../../../core/services/ui/messenger.servic
 import { User } from '../../../../models/models/user/user.model';
 import { UserService } from '../../../../core/services/api/user.service';
 import { UserUpdateModel } from '../../../../models/models/user/user-update.model';
-import { ERetCode } from '../../../../models/enum/etype_project.enum';
+import { EErrorType } from '../../../../models/enum/etype_project.enum';
 import { CommonModule } from '@angular/common';
 import { Validator } from '../../../../library/share-function/validator';
 import { AuthenticationService } from '../../../../core/services/api/auth.service';

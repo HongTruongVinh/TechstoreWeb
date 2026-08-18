@@ -4,7 +4,7 @@ import { RegisterRequestModel } from '../../../models/models/authentication/regi
 import { AuthenticationService } from '../../../core/services/api/auth.service';
 import { TokenStorageService } from '../../../core/services/ui/token-storage.service';
 import { MessengerServices } from '../../../core/services/ui/messenger.service';
-import { ERetCode } from '../../../models/enum/etype_project.enum';
+import { EErrorType } from '../../../models/enum/etype_project.enum';
 import { Validator } from '../../../library/share-function/validator';
 import { CommonModule } from '@angular/common';
 import { Dialog, DialogRef } from '@angular/cdk/dialog';

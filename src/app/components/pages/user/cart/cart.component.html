@@ -1,95 +1,101 @@
-@if(cartItems$ | async; as cartItems) {
-<div class="mb-3 p-2 bg-smoke shadow-sm ">
-    <div class="d-flex justify-content-between">
-        <p class="mb-0 fw-bold">GIỎ HÀNG</p>
-        <div class="form-check">
-            <input #cba class="form-check-input" id="cba" type="checkbox" (change)="selectAll(cba.checked)">
-            <label class="form-check-label" for="cba">
-                Chọn tất cả
-            </label>
-        </div>
-        <a *ngIf="selectedItems$ | async as selectedItems" class="text-decoration-none text-primary cursor-pointer" (click)="remove()">Xoá
-            {{selectedItems.length}} mục</a>
-    </div>
-</div>
-
-<p *ngIf="cartItems.length == 0">Giỏ hàng của bạn rỗng! </p>
-
-<div class="list-item">
-    @for(product of cartItems; track product.id) {
-    <div class="card mb-3 border-0 shadow-sm p-3">
-        <div class="d-flex align-items-center justify-content-between flex-wrap">
-
-            <div class="d-flex align-items-center flex-grow-1 me-3">
-                <!-- Checkbox -->
-                <div class="form-check me-3">
-                    <input #cb class="form-check-input" type="checkbox" [checked]="(selectedItems$ | async)?.includes(product)"
-                        (change)="toggleSelect(product)">
-                </div>
-                <!-- Hình ảnh sản phẩm -->
-                <img [src]="product.mainImageUrl | fullImageUrl" alt="product" class="img-thumbnail rounded me-3"
-                    style="width: 80px; height: 80px; object-fit: cover;">
-
-                <!-- Thông tin sản phẩm -->
-                <div>
-                    <h6 class="fw-semibold mb-1 text-dark product-name"
-                        (click)="viewProductDetails(buildProductUrl(product))">
-                        {{ product.productName + ' - ' + product.variantName }}
-                    </h6>
-                    <small class="text-muted">
-                        Phân Loại: <span class="text-dark fw-medium">{{product.optionName}}</span>
-                    </small>
-                </div>
+@if (cartItems$ | async; as cartItems) {
+  @if (loading$ | async) {
+    <section class="cart-state" aria-live="polite">
+      <div class="spinner-border text-primary" role="status"><span class="visually-hidden">Đang tải...</span></div>
+      <p>Đang tải giỏ hàng...</p>
+    </section>
+  } @else {
+    @if (selectedItems$ | async; as selectedItems) {
+      @if (selectedItemIds$ | async; as selectedItemIds) {
+      @if (cartItems.length === 0) {
+        <section class="cart-state empty-cart">
+          <div class="empty-cart__icon" aria-hidden="true">🛒</div>
+          <h1>Giỏ hàng của bạn đang trống</h1>
+          <p>Hãy khám phá các sản phẩm công nghệ phù hợp với bạn.</p>
+          <button type="button" class="btn btn-primary" (click)="continueShopping()">Tiếp tục mua sắm</button>
+        </section>
+      } @else {
+        <section class="cart-page">
+          <header class="cart-header">
+            <div><h1>Giỏ hàng</h1><p>{{ cartItems.length }} sản phẩm trong giỏ</p></div>
+            <div class="cart-header__actions">
+              <div class="form-check mb-0">
+                <input #selectAllCheckbox class="form-check-input" id="select-all-cart-items" type="checkbox"
+                  [checked]="(allItemsSelected$ | async) ?? false"
+                  [indeterminate]="(someItemsSelected$ | async) ?? false"
+                  (change)="selectAll(selectAllCheckbox.checked)">
+                <label class="form-check-label" for="select-all-cart-items">Chọn tất cả</label>
+              </div>
+              @if (selectedItems.length > 0) {
+                <button type="button" class="btn btn-link cart-remove" (click)="remove(selectedItems.length)"
+                  [attr.aria-label]="'Xoá ' + selectedItems.length + ' sản phẩm đã chọn'">
+                  <span aria-hidden="true">🗑</span> Xoá {{ selectedItems.length }} mục
+                </button>
+              }
             </div>
+          </header>
 
-            <!-- Giá và số lượng -->
-            <div class="d-flex align-items-center flex-wrap gap-4 mt-2  w-100 w-md-auto
-               justify-content-center justify-content-md-end">
-
-                <!-- Giá -->
-                <div class="text-end">
-                    <div *ngIf="product.salePrice != null" class="product-price">
-                        <span class="current-price fw-bold text-danger">{{ product.price - product.salePrice |
-                            thousandSeparator}}</span>
-                        <span class="old-price text-muted text-decoration-line-through">{{ product.price }}</span>
+          <div class="cart-list">
+            @for (product of cartItems; track product.id) {
+              <article class="cart-item" [class.cart-item--selected]="selectedItemIds.includes(product.id)">
+                <div class="cart-item__main">
+                  <div class="form-check cart-item__check">
+                    <input class="form-check-input" type="checkbox" [id]="'cart-item-' + product.id"
+                      [checked]="selectedItemIds.includes(product.id)" (change)="toggleSelect(product)"
+                      [attr.aria-label]="'Chọn ' + product.productName">
+                  </div>
+                  <button type="button" class="product-image" (click)="viewProductDetails(buildProductUrl(product))"
+                    [attr.aria-label]="'Xem chi tiết ' + product.productName">
+                    <img [src]="product.mainImageUrl | fullImageUrl" [alt]="product.productName" loading="lazy">
+                  </button>
+                  <div class="product-info">
+                    <button type="button" class="product-name" (click)="viewProductDetails(buildProductUrl(product))">
+                      {{ product.productName }} - {{ product.variantName }}
+                    </button>
+                    <p>Phân loại: <strong>{{ product.optionName }}</strong></p>
+                    <div class="unit-price">
+                      @if (product.salePrice != null) {
+                        <span class="current-price">{{ product.price - product.salePrice | thousandSeparator }}₫</span>
+                        <span class="old-price">{{ product.price | thousandSeparator }}₫</span>
+                      } @else {
+                        <span class="current-price">{{ product.price | thousandSeparator }}₫</span>
+                      }
                     </div>
-                    <div *ngIf="product.salePrice == null" class="product-price">
-                        <span class="current-price fw-bold text-danger">{{ product.price | thousandSeparator}}</span>
-                    </div>
+                  </div>
                 </div>
 
-                <!-- Nút tăng giảm số lượng -->
-                <div class="input-group input-group-sm" style="width: 100px;">
-                    <button class="btn btn-outline-secondary" type="button" (click)="decrease(product)">−</button>
-                    <input type="text" class="form-control text-center" [value]="product.quantity" readonly>
-                    <button class="btn btn-outline-secondary" type="button" (click)="increase(product)">+</button>
-                    <div class="row quantity-text">
-                        <span class="stock-text">Còn {{product.stock}} sản phẩm</span>
+                <div class="cart-item__controls">
+                  <div class="quantity-block">
+                    <span class="control-label">Số lượng</span>
+                    <div class="quantity-control" role="group" [attr.aria-label]="'Số lượng ' + product.productName">
+                      <button type="button" (click)="decrease(product)" [disabled]="product.quantity <= 1" aria-label="Giảm số lượng">−</button>
+                      <input type="text" [value]="product.quantity" readonly [attr.aria-label]="'Số lượng hiện tại: ' + product.quantity">
+                      <button type="button" (click)="increase(product)" [disabled]="product.quantity >= product.stock" aria-label="Tăng số lượng">+</button>
                     </div>
+                    <small>Còn {{ product.stock }} sản phẩm</small>
+                  </div>
+                  <div class="line-total">
+                    <span class="control-label">Thành tiền</span>
+                    <strong>{{ product.totalPrice | thousandSeparator }}₫</strong>
+                  </div>
                 </div>
+              </article>
+            }
+          </div>
 
-                <div class="text-end">
-                    <div class="fw-semibold text-danger">{{product.totalPrice | thousandSeparator}}₫</div>
-                </div>
+          <aside class="checkout-bar" aria-label="Tóm tắt giỏ hàng">
+            <div class="checkout-total">
+              <span>Tổng thanh toán ({{ selectedItems.length }} sản phẩm)</span>
+              <strong>{{ totalPrice$ | async | thousandSeparator }}₫</strong>
             </div>
-        </div>
-    </div>
-
+            <button type="button" class="btn btn-primary checkout-button" (click)="createOrder()"
+              [disabled]="selectedItems.length === 0">
+              {{ selectedItems.length > 0 ? 'Mua hàng' : 'Chọn sản phẩm để mua' }}
+            </button>
+          </aside>
+        </section>
+      }
+      }
     }
-</div>
-}
-
-@if (selectedItems$ | async; as selectedItems) {
-<div class="amount-section mb-3 p-3 shadow-sm rounded">
-    <p class="amount-text mb-0 fw-bold">
-        TỔNG TIỀN: <span class="text-danger">{{totalPrice$ | async | number | thousandSeparator}} ₫</span>
-    </p>
-    <button type="button" class="btn" (click)="createOrder()" [disabled]="selectedItems.length === 0">
-        @if (selectedItems.length > 0) {
-            Mua hàng ({{selectedItems.length}})
-        } @else {
-            Chọn sản phẩm để mua
-        }
-    </button>
-</div>
+  }
 }

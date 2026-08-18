@@ -9,7 +9,7 @@ import { BreadcrumbComponent, BreadcrumbItem } from '../../../common/breadcrumb/
 import { OrderService } from '../../../../core/services/api/order.service';
 import { InvoiceModel, OrderModel, PaymentModel, QrcodeModel } from '../../../../models/models/order/order.model';
 import { ActivatedRoute } from '@angular/router';
-import { EOrderStatus, EPaymentMethod, ERetCode } from '../../../../models/enum/etype_project.enum';
+import { EOrderStatus, EPaymentMethod, EErrorType } from '../../../../models/enum/etype_project.enum';
 import { OrderItemModel } from '../../../../models/models/order/order-item.model';
 import { OrderStatusPipe } from "../../../../pipes/order-status.pipe";
 import { CancelOrderModel } from '../../../../models/models/order/cancel-order.model';

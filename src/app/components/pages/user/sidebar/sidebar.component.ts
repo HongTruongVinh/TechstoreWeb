@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { TokenStorageService } from '../../../../core/services/ui/token-storage.service';
 import { User } from '../../../../models/models/user/user.model';
-import { AuthenticationService } from '../../../../core/services/api/auth.service';
+import { UiStateService } from '../../../../core/services/ui/ui-state.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -13,11 +13,11 @@ import { AuthenticationService } from '../../../../core/services/api/auth.servic
 })
 export class SidebarComponent {
   user?: User;
-  activeMenu: string = 'cart'; // default
-  nameAvatar: string = '';
+  activeMenu: string = '';
+  nameAvatar: string = 'TS';
   currentUrl = this.router.url;
 
-  auth = inject(AuthenticationService);
+  uiState = inject(UiStateService);
   constructor(
     private readonly router: Router,
     private readonly tks: TokenStorageService,
@@ -30,7 +30,7 @@ export class SidebarComponent {
     else if (this.currentUrl == "/user/purchase") {
       this.selectMenu("purchase");
     }
-    else if (this.currentUrl == "/user/info") {
+    else if (this.currentUrl == "/user/profile") {
       this.selectMenu("info");
     }
 
@@ -41,10 +41,13 @@ export class SidebarComponent {
     if (this.user) {
       if (this.user.firstName && this.user.lastName) {
         this.nameAvatar = this.user.lastName.charAt(0).toUpperCase() + this.user.firstName.charAt(0).toUpperCase();
-      } else {
-        this.nameAvatar = 'TS'; // Default avatar text
       }
     }
+  }
+
+  get displayName(): string {
+    if (!this.user) return 'Khách hàng TechStore';
+    return `${this.user.lastName ?? ''} ${this.user.firstName ?? ''}`.trim() || 'Khách hàng TechStore';
   }
 
   selectMenu(menu: string) {
@@ -56,19 +59,22 @@ export class SidebarComponent {
   }
 
   infomation() {
+    this.uiState.hideUserSidebar();
     this.router.navigate(['/user/profile']);
   }
 
   puchase() {
+    this.uiState.hideUserSidebar();
     this.router.navigate(['/user/purchase']);
   }
 
   cart() {
+    this.uiState.hideUserSidebar();
     this.router.navigate(['/user/cart']);
   }
 
   logout() {
     this.tks.signOut();
-    window.location.reload();
+    this.router.navigate(['/']).then(() => window.location.reload());
   }
 }

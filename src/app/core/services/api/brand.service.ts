@@ -5,7 +5,7 @@ import { LinkSettingsService } from './link-settings.service';
 import { ApiResponse } from '../../../models/models/api-response.model';
 
 import { BrandModel as Brand } from '../../../models/models/brand/brand.model';
-import { ERetCode } from '../../../models/enum/etype_project.enum';
+import { EErrorType } from '../../../models/enum/etype_project.enum';
 
 
 const BRANDS_KEY = 'brands';

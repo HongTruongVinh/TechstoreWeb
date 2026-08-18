@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { LoginComponent } from '../../dialog/login/login.component';
 import { Dialog, DialogRef } from '@angular/cdk/dialog';
 import { UiStateService } from '../../../core/services/ui/ui-state.service';
@@ -20,6 +20,8 @@ import { selectCartItemCount } from '../../../store/cart/cart.selectors';
 })
 export class MobileMenuComponent {
 
+  @Input() menuHidden = false;
+
   @Output()
   toggleCategories = new EventEmitter<void>();
 
@@ -30,12 +32,11 @@ export class MobileMenuComponent {
 
   firstName: string = '';
 
+  uiState = inject(UiStateService);
   authDialog = inject(AuthDialogService);
   tks = inject(TokenStorageService);
   constructor(
-    private uiState: UiStateService,
     private readonly router: Router,
-
     private store: Store
   ) {
     this.totalQuantity$ = this.store.select(selectCartItemCount);
@@ -58,6 +59,11 @@ export class MobileMenuComponent {
     window.open(`https://zalo.me/${this.phoneNumber}`, '_blank');
   }
 
+  openPersonalZone() {
+    this.uiState.showUserSidebar();
+    this.router.navigate(['/user']);
+  }
+
   openLogin() {
     const ref = this.authDialog.openLogin();
 
@@ -73,7 +79,8 @@ export class MobileMenuComponent {
   }
 
   openCart() {
-    this.uiState.hideMobileMenu();
+    this.uiState.hideUserSidebar();
+    // this.uiState.hideMobileMenu();
     this.router.navigate(['/user/cart']);
   }
 }

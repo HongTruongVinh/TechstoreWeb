@@ -34,9 +34,10 @@ export class UserComponent {
     if(this.device.isMobile()) {
       this.uiState.hideNavbar();
       this.uiState.hideWidgetPanel();
-      this.uiState.hideMobileMenu();
+      // this.uiState.hideMobileMenu();
     }
   }
+
 
   ngOnDestroy(): void {
     this.uiState.showFooter();

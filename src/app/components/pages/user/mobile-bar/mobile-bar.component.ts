@@ -37,7 +37,7 @@ export class MobileBarComponent {
   }
 
   infomation() {
-    this.router.navigate(['/user/profile']);
+    this.router.navigate(['/user']);
   }
 
   puchase() {

@@ -79,29 +79,17 @@ export enum EOrderType
     Online,  // Đơn hàng trực tuyến
 }
 
-export enum ERetCode
+export enum EErrorType
 {
-    Successfull,
-
     BadRequest,
-
     SystemError,
-
-    LoginSuccess,
-
-    LoginError,
-
-    ExitAccount,
-
-    ErrorCookie,
-
-    PasswordNotSame,
-
-    NoExitData,
-
+    NotFound,
     ConfictData,
+    Unauthorized,
+    Forbidden,
+    Status500InternalServerError,
 
-    NoPermission
+    IdempotencyKeyConflict
 }
 
 export enum EDiscountType

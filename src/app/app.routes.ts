@@ -13,11 +13,6 @@ import { OrderOverviewComponent } from './components/pages/orders/order-overview
 
 export const routes: Routes = [
     { path: '', component: HomeComponent },
-    { path: 'danh-muc/:categorySlug', component: ProductsComponent },
-    { path: 'tim-kiem/:keyword', component: ProductsComponent },
-    { path: 'san-pham/:categorySlug/:brandSlug', component: ProductsComponent },
-    { path: 'san-pham/:categorySlug/:brandSlug/:priceFilterSlug', component: ProductsComponent },
-    { path: ':slugWithId', component: ProductDetailsComponent },
     {
                 path: 'user',
                 component: UserComponent,
@@ -30,6 +25,11 @@ export const routes: Routes = [
                 ],
                 
     },
+    { path: 'danh-muc/:categorySlug', component: ProductsComponent },
+    { path: 'tim-kiem/:keyword', component: ProductsComponent },
+    { path: 'san-pham/:categorySlug/:brandSlug', component: ProductsComponent },
+    { path: 'san-pham/:categorySlug/:brandSlug/:priceFilterSlug', component: ProductsComponent },
+    { path: ':slugWithId', component: ProductDetailsComponent },
     // { path: 'order-details/:id', component: OrderDetailComponent },
     { path: 'order-details/:id', component: OrderOverviewComponent },
 ];

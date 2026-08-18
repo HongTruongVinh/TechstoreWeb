@@ -62,5 +62,6 @@ export const toggleSelectItem = createAction(
 );
 
 export const toggleSelectAllItems = createAction(
-  '[CartItem] Toggle Select All Items'
+  '[CartItem] Toggle Select All Items',
+  props<{ checked: boolean }>()
 );

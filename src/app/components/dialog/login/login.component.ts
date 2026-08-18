@@ -13,7 +13,7 @@ import { LoginRequestModel } from '../../../models/models/authentication/login-r
 import { TokenStorageService } from '../../../core/services/ui/token-storage.service';
 import { AuthenticationService } from '../../../core/services/api/auth.service';
 import { MessengerServices } from '../../../core/services/ui/messenger.service';
-import { ERetCode } from '../../../models/enum/etype_project.enum';
+import { EErrorType } from '../../../models/enum/etype_project.enum';
 import { RegisterComponent } from '../register/register.component';
 import { LoginDialogResult } from '../../../models/models/authentication/login-result.model';
 

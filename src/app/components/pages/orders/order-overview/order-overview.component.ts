@@ -7,7 +7,7 @@ import { ThousandSeparatorPipe } from '../../../../pipes/thousandSeparator.pipe'
 import { DateToStringPipe } from '../../../../pipes/DatePipe';
 import { BreadcrumbComponent, BreadcrumbItem } from '../../../common/breadcrumb/breadcrumb.component';
 import { OrderService } from '../../../../core/services/api/order.service';
-import { EOrderStatus, EPaymentMethod, ERetCode } from '../../../../models/enum/etype_project.enum';
+import { EOrderStatus, EPaymentMethod, EErrorType } from '../../../../models/enum/etype_project.enum';
 import { OrderStatusPipe } from '../../../../pipes/order-status.pipe';
 import { InvoiceStatusPipe } from '../../../../pipes/invoice-status.pipe';
 import { OrderModel } from '../../../../models/models/order/order.model';

@@ -1,5 +1,5 @@
 import { CommonModule, Location } from '@angular/common';
-import { Component, ElementRef, inject, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, inject, ViewChild } from '@angular/core';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { SlickCarouselModule, SlickCarouselComponent } from 'ngx-slick-carousel';
 import { FullImageUrlPipe } from '../../../pipes/full-image-url.pipe';
@@ -8,7 +8,7 @@ import { ProductDetailsModel, ProductVariantModel, ProductVariantOptionModel } f
 import { ActivatedRoute } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { ProductService } from '../../../core/services/api/product.service';
-import { ERetCode } from '../../../models/enum/etype_project.enum';
+import { EErrorType } from '../../../models/enum/etype_project.enum';
 import { CartItemCreateModel } from '../../../models/models/cart/cart-item-create.model';
 import { TokenStorageService } from '../../../core/services/ui/token-storage.service';
 import { BreadcrumbComponent, BreadcrumbItem } from "../../common/breadcrumb/breadcrumb.component";
@@ -108,15 +108,16 @@ export class ProductDetailsComponent {
     infinite: true,
     slidesToShow: 1,
     slidesToScroll: 1,
-    autoplay: true,
-    adaptiveHeight: true,
+    autoplay: false,
+    adaptiveHeight: false,
   };
 
   slidesConfig = {
     infinite: true,
     slidesToShow: 4,
     slidesToScroll: 1,
-    autoplay: true,
+    autoplay: false,
+    focusOnSelect: true,
   }
 
 
@@ -129,11 +130,15 @@ export class ProductDetailsComponent {
 
         const product = this.product;
         if (product) {
-          product.variants[0].options.forEach(option => {
-            product.galleryImageUrls.push(option.imageUrl);
+          product.variants.flatMap(variant => variant.options).forEach(option => {
+            if (option.imageUrl && !product.galleryImageUrls.includes(option.imageUrl)) {
+              product.galleryImageUrls.push(option.imageUrl);
+            }
           });
 
-          this.selectVariant(product.variants[0].id);
+          const initialVariant = product.variants.find(variant => this.isVariantAvailable(variant))
+            ?? product.variants[0];
+          this.selectVariant(initialVariant.id);
           this.titleService.setTitle(product.name);
 
           this.isItemInCart$.subscribe(data => {
@@ -163,7 +168,12 @@ export class ProductDetailsComponent {
       const selectedVariant = product.variants?.find(variant => variant.id === variantId);
       if (selectedVariant) {
         this.selectedVariant = selectedVariant;
-        this.selectOption(this.selectedVariant.options[0].id);
+        const initialOption = selectedVariant.options.find(option => this.isOptionAvailable(option))
+          ?? selectedVariant.options[0];
+        this.selectedOption$.next(initialOption ?? null);
+        if (initialOption) {
+          this.showOptionImage(initialOption);
+        }
       }
     }
   }
@@ -172,15 +182,59 @@ export class ProductDetailsComponent {
     const selectedVariant = this.selectedVariant;
     if (selectedVariant) {
       const selectedOption = selectedVariant.options.find(op => op.id === optionId);
-      if (selectedOption) {
+      if (selectedOption && this.isOptionAvailable(selectedOption)) {
 
         // if(this.showedImg) {
         //   this.showedImg.nativeElement.src = ConvertPhotoUrl.convertPublicIdToUrl(selectedOption.imageUrl);
         // }
 
         this.selectedOption$.next(selectedOption);
+        this.showOptionImage(selectedOption);
       }
     }
+  }
+
+  isOptionAvailable(
+    option: ProductVariantOptionModel | null | undefined
+  ): option is ProductVariantOptionModel {
+    return !!option && option.stock > 0;
+  }
+
+  isVariantAvailable(variant: ProductVariantModel): boolean {
+    return variant.options.some(option => this.isOptionAvailable(option));
+  }
+
+  getBasePrice(
+    variant: ProductVariantModel,
+    option?: ProductVariantOptionModel | null
+  ): number {
+    return option?.price ?? variant.price;
+  }
+
+  getFinalPrice(
+    variant: ProductVariantModel,
+    option?: ProductVariantOptionModel | null
+  ): number {
+    return Math.max(0, this.getBasePrice(variant, option) - (variant.salePrice || 0));
+  }
+
+  getVariantFinalPrice(variant: ProductVariantModel): number {
+    const availableOptions = variant.options.filter(option => this.isOptionAvailable(option));
+    const options = availableOptions.length > 0 ? availableOptions : variant.options;
+
+    if (options.length === 0) {
+      return this.getFinalPrice(variant);
+    }
+
+    return Math.min(...options.map(option => this.getFinalPrice(variant, option)));
+  }
+
+  private showOptionImage(option: ProductVariantOptionModel): void {
+    const imageIndex = this.product?.galleryImageUrls.indexOf(option.imageUrl) ?? -1;
+    if (imageIndex < 0) return;
+
+    this.selectedImageIndex = imageIndex;
+    setTimeout(() => this.slickModal?.slickGoTo(imageIndex));
   }
 
   handleCartAction() {
@@ -190,7 +244,8 @@ export class ProductDetailsComponent {
     }
 
     const selectedOption = this.selectedOption$.value;
-    if (!selectedOption) {
+    if (!this.isOptionAvailable(selectedOption)) {
+      this.messengerService.errorNotification('Sản phẩm này hiện đã hết hàng.');
       return;
     }
 
@@ -217,28 +272,33 @@ export class ProductDetailsComponent {
   }
 
   slickChange(event: any) {
-    const swiper = document.querySelectorAll('.swiperlist')
+    this.selectedImageIndex = event.currentSlide ?? 0;
   }
 
-  slidePreview(index: any, event: any) {
-    const swiper = document.querySelectorAll('.swiperlist')
-    swiper.forEach((el: any) => {
-      el.classList.remove('swiper-slide-thumb-active')
-    })
-    event.target.closest('.swiperlist').classList.add('swiper-slide-thumb-active')
-    this.slickModal.slickGoTo(index)
+  slidePreview(index: number) {
+    this.selectedImageIndex = index;
+    this.slickModal.slickGoTo(index);
   }
 
   showImageModal = false;
   currentImage = '';
+  selectedImageIndex = 0;
 
-  openImageModal(img: string) {
+  openImageModal(img: string, index: number) {
     this.currentImage = img;
+    this.selectedImageIndex = index;
     this.showImageModal = true;
   }
 
   closeImageModal() {
     this.showImageModal = false;
+  }
+
+  @HostListener('document:keydown.escape')
+  closeImageModalOnEscape() {
+    if (this.showImageModal) {
+      this.closeImageModal();
+    }
   }
 
   goBack(): void {

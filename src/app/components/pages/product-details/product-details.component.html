@@ -4,14 +4,21 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-4">
-                <div class="card p-3 sticky-side-box">
-                    <ngx-slick-carousel class="carousel swiper product-thumbnail-slider p-2 rounded" [config]="slideConfig"
+                <div class="card p-3 sticky-side-box product-gallery">
+                    <ngx-slick-carousel class="carousel swiper product-thumbnail-slider rounded" [config]="slideConfig"
                         #slickModal="slick-carousel" (afterChange)="slickChange($event)">
                         @for (i of product.galleryImageUrls; track $index) {
                         <div ngxSlickItem class="slide">
                             <div class="slide-inner">
-                                <img class="slide-image" #showedImg id="showed-img" [src]="i | fullImageUrl" alt=""
-                                    (click)="openImageModal(i)" />
+                                <button type="button" class="image-zoom-trigger"
+                                    (click)="openImageModal(i, $index)"
+                                    [attr.aria-label]="'Phóng to ảnh ' + ($index + 1) + ' của ' + product.name">
+                                    <img class="slide-image" #showedImg [src]="i | fullImageUrl"
+                                        [alt]="product.name + ' - ảnh ' + ($index + 1)" />
+                                    <span class="zoom-hint" aria-hidden="true">
+                                        <i class="bi bi-zoom-in"></i> Phóng to
+                                    </span>
+                                </button>
                             </div>
                         </div>
                         }
@@ -20,10 +27,15 @@
                     <!-- end swiper thumbnail slide -->
                     <ngx-slick-carousel class="carousel swiper product-nav-slider mt-2" [config]="slidesConfig">
                         @for (i of product.galleryImageUrls; track $index) {
-                        <div ngxSlickItem class="swiper-slide swiperlist me-2" (click)="slidePreview($index,$event)">
-                            <div class="nav-slide-item">
-                                <img [src]="i | fullImageUrl" alt="" class="img-fluid d-block">
-                            </div>
+                        <div ngxSlickItem class="swiper-slide swiperlist">
+                            <button type="button" class="nav-slide-item"
+                                [class.active]="selectedImageIndex === $index"
+                                (click)="slidePreview($index)"
+                                [attr.aria-label]="'Xem ảnh ' + ($index + 1) + ' của ' + product.name"
+                                [attr.aria-current]="selectedImageIndex === $index ? 'true' : null">
+                                <img [src]="i | fullImageUrl"
+                                    [alt]="product.name + ' - ảnh thu nhỏ ' + ($index + 1)" class="img-fluid d-block">
+                            </button>
                         </div>
                         }
                     </ngx-slick-carousel>
@@ -50,11 +62,22 @@
                                 <h6 class="fs-md mb-3">Các phiên bản:</h6>
                                 <div class="d-flex flex-wrap gap-2">
                                     @for (variant of product.variants; track variant.id) {
-                                    <div class="variant-card" [ngClass]="{ 'selected': selectedVariant.id === variant.id }"
+                                    <button type="button" class="variant-card"
+                                        [class.selected]="selectedVariant.id === variant.id"
+                                        [class.out-of-stock]="!isVariantAvailable(variant)"
+                                        [disabled]="!isVariantAvailable(variant)"
+                                        [attr.aria-pressed]="selectedVariant.id === variant.id"
                                         (click)="selectVariant(variant.id)">
-                                        <div>{{variant.name}}</div>
-                                        <div class="price">{{variant.price | thousandSeparator}} </div>
-                                    </div>
+                                        @if (selectedVariant.id === variant.id) {
+                                        <span class="selection-check" aria-hidden="true"><i class="bi bi-check-lg"></i></span>
+                                        }
+                                        <span class="option-name">{{variant.name}}</span>
+                                        <span class="price-label">Giá từ</span>
+                                        <span class="price">{{getVariantFinalPrice(variant) | thousandSeparator}} ₫</span>
+                                        @if (!isVariantAvailable(variant)) {
+                                        <span class="stock-label">Hết hàng</span>
+                                        }
+                                    </button>
                                     }
                                 </div>
     
@@ -62,16 +85,26 @@
                                     <h6 class="fs-md mb-3">Màu sắc:</h6>
                                     <div class="d-flex flex-wrap gap-2">
                                         @for (option of selectedVariant.options; track option.id) {
-                                        <div class="option-card d-flex align-items-center"
-                                            [ngClass]="{ 'selected': (selectedOption$ | async)?.id === option.id }"
+                                        <button type="button" class="option-card d-flex align-items-center"
+                                            [class.selected]="(selectedOption$ | async)?.id === option.id"
+                                            [class.out-of-stock]="!isOptionAvailable(option)"
+                                            [disabled]="!isOptionAvailable(option)"
+                                            [attr.aria-pressed]="(selectedOption$ | async)?.id === option.id"
                                             (click)="selectOption(option.id)">
+                                            @if ((selectedOption$ | async)?.id === option.id) {
+                                            <span class="selection-check" aria-hidden="true"><i class="bi bi-check-lg"></i></span>
+                                            }
                                             <img [src]="option.imageUrl | fullImageUrl" alt="{{option.name}}"
                                                 class="thumb me-2">
-                                            <div>
-                                                <div>{{option.name}}</div>
-                                                <div class="price">{{option.price | thousandSeparator}} </div>
-                                            </div>
-                                        </div>
+                                            <span class="option-content">
+                                                <span class="option-name">{{option.name}}</span>
+                                                <span class="price-label">Giá cuối</span>
+                                                <span class="price">{{getFinalPrice(selectedVariant, option) | thousandSeparator}} ₫</span>
+                                                @if (!isOptionAvailable(option)) {
+                                                <span class="stock-label">Hết hàng</span>
+                                                }
+                                            </span>
+                                        </button>
                                         }
                                     </div>
                                 </div>
@@ -110,21 +143,16 @@
                                                 <div class="card border shadow-none mb-0">
                                                     <div class="card-body p-2">
                                                         <div class="text-center">
-                                                            <div *ngIf="selectedVariant.salePrice != 0"
-                                                                class="product-price">
-                                                                <span class="current-price fw-bold text-danger">{{
-                                                                    (selectedVariant.price - selectedVariant.salePrice) |
-                                                                    thousandSeparator
-                                                                    }} ₫</span>
-                                                                <br>
-                                                                <span
-                                                                    class="old-price text-muted text-decoration-line-through">{{
-                                                                    selectedVariant.price | thousandSeparator }} ₫</span>
-                                                            </div>
-                                                            <div *ngIf="selectedVariant.salePrice == 0" class="product-price">
+                                                            <div class="product-price">
+                                                                <span class="price-caption">Giá cuối cùng</span>
                                                                 <span class="current-price fw-bold text-danger">
-                                                                    {{ (selectedOption$ | async)?.price | thousandSeparator }} ₫
+                                                                    {{ getFinalPrice(selectedVariant, (selectedOption$ | async)) | thousandSeparator }} ₫
                                                                 </span>
+                                                                @if (selectedVariant.salePrice > 0) {
+                                                                <span class="old-price text-muted text-decoration-line-through">
+                                                                    {{ getBasePrice(selectedVariant, (selectedOption$ | async)) | thousandSeparator }} ₫
+                                                                </span>
+                                                                }
                                                             </div>
                                                         </div>
                                                     </div>
@@ -148,7 +176,9 @@
                                 </div><!--end row-->
                                 <div class="mt-4 d-flex justify-content-center align-items-center gap-2">
                                     <button *ngIf="!isShowAddToCardAnimation" type="button"
-                                        class="btn btn-add-to-cart w-100" (mouseenter)="isHover = true"
+                                        class="btn btn-add-to-cart w-100"
+                                        [disabled]="!isOptionAvailable(selectedOption$.value)"
+                                        (mouseenter)="isHover = true"
                                         (mouseleave)="isHover = false" (click)="handleCartAction()">
     
                                         <ng-container *ngIf="!isHover; else hoverTemplate">
@@ -270,16 +300,23 @@
 </section>
 
 <!-- open image modal -->
-<div class="modal fade image-modal" tabindex="-1" [ngClass]="{'show': showImageModal}"
-    [style.display]="showImageModal ? 'block' : 'none'">
-    <div class="modal-dialog modal-dialog-centered modal-xl">
-        <div class="modal-content bg-light">
+<div class="modal fade image-modal" tabindex="-1" role="dialog" aria-modal="true"
+    aria-label="Xem ảnh sản phẩm" [attr.aria-hidden]="!showImageModal"
+    [ngClass]="{'show': showImageModal}" [style.display]="showImageModal ? 'block' : 'none'"
+    (click)="closeImageModal()">
+    <div class="modal-dialog modal-dialog-centered modal-xl" (click)="$event.stopPropagation()">
+        <div class="modal-content">
             <div class="modal-header border-0">
-                <button type="button" class="btn-close" (click)="closeImageModal()">X</button>
+                <button type="button" class="btn-close" aria-label="Đóng ảnh phóng to"
+                    (click)="closeImageModal()"></button>
             </div>
             <div class="modal-body text-center">
-                <img [src]="currentImage | fullImageUrl" class="img-fluid" style="max-height: 80vh;">
+                <img [src]="currentImage | fullImageUrl" class="img-fluid modal-product-image"
+                    [alt]="product?.name + ' - ảnh phóng to'">
             </div>
         </div>
     </div>
 </div>
+@if (showImageModal) {
+<div class="modal-backdrop fade show"></div>
+}

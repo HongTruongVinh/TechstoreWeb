@@ -26,4 +26,8 @@ export class IdempotencyService {
     clearOrderKey(): void {
         sessionStorage.removeItem(this.orderKey);
     }
+
+    clearAllKeys(): void {
+        this.clearOrderKey();
+    }
 }

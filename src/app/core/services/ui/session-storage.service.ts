@@ -2,16 +2,9 @@ import { Injectable } from "@angular/core";
 import { CartItem } from "../../../models/models/cart/cart-item.model";
 import { TokenStorageService } from "./token-storage.service";
 import { CartService } from "../api/cart.service";
-import { ERetCode } from "../../../models/enum/etype_project.enum";
-import { CategoryService } from "../api/category.service";
-import { BrandService } from "../api/brand.service";
-import { BrandModel } from "../../../models/models/brand/brand.model";
-import { Category } from "../../../models/models/category/category.model";
 
 const ORDERITEMS_KEY = 'orderItems';
 const CARTITEMS_KEY = 'cartItems';
-const BRANDS_KEY = 'brands';
-const CATEGORIES_KEY = 'categories';
 
 
 @Injectable({ providedIn: 'root' })
@@ -75,5 +68,7 @@ export class SessionStorageService {
   clearOrder() {
     sessionStorage.removeItem(ORDERITEMS_KEY);
   }
+
+  
 
 }

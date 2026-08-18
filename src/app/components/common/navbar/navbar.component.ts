@@ -12,7 +12,7 @@ import { PagedResult } from '../../../models/models/api-response.model';
 import { ProductListItemModel } from '../../../models/models/product/product-list-item.model';
 import { ProductSearchQuery } from '../../../models/models/product/product-search-query.model';
 import { ProductService } from '../../../core/services/api/product.service';
-import { ERetCode } from '../../../models/enum/etype_project.enum';
+import { EErrorType } from '../../../models/enum/etype_project.enum';
 import { FullImageUrlPipe } from "../../../pipes/full-image-url.pipe";
 import { Store } from '@ngrx/store';
 import { selectCartItemCount } from '../../../store/cart/cart.selectors';

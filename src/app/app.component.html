@@ -16,7 +16,9 @@
 <!-- <app-footer *ngIf="uiState.footerVisible$ | async"></app-footer> -->
 <app-footer></app-footer>
 
-<app-mobile-menu *ngIf="uiState.mobileMenuVisible$ | async" (toggleCategories)="toggleCategoryPanel()"
+<!-- <app-mobile-menu *ngIf="uiState.mobileMenuVisible$ | async" (toggleCategories)="toggleCategoryPanel()"
+    class="mobile-menu"></app-mobile-menu> -->
+<app-mobile-menu [menuHidden]="isMobileMenuHidden" (toggleCategories)="toggleCategoryPanel()"
     class="mobile-menu"></app-mobile-menu>
 
 <app-loading></app-loading>

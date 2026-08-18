@@ -5,7 +5,7 @@ import { BrandModel } from '../../../models/models/brand/brand.model';
 import { Router } from '@angular/router';
 import { CategoryService } from '../../../core/services/api/category.service';
 import { BrandService } from '../../../core/services/api/brand.service';
-import { ERetCode } from '../../../models/enum/etype_project.enum';
+import { EErrorType } from '../../../models/enum/etype_project.enum';
 import { FullImageUrlPipe } from "../../../pipes/full-image-url.pipe";
 import { UiStateService } from '../../../core/services/ui/ui-state.service';
 import { PriceFilter } from '../../../models/models/product/price-fillter.model';

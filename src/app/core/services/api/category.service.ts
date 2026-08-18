@@ -5,7 +5,7 @@ import { ApiResponse } from "../../../models/models/api-response.model";
 import { LinkSettingsService } from "./link-settings.service";
 
 import { Category } from "../../../models/models/category/category.model";
-import { ERetCode } from "../../../models/enum/etype_project.enum";
+import { EErrorType } from "../../../models/enum/etype_project.enum";
 import { PriceFilter } from "../../../models/models/product/price-fillter.model";
 
 

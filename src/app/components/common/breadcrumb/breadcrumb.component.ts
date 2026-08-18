@@ -1,6 +1,7 @@
 import { CommonModule, Location } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { IdempotencyService } from '../../../core/services/api/idempotency-key.service';
 
 @Component({
   selector: 'app-breadcrumb',
@@ -11,10 +12,14 @@ import { RouterModule } from '@angular/router';
 })
 export class BreadcrumbComponent {
   @Input() items: BreadcrumbItem[] = [];
-  
-  constructor(private location: Location) { }
+
+  constructor(
+    private location: Location,
+    private readonly idempotencyService: IdempotencyService,
+  ) { }
 
   goBack() {
+    this.idempotencyService.clearAllKeys();
     this.location.back();
   }
 }

@@ -6,7 +6,7 @@ import { Category } from '../../../models/models/category/category.model';
 import { ProductListItemModel } from '../../../models/models/product/product-list-item.model';
 import { Router } from '@angular/router';
 import { ProductService } from '../../../core/services/api/product.service';
-import { ERetCode } from '../../../models/enum/etype_project.enum';
+import { EErrorType } from '../../../models/enum/etype_project.enum';
 import { BrandModel } from '../../../models/models/brand/brand.model';
 import { CategoryPanelComponent } from "../../common/category-panel/category-panel.component";
 import { DeviceService } from '../../../core/services/ui/device.service';

@@ -145,7 +145,7 @@ export class TransferHttpService {
         if (error.status >= 500) {
           this.showError(
             'Có lỗi xảy ra',
-            this.getServerMessage(error) ||
+            // this.getServerMessage(error) ||
             'Hệ thống đang gặp sự cố. Vui lòng thử lại sau.'
           );
         }

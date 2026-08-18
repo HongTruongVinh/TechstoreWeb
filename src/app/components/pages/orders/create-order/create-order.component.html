@@ -1,299 +1,181 @@
-
-<div class="card border-bottom border-2 mb-2">
-    <div class="card-body d-flex gap-3">
-        <div class="flex-grow-1">
-            <h6 class="card-title mb-3">Khách hàng</h6>
-            <form id="newOrderForm" (ngSubmit)="saveAction()" [formGroup]="newOrderForm" class="tablelist-form"
-                novalidate autocomplete="off">
-
-                <div class="d-flex align-items-center mb-3">
-                    <label for="customerName" class="form-label me-3 mb-0" style="width: 120px;">Tên <span
-                            class="text-danger">*</span></label>
-                    <input formControlName="customerName" type="text" class="form-control" id="customerName"
-                        placeholder="Nhập tên khách hàng" required>
-                </div>
-
-                <div class="d-flex align-items-center mb-3">
-                    <label for="customerPhoneNumber" class="form-label me-3 mb-0" style="width: 120px;">SĐT
-                        <span class="text-danger">*</span></label>
-                    <input formControlName="customerPhoneNumber" type="text" class="form-control"
-                        id="customerPhoneNumber" placeholder="Nhập số điện thoại" required>
-                </div>
-
-                <div class="d-flex align-items-center mb-3">
-                    <label for="customerAddress" class="form-label me-3 mb-0" style="width: 120px;">Địa chỉ nhận
-                        <span class="text-danger">*</span></label>
-                    <input formControlName="customerAddress" type="text" class="form-control" id="customerAddress"
-                        placeholder="Nhập địa chỉ nhận hàng" required>
-                </div>
-
-                <div class="d-flex align-items-center mb-3">
-                    <label for="note" class="form-label me-3 mb-0" style="width: 120px;">Ghi chú</label>
-                    <input formControlName="note" type="text" class="form-control" id="note" placeholder="Nhập ghi chú">
-                </div>
-            </form>
+<div class="checkout-page">
+  <div class="checkout-heading">
+    <div><span class="checkout-eyebrow">Thanh toán</span>
+      <h4 class="mb-1">Hoàn tất đơn hàng</h4>
+      <p class="text-muted mb-0">Kiểm tra thông tin trước khi xác nhận đặt hàng.</p>
+    </div>
+    <span class="secure-checkout"><i class="bi bi-shield-check"></i> Thanh toán an toàn</span>
+  </div>
+  <div class="row g-4">
+    <div class="col-lg-8">
+      <section class="checkout-card">
+        <div class="section-heading"><span class="section-icon"><i class="bi bi-geo-alt"></i></span>
+          <div>
+            <h5>Thông tin nhận hàng</h5>
+            <p>Thông tin dùng để liên hệ và giao hàng.</p>
+          </div>
         </div>
-    </div>
-</div>
-
-<div class="row mb-2">
-    <div class="col-xxl-12">
-        <div class="card">
-            <div class="card-header d-flex align-items-center gap-3">
-                <h6 class="card-title mb-0 flex-grow-1">Các mặt hàng</h6>
+        <form id="newOrderForm" (ngSubmit)="saveAction()" [formGroup]="newOrderForm" novalidate autocomplete="off">
+          <div class="row g-3">
+            <div class="col-md-6"><label for="customerName" class="form-label">Họ và tên <span
+                  class="text-danger">*</span></label><input formControlName="customerName" type="text"
+                class="form-control" [class.is-invalid]="isFieldInvalid('customerName')" id="customerName"
+                placeholder="Nhập họ và tên">@if (isFieldInvalid('customerName')) {<div class="invalid-feedback">Vui
+                lòng nhập họ và tên người nhận.</div>}</div>
+            <div class="col-md-6"><label for="customerPhoneNumber" class="form-label">Số điện thoại <span
+                  class="text-danger">*</span></label><input formControlName="customerPhoneNumber" type="tel"
+                inputmode="tel" class="form-control" [class.is-invalid]="isFieldInvalid('customerPhoneNumber')"
+                id="customerPhoneNumber" placeholder="Ví dụ: 0912 345 678">@if (isFieldInvalid('customerPhoneNumber')) {
+              <div class="invalid-feedback">Số điện thoại phải có từ 9 đến 11 chữ số.</div>}</div>
+            <div class="col-12"><label for="customerAddress" class="form-label">Địa chỉ nhận hàng <span
+                  class="text-danger">*</span></label><input formControlName="customerAddress" type="text"
+                class="form-control" [class.is-invalid]="isFieldInvalid('customerAddress')" id="customerAddress"
+                placeholder="Số nhà, tên đường, phường/xã, quận/huyện, tỉnh/thành phố">@if
+              (isFieldInvalid('customerAddress')) {<div class="invalid-feedback">Vui lòng nhập địa chỉ nhận hàng.</div>}
             </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table align-middle table-nowrap table-borderless">
-                        <thead class="table-active">
-                            <tr>
-                                <th>Mặt hàng</th>
-                                <th>Đơn giá</th>
-                                <th>Số lượng</th>
-                                <th class="text-end">Thành tiền</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @for (orderItem of orderItems; track $index)
-                            {
-                            <tr>
-                                <td>
-                                    <div class="product-item d-flex align-items-center gap-2">
-                                        <div class="avatar-sm flex-shrink-0">
-                                            <div class="avatar-title bg-light rounded">
-                                                <img class="item-img avatar-xs" [src]="orderItem.mainImageUrl | fullImageUrl" alt=""
-                                                    >
-                                            </div>
-                                        </div>
-                                        <div class="flex-grow-1">
-                                            <h6 class="fs-md">
-                                                 {{ orderItem.productName + ' - ' + orderItem.variantName }}
-                                            </h6>
-                                            <small class="text-muted">
-                                                Phân Loại: <span class="text-dark fw-medium">{{orderItem.optionName}}</span>
-                                            </small>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>{{orderItem.salePrice?? orderItem.price | thousandSeparator}} VND</td>
-                                <td>
-                                    {{orderItem.quantity}}
-                                </td>
-                                <td class="fw-medium text-end">{{orderItem.totalPrice | thousandSeparator}} VND</td>
-                            </tr>
-                            }
-                        </tbody>
-                    </table>
-
-                    
-                </div>
-            </div>
-        </div><!--end card-->
-    </div>
-</div><!--end row-->
-<div class="row mb-2">
-    <div class="col-xxl-12">
-        <div class="card">
-            <div class="card-header">
-                <h6 class="card-title mb-0">Ưu đãi</h6>
-            </div>
-            <div class="card-body pt-4">
-                <div class="d-flex align-items-center mb-3">
-                    <label for="discountCode" class="form-label me-3 mb-0" style="width: 120px;">
-                        Mã ưu đãi
-                    </label>
-
-                    <div class="input-group">
-                        <input [(ngModel)]="discountCode" (ngModelChange)="onDiscountCodeChange()" type="text" class="form-control me-1" id="discountCode"
-                            placeholder="Nhập mã ưu đãi" />
-
-                        <button class="btn btn-primary" type="button" (click)="checkDiscountCode()" [disabled]="isApplyVoucher">
-                            @if (isApplyVoucher) {
-                                Đang áp dụng
-                            } @else {
-                                Áp dụng
-                            }
-                        </button>
-                    </div>
-                </div>
-                <span class="text-muted fw-medium mb-3 d-block">
-                    Nhập mã D99 để nhận giảm giá 99.99% (Mục đích cho việc thử nghiệm chuyển khoản với số tiền thấp)
-                </span>
-                <div class="d-flex align-items-center mb-3">
-                    <div class="flex-grow-1">
-                        <select [(ngModel)]="discountCode" class="form-select" (change)="selectVoucher()">
-                            <option value="">-- Chọn mã ưu đãi --</option>
-                            <option *ngFor="let voucher of vouchers" [value]="voucher.code">
-                                {{ voucher.code }}
-                            </option>
-                        </select>
-                        <div *ngIf="voucher" class="voucher-card mt-3">
-                            <div class="voucher-card-left">
-                                <div class="voucher-icon">
-                                    <i class="bi bi-ticket-perforated"></i>
-                                </div>
-                            </div>
-                
-                            <div class="voucher-card-content flex-grow-1">
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <div>
-                                        <span class="voucher-code">
-                                            {{ voucher.code }}
-                                        </span>
-                
-                                        <span class="badge bg-success-subtle text-success ms-2">
-                                            Đã chọn
-                                        </span>
-                                    </div>
-                
-                                    <button type="button" class="btn btn-sm btn-link text-danger p-0" (click)="removeVoucher()">
-                                        Bỏ chọn
-                                    </button>
-                                </div>
-                
-                                <div class="voucher-description mt-1">
-                                    {{ voucher.description }}
-                                </div>
-                
-                                <div class="voucher-info mt-3">
-                                    <div class="voucher-info-item">
-                                        <span class="text-muted">Ưu đãi</span>
-                                        <strong>
-                                            {{ getDiscountText(voucher) }}
-                                        </strong>
-                                    </div>
-                
-                                    <div class="voucher-info-item" *ngIf="voucher.maxDiscountAmount > 0">
-                                        <span class="text-muted">Giảm tối đa</span>
-                                        <strong>
-                                            {{ voucher.maxDiscountAmount | number:'1.0-0' }}đ
-                                        </strong>
-                                    </div>
-                
-                                    <div class="voucher-info-item">
-                                        <span class="text-muted">Đơn tối thiểu</span>
-                                        <strong>
-                                            {{ voucher.minOrderPrice | number:'1.0-0' }}đ
-                                        </strong>
-                                    </div>
-                
-                                    <div class="voucher-info-item">
-                                        <span class="text-muted">Hạn sử dụng</span>
-                                        <strong>
-                                            {{ voucher.endDate | date:'dd/MM/yyyy' }}
-                                        </strong>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-            </div>
+            <div class="col-12"><label for="note" class="form-label">Ghi chú <span class="text-muted fw-normal">(không
+                  bắt buộc)</span></label><textarea formControlName="note" class="form-control" id="note" rows="3"
+                placeholder="Ví dụ: Giao hàng trong giờ hành chính"></textarea></div>
+          </div>
+        </form>
+      </section>
+      <section class="checkout-card">
+        <div class="section-heading"><span class="section-icon"><i class="bi bi-bag-check"></i></span>
+          <div class="flex-grow-1">
+            <h5>Sản phẩm</h5>
+            <p>{{ orderItems.length }} mặt hàng trong đơn</p>
+          </div>
         </div>
-    </div>
-</div>
-
-<div class="row mb-2">
-    <div class="col-xxl-12">
-        <div class="card">
-            <div class="card-header">
-                <h6 class="card-title mb-0">Tổng thanh toán</h6>
+        @if (orderItems.length > 0)
+        {
+        <div class="order-items">
+          @for (orderItem of orderItems; track orderItem.productVariantOptionId)
+          {
+          <article class="order-item">
+            <div class="product-image-wrap"><img [src]="orderItem.mainImageUrl | fullImageUrl" [alt]="orderItem.productName"
+                class="product-image"></div>
+            <div class="product-details">
+              <h6>{{ orderItem.productName }} - {{ orderItem.variantName }}</h6><span class="variant-label">Phân loại:
+                {{ orderItem.optionName }}</span>
+              <div class="mobile-item-price">{{ (orderItem.salePrice ?? orderItem.price) | thousandSeparator }}₫ × {{
+                orderItem.quantity }}</div>
             </div>
-            <div class="card-body pt-4">
-                <div class="table-responsive table-card">
-                    <table class="table table-borderless mb-0">
-                        <tbody>
-                            <tr>
-                                <td>Giá tổng sản phẩm :</td>
-                                <td class="text-end">{{subtotal | thousandSeparator}}</td>
-                            </tr>
-                            <tr>
-                                <td>Giảm giá :</td>
-                                <td class="text-end">-{{discount | thousandSeparator}}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Phí vận chuyển :</td>
-                                <td class="text-end">-{{shipping | thousandSeparator}}
-                                </td>
-                            </tr>
-                            <tr class="border-top border-top-dashed">
-                                <th scope="row">Tổng (VND) :</th>
-                                <th class="text-end">{{totalPrice| thousandSeparator}} VND</th>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            <div class="unit-price"><span>Đơn giá</span>{{ (orderItem.salePrice ?? orderItem.price) | thousandSeparator
+              }}₫</div>
+            <div class="quantity"><span>Số lượng</span>{{ orderItem.quantity }}</div>
+            <div class="item-total"><span>Thành tiền</span>{{ orderItem.totalPrice | thousandSeparator }}₫</div>
+          </article>}
         </div>
-    </div>
-</div>
-
-<div class="row mb-2">
-    <div class="col-xxl-12">
-        <div class="card">
-            <div class="card-header">
-                <h6 class="card-title mb-0">Phương thức thanh toán <span class="text-danger">*</span></h6>
-            </div>
-            <div class="card-body pt-4">
-                <div class="d-flex align-items-center">
-                <select [(ngModel)]="selectedpaymentMethodId" class="form-select">
-                    <option *ngFor="let paymentMethod of paymentMethods" [ngValue]="paymentMethod.methodId">
-                        {{ paymentMethod.name }}
-                    </option>
-                </select>
-            </div>
-            </div>
+        }
+        @else {
+        <div class="empty-state"><i class="bi bi-cart-x"></i>
+          <p>Chưa có sản phẩm nào để thanh toán.</p><button type="button" class="btn btn-outline-primary"
+            (click)="backToCart()">Quay lại giỏ hàng</button>
         </div>
-    </div>
-</div>
-
-@if (isClickedGenerateQrCode) {
-    <div class="row mb-2">
-    <div class="col-xxl-12">
-        <div class="card">
-            <div class="card-header">
-                <h6 class="card-title mb-0">Mã thanh toán</h6>
-            </div>
-            <div class="card-body pt-4">
-                <div class="d-flex align-items-center justify-content-center mb-3">
-                    @if(paymentData && !isLoadingQrCode) {
-                        <!-- <img *ngIf="!isPaymentSuccess" [src]="paymentData.qrDataURL" alt="QR Code" class="img-fluid qr-code-image" (click)="testSignalR()"> -->
-                        <img *ngIf="!isPaymentSuccess" [src]="paymentData.qrDataURL" alt="QR Code" class="img-fluid qr-code-image">
-                        <ng-lottie *ngIf="isPaymentSuccess" [options]="successOptions" class=" qr-code-image"></ng-lottie>
-                        <div class="ms-4">
-                            <p *ngIf="!isPaymentSuccess" class="mb-1 label-text">Vui lòng quét mã QR để thanh toán</p>
-                            <p *ngIf="isPaymentSuccess" class="mb-1 success-text">Đã thanh toán thành công</p>
-                            <p class="mb-0 fw-bold">Số tiền: {{paymentData.amount | thousandSeparator}} VND</p>
-                            <p class="mb-0 fw-bold">Mã đơn hàng: {{paymentData.snapshotId}}</p>
-                        </div>
-                    }
-                    @else if (isLoadingQrCode) {
-                        <ng-lottie [options]="loadingOptions" class=" qr-code-image"></ng-lottie>
-                        <p class="mb-1 fw-bold">Đang tạo mã thanh toán</p>
-                    }
-                </div>
-            </div>
+        }
+      </section>
+      <section class="checkout-card">
+        <div class="section-heading"><span class="section-icon"><i class="bi bi-ticket-perforated"></i></span>
+          <div>
+            <h5>Mã ưu đãi</h5>
+            <p>Nhập mã hoặc chọn một ưu đãi đang khả dụng.</p>
+          </div>
         </div>
-    </div>
-</div>
-}
-
-<!-- <div id="elmLoader">
-    <div class="spinner-border text-primary avatar-sm" role="status">
-        <span class="visually-hidden">Loading...</span>
-    </div>
-</div> -->
-
-<div class="row mb-2">
-    <div class="col-xxl-12">
-        <div class="d-flex justify-content-between gap-3">
-            <button type="button" class="btn btn-secondary" (click)="backToCart()">Quay lại giỏ hàng</button>
-            <button *ngIf="selectedpaymentMethodId === 0" type="submit" class="btn btn-primary" form="newOrderForm">Xác nhận đặt hàng</button>
-            <button *ngIf="selectedpaymentMethodId === 1 && paymentData === undefined" type="submit" class="btn btn-primary" form="newOrderForm">Nhận mã thanh toán</button>
+        <div class="voucher-entry"><input [(ngModel)]="discountCode" (ngModelChange)="onDiscountCodeChange()"
+            type="text" class="form-control text-uppercase" id="discountCode" placeholder="Nhập mã ưu đãi"
+            [disabled]="isCheckingVoucher || isPaymentLocked" (keyup.enter)="checkDiscountCode()"><button
+            class="btn btn-primary" type="button" (click)="checkDiscountCode()"
+            [disabled]="!discountCode.trim() || isApplyVoucher || isCheckingVoucher || isPaymentLocked">@if
+            (isCheckingVoucher) {<span class="spinner-border spinner-border-sm me-1"></span> Đang kiểm tra} @else if
+            (isApplyVoucher) {<i class="bi bi-check-lg me-1"></i> Đã áp dụng} @else {Áp dụng}</button></div>
+        @if (vouchers.length > 0 && !voucher) {<div class="available-vouchers"><span class="small text-muted">Mã khả
+            dụng:</span>@for (availableVoucher of vouchers; track availableVoucher.id) {<button type="button"
+            class="voucher-chip" (click)="applyVoucher(availableVoucher)"
+            [disabled]="isCheckingVoucher || isPaymentLocked"><strong>{{ availableVoucher.code }}</strong><span>{{
+              getDiscountText(availableVoucher) }}</span></button>}</div>}
+        @if (voucher) {<div class="voucher-card mt-3">
+          <div class="voucher-card-left"><i class="bi bi-ticket-perforated"></i></div>
+          <div class="voucher-card-content">
+            <div class="voucher-topline">
+              <div><span class="voucher-code">{{ voucher.code }}</span><span class="applied-badge">Đã chọn</span></div>
+              <button type="button" class="btn btn-sm btn-link text-danger p-0" (click)="removeVoucher()"
+                [disabled]="isPaymentLocked">Bỏ chọn</button>
+            </div>
+            <p class="voucher-description">{{ voucher.description }}</p>
+            <div class="voucher-info">
+              <div><span>Ưu đãi</span><strong>{{ getDiscountText(voucher) }}</strong></div>@if
+              (voucher.maxDiscountAmount > 0) {<div><span>Giảm tối đa</span><strong>{{ voucher.maxDiscountAmount |
+                  number:'1.0-0' }}₫</strong></div>}<div><span>Đơn tối thiểu</span><strong>{{ voucher.minOrderPrice |
+                  number:'1.0-0' }}₫</strong></div>
+              <div><span>Hạn sử dụng</span><strong>{{ voucher.endDate | date:'dd/MM/yyyy' }}</strong></div>
+            </div>
+          </div>
+        </div>}
+      </section>
+      <section class="checkout-card">
+        <div class="section-heading"><span class="section-icon"><i class="bi bi-wallet2"></i></span>
+          <div>
+            <h5>Phương thức thanh toán <span class="text-danger">*</span></h5>
+            <p>Chọn cách bạn muốn thanh toán đơn hàng.</p>
+          </div>
         </div>
+        <div class="payment-methods">@for (paymentMethod of paymentMethods; track paymentMethod.methodId) {<label
+            class="payment-method" [class.selected]="selectedpaymentMethodId === paymentMethod.methodId"
+            [class.disabled]="isPaymentLocked"><input type="radio" name="paymentMethod" [value]="paymentMethod.methodId"
+              [(ngModel)]="selectedpaymentMethodId" [disabled]="isPaymentLocked"><span class="payment-icon"><i
+                class="bi"
+                [ngClass]="paymentMethod.methodId === paymentMethodEnum.COD ? 'bi-truck' : 'bi-bank'"></i></span><span
+              class="payment-copy"><strong>{{ paymentMethod.name }}</strong><small>{{ paymentMethod.methodId ===
+                paymentMethodEnum.COD ? 'Thanh toán cho nhân viên khi nhận hàng' : 'Quét mã QR bằng ứng dụng ngân hàng'
+                }}</small></span><i class="bi bi-check-circle-fill payment-check"></i></label>}</div>
+      </section>
+      @if (isClickedGenerateQrCode) {<section class="checkout-card qr-section">
+        <div class="section-heading"><span class="section-icon"><i class="bi bi-qr-code"></i></span>
+          <div>
+            <h5>Mã thanh toán</h5>
+            <p>Giữ trang này mở trong khi thực hiện thanh toán.</p>
+          </div>
+        </div>
+        <div class="qr-content">@if (isLoadingQrCode) {<ng-lottie [options]="loadingOptions"
+            class="qr-animation"></ng-lottie>
+          <div>
+            <h6>Đang tạo mã thanh toán...</h6>
+            <p class="text-muted mb-0">Quá trình này chỉ mất vài giây.</p>
+          </div>} @else if (qrCodeError) {<div class="qr-error-icon"><i class="bi bi-exclamation-triangle"></i></div>
+          <div>
+            <h6>Không thể tạo mã thanh toán</h6>
+            <p class="text-muted mb-2">{{ qrCodeError }}</p><button type="button" class="btn btn-outline-primary btn-sm"
+              (click)="retryQrCode()">Thử lại</button>
+          </div>} @else if (paymentData) {@if (!isPaymentSuccess) {<img [src]="paymentData.qrDataURL"
+            alt="Mã QR thanh toán" class="qr-code-image">} @else {<ng-lottie [options]="successOptions"
+            class="qr-animation"></ng-lottie>}<div>
+            <h6 [class.text-success]="isPaymentSuccess">{{ isPaymentSuccess ? 'Đã thanh toán thành công' : 'Quét mã QR để thanh toán' }}</h6>
+            <p class="mb-1">Số tiền: <strong>{{ paymentData.amount | thousandSeparator }}₫</strong></p>
+            <p class="mb-0 text-muted">Mã đơn hàng: {{ paymentData.snapshotId }}</p>
+          </div>}
+        </div>
+      </section>}
     </div>
+    <div class="col-lg-4">
+      <aside class="order-summary">
+        <h5>Tóm tắt đơn hàng</h5>
+        <div class="summary-row"><span>Tạm tính</span><strong>{{ subtotal | thousandSeparator }}₫</strong></div>
+        <div class="summary-row discount"><span>Ưu đãi</span><strong>-{{ discount | thousandSeparator }}₫</strong></div>
+        <div class="summary-row"><span>Phí vận chuyển</span><strong>{{ shipping > 0 ? '+' : '' }}{{ shipping |
+            thousandSeparator }}₫</strong></div>@if (discount > 0) {<div class="saving-notice"><i
+            class="bi bi-stars"></i> Bạn tiết kiệm được {{ discount | thousandSeparator }}₫</div>}<div
+          class="summary-total"><span>Tổng</span><strong>{{ totalPrice | thousandSeparator }}₫</strong></div>
+        <button type="submit" class="btn btn-primary checkout-button" form="newOrderForm"
+          [disabled]="isSubmitting || isLoadingQrCode || orderItems.length === 0 || !!paymentData">@if (isSubmitting ||
+          isLoadingQrCode) {<span class="spinner-border spinner-border-sm me-2"></span>{{ selectedpaymentMethodId ===
+          paymentMethodEnum.COD ? 'Đang tạo đơn...' : 'Đang tạo mã...' }} } @else {<i class="bi me-2"
+            [ngClass]="selectedpaymentMethodId === paymentMethodEnum.COD ? 'bi-bag-check' : 'bi-qr-code'"></i>{{
+          selectedpaymentMethodId === paymentMethodEnum.COD ? 'Xác nhận đặt hàng' : 'Nhận mã thanh toán' }}
+          }</button><button type="button" class="btn btn-link back-button" (click)="backToCart()"
+          [disabled]="isSubmitting || isPaymentLocked"><i class="bi bi-arrow-left me-1"></i> Quay lại giỏ hàng</button>
+        <p class="checkout-note"><i class="bi bi-lock"></i> Thông tin của bạn được bảo mật và chỉ dùng để xử lý đơn
+          hàng.</p>
+      </aside>
+    </div>
+  </div>
 </div>
-
-<!-- <button *ngIf="paymentRequest" id="btnTest" class="btn btn-primary" (click)="testSignalR()">Test SignalR</button> -->

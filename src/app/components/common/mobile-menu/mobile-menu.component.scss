@@ -19,6 +19,13 @@
   box-shadow: 0 -2px 10px rgba(0,0,0,.08);
 
   z-index: 100;
+  transform: translateY(0);
+  transition: transform 220ms ease-in-out;
+  will-change: transform;
+
+  &.mobile-menu--hidden {
+    transform: translateY(calc(100% + 12px));
+  }
 
   a{
     flex:1;

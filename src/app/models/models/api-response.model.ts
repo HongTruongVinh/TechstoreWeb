@@ -1,8 +1,10 @@
+import { EErrorType } from "../enum/etype_project.enum";
 
 export interface ApiResponse<T> {
   success: boolean;
   message: string;
   data: T | null;
+  ErrorType?: EErrorType;
 }
 
 export interface PagedResult<T> {

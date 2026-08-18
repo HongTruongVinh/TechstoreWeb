@@ -1,25 +1,32 @@
-<div class="account-sidebar card p-4 justify-content-center align-items-center">
-   <!-- <img src="assets/images/icons/logo-light.png" alt="Avatar" class="user-avatar mb-3"> -->
-   <div class="name-avatar rounded-circle text-white d-flex
-            align-items-center justify-content-center">
-      {{nameAvatar}}
-   </div>
+<section class="account-sidebar" aria-label="Tài khoản của tôi">
+  <header class="profile-card">
+    <div class="avatar" aria-hidden="true">{{ nameAvatar }}</div>
+    <div class="profile-copy">
+      <p class="welcome">Xin chào,</p>
+      <h2>{{ displayName }}</h2>
+      <p class="membership">Thành viên TechStore</p>
+    </div>
+  </header>
 
-   @if(user){<h5 class="fw-bold text-center mb-1">{{user.lastName + " " + user.firstName}}</h5>}
-   <p class="text-muted mb-3">Thành viên TechStore </p>
+  <nav class="account-menu" aria-label="Tiện ích tài khoản">
+    <a class="menu-item" [class.active]="activeMenu === 'cart'" (click)="selectMenu('cart')">
+      <span class="menu-icon cart"><i class="bi bi-cart3"></i></span>
+      <span class="menu-content"><strong>Giỏ hàng</strong><small>Xem và quản lý sản phẩm đã chọn</small></span>
+      <i class="bi bi-chevron-right arrow"></i>
+    </a>
+    <a class="menu-item" [class.active]="activeMenu === 'purchase'" (click)="selectMenu('purchase')">
+      <span class="menu-icon orders"><i class="bi bi-box-seam"></i></span>
+      <span class="menu-content"><strong>Các đơn hàng</strong><small>Theo dõi lịch sử và trạng thái đơn hàng</small></span>
+      <i class="bi bi-chevron-right arrow"></i>
+    </a>
+    <a class="menu-item" [class.active]="activeMenu === 'info'" (click)="selectMenu('info')">
+      <span class="menu-icon profile"><i class="bi bi-person-vcard"></i></span>
+      <span class="menu-content"><strong>Thông tin cá nhân</strong><small>Cập nhật hồ sơ và mật khẩu của bạn</small></span>
+      <i class="bi bi-chevron-right arrow"></i>
+    </a>
+  </nav>
 
-   <div class="d-flex flex-column align-items-center mb-3">
-      <a class="sidebar-link mb-2" [class.active]="activeMenu === 'cart'" (click)="selectMenu('cart')">
-         Giỏ hàng
-      </a>
-
-      <a class="sidebar-link mb-2" [class.active]="activeMenu === 'purchase'" (click)="selectMenu('purchase')">
-         Đơn hàng đã mua
-      </a>
-
-      <a class="sidebar-link mb-2" [class.active]="activeMenu === 'info'" (click)="selectMenu('info')">
-         Thông tin cá nhân
-      </a>
-   </div>
-   <button class="btn btn-outline-primary w-100" (click)="logout()">Đăng Xuất</button>
-</div>
+  <button type="button" class="logout-button" (click)="logout()">
+    <i class="bi bi-box-arrow-right"></i><span>Đăng xuất</span>
+  </button>
+</section>

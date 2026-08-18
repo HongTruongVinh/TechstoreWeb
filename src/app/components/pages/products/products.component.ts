@@ -8,7 +8,7 @@ import { BrandModel } from '../../../models/models/brand/brand.model';
 import { ProductService } from '../../../core/services/api/product.service';
 import { ActivatedRoute } from '@angular/router';
 import { BreadcrumbComponent, BreadcrumbItem } from "../../common/breadcrumb/breadcrumb.component";
-import { ERetCode } from '../../../models/enum/etype_project.enum';
+import { EErrorType } from '../../../models/enum/etype_project.enum';
 import { LoadingService } from '../../../core/services/loading/loading.service';
 import { PagedResult } from '../../../models/models/api-response.model';
 import { ProductSearchQuery } from '../../../models/models/product/product-search-query.model';
