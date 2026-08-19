@@ -20,11 +20,12 @@ export const routes: Routes = [
                 children: [
                     { path: 'profile', component: ProfileComponent },
                     { path: 'purchase', component: PurchesComponent },
-                    { path: 'create-order', component: CreateOrderComponent },
+                    // { path: 'create-order', component: CreateOrderComponent },
                     { path: 'cart', component: CartComponent },
                 ],
                 
     },
+    { path: 'user/create-order', component: CreateOrderComponent, canActivate: [AuthGuard] },
     { path: 'danh-muc/:categorySlug', component: ProductsComponent },
     { path: 'tim-kiem/:keyword', component: ProductsComponent },
     { path: 'san-pham/:categorySlug/:brandSlug', component: ProductsComponent },

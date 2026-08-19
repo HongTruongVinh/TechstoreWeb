@@ -7,12 +7,11 @@ import { CommonModule } from '@angular/common';
 import { UiStateService } from '../../../core/services/ui/ui-state.service';
 import { TokenStorageService } from '../../../core/services/ui/token-storage.service';
 import { User } from '../../../models/models/user/user.model';
-import { MobileBarComponent } from "./mobile-bar/mobile-bar.component";
 
 @Component({
   selector: 'app-user',
   standalone: true,
-  imports: [RouterOutlet, SidebarComponent, BreadcrumbComponent, CommonModule, MobileBarComponent],
+  imports: [RouterOutlet, SidebarComponent, CommonModule],
   templateUrl: './user.component.html',
   styleUrl: './user.component.scss'
 })

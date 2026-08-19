@@ -23,6 +23,7 @@ import { Voucher } from '../../../../models/models/voucher/voucher.model';
 import { VoucherService } from '../../../../core/services/api/voucher.service';
 import { EAlertType } from '../../../../library/enum/ealerttype';
 import { finalize, Subject, takeUntil } from 'rxjs';
+import { BreadcrumbComponent, BreadcrumbItem } from '../../../common/breadcrumb/breadcrumb.component';
 
 @Component({
   selector: 'app-create-order',
@@ -30,6 +31,7 @@ import { finalize, Subject, takeUntil } from 'rxjs';
   imports: [
     CommonModule,
     FormsModule,
+    BreadcrumbComponent,
     ReactiveFormsModule,
     NgSelectModule,
     ThousandSeparatorPipe,
@@ -40,6 +42,12 @@ import { finalize, Subject, takeUntil } from 'rxjs';
   styleUrl: './create-order.component.scss'
 })
 export class CreateOrderComponent implements OnDestroy {
+  breadcrumbItems: BreadcrumbItem[] = [
+    { label: 'Trang chủ', url: '/' },
+    { label: 'Cá nhân' },
+    { label: 'Tạo đơn hàng' }
+  ];
+  
   isLoadingQrCode = false;
   isPaymentSuccess = false;
   isClickedGenerateQrCode = false;

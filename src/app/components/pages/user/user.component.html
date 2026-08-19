@@ -23,6 +23,7 @@
 
     <div *ngIf="!(uiState.showUserSidebar$ | async)">
       <!-- main content -->
+       <!-- <app-breadcrumb [items]="breadcrumbItems"></app-breadcrumb> -->
        <router-outlet></router-outlet>
     </div>
   </div>
