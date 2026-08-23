@@ -5,15 +5,13 @@ import { ApiResponse} from "../../../models/models/api-response.model";
 
 import { ListItemOrderModel } from "../../../models/models/order/list-item-order.model";
 import { LinkSettingsService } from "./link-settings.service";
-import { OrderItemModel } from "../../../models/models/order/order-item.model";
-import { CartItem } from "../../../models/models/cart/cart-item.model";
 import { OrderCreateModel } from "../../../models/models/order/cod-order-create.model";
 import { OrderModel } from "../../../models/models/order/order.model";
-import { PrepayOrderResult } from "../../../models/models/order/prepay-order-result.model";
-import { PaymentDataModel } from "../../../models/models/payment/payment-data.model";
 import { CancelOrderModel } from "../../../models/models/order/cancel-order.model";
 import { UpdateOrderModel } from "../../../models/models/order/update-order.model";
 import { IdempotencyService } from "./idempotency-key.service";
+import { CreateCODOnlineOrderResult } from "../../../models/models/order/create-cod-order-result.model";
+import { CreatePaymentSnapshotResult } from "../../../models/models/order/create-snapshot-result.model";
 
 @Injectable({ providedIn: 'root' })
 export class OrderService {
@@ -63,13 +61,13 @@ export class OrderService {
                     }
                     return this.transferHttp.post(apiUrl, newOrder);
                 }),
-                map((res: ApiResponse<string>) => res)
+                map((res: ApiResponse<CreateCODOnlineOrderResult>) => res)
             );
     }
 
-    createPrepayOrder(newOrder: OrderCreateModel) {
+    createSnapshotOrder(newOrder: OrderCreateModel) {
         return this.linkSettingsService
-            .getResLinkSetting('Payment', 'GetpaymentData')
+            .getResLinkSetting('Order', 'CreateSnapshotOrder')
             .pipe(
                 switchMap((apiUrl) => {
                     if (!apiUrl) {
@@ -77,7 +75,7 @@ export class OrderService {
                     }
                     return this.transferHttp.post(apiUrl, newOrder, this.idempotencyService.getOrderKey());
                 }),
-                map((res: ApiResponse<PaymentDataModel>) => res)
+                map((res: ApiResponse<CreatePaymentSnapshotResult>) => res)
             );
     }
 

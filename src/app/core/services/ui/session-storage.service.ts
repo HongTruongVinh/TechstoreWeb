@@ -2,9 +2,11 @@ import { Injectable } from "@angular/core";
 import { CartItem } from "../../../models/models/cart/cart-item.model";
 import { TokenStorageService } from "./token-storage.service";
 import { CartService } from "../api/cart.service";
+import { OrderCreateModel } from "../../../models/models/order/cod-order-create.model";
 
 const ORDERITEMS_KEY = 'orderItems';
 const CARTITEMS_KEY = 'cartItems';
+const ORDER_KEY = 'cartItems';
 
 
 @Injectable({ providedIn: 'root' })
@@ -48,7 +50,7 @@ export class SessionStorageService {
     return false;
   }
 
-  createOrder(orderItems: CartItem[]) {
+  saveOrderItems(orderItems: CartItem[]) {
     sessionStorage.setItem(ORDERITEMS_KEY, JSON.stringify(orderItems));
   }
 
@@ -65,10 +67,26 @@ export class SessionStorageService {
     return null;
   }
 
-  clearOrder() {
-    sessionStorage.removeItem(ORDERITEMS_KEY);
+  setOrderCreateModel(order: OrderCreateModel) {
+    sessionStorage.setItem(ORDER_KEY, JSON.stringify(order));
   }
 
-  
+  getOrderCreateModel(): OrderCreateModel | null {
+    const order = sessionStorage.getItem(ORDER_KEY);
+    if (order) {
+      try {
+        return JSON.parse(order) as OrderCreateModel;
+      } catch (e) {
+        console.error('Lỗi khi parse OrderCreateModel từ sessionStorage:', e);
+        return null;
+      }
+    }
+    return null;
+  }
+
+  clearOrder() {
+    sessionStorage.removeItem(ORDERITEMS_KEY);
+    sessionStorage.removeItem(ORDER_KEY);
+  }
 
 }

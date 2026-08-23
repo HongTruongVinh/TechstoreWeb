@@ -105,3 +105,10 @@ export enum EVoucherStatus
     Expired,
     Disabled
 }
+
+export enum EPaymentSnapshotStatus {
+    PendingPayment = 1,
+    Paid = 2,
+    Expired = 3,
+    Cancelled = 4
+}

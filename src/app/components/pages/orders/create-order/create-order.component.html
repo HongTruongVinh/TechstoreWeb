@@ -22,22 +22,22 @@
           <div class="row g-3">
             <div class="col-md-6"><label for="customerName" class="form-label">Họ và tên <span
                   class="text-danger">*</span></label><input formControlName="customerName" type="text"
-                class="form-control" [class.is-invalid]="isFieldInvalid('customerName')" id="customerName"
+                class="form-control" [class.is-invalid]="isFieldInvalid('customerName')" id="customerName" [readonly]="isPaymentLocked"
                 placeholder="Nhập họ và tên">@if (isFieldInvalid('customerName')) {<div class="invalid-feedback">Vui
                 lòng nhập họ và tên người nhận.</div>}</div>
             <div class="col-md-6"><label for="customerPhoneNumber" class="form-label">Số điện thoại <span
                   class="text-danger">*</span></label><input formControlName="customerPhoneNumber" type="tel"
-                inputmode="tel" class="form-control" [class.is-invalid]="isFieldInvalid('customerPhoneNumber')"
+                inputmode="tel" class="form-control" [class.is-invalid]="isFieldInvalid('customerPhoneNumber')" [readonly]="isPaymentLocked"
                 id="customerPhoneNumber" placeholder="Ví dụ: 0912 345 678">@if (isFieldInvalid('customerPhoneNumber')) {
               <div class="invalid-feedback">Số điện thoại phải có từ 9 đến 11 chữ số.</div>}</div>
             <div class="col-12"><label for="customerAddress" class="form-label">Địa chỉ nhận hàng <span
                   class="text-danger">*</span></label><input formControlName="customerAddress" type="text"
-                class="form-control" [class.is-invalid]="isFieldInvalid('customerAddress')" id="customerAddress"
+                class="form-control" [class.is-invalid]="isFieldInvalid('customerAddress')" id="customerAddress" [readonly]="isPaymentLocked"
                 placeholder="Số nhà, tên đường, phường/xã, quận/huyện, tỉnh/thành phố">@if
               (isFieldInvalid('customerAddress')) {<div class="invalid-feedback">Vui lòng nhập địa chỉ nhận hàng.</div>}
             </div>
             <div class="col-12"><label for="note" class="form-label">Ghi chú <span class="text-muted fw-normal">(không
-                  bắt buộc)</span></label><textarea formControlName="note" class="form-control" id="note" rows="3"
+                  bắt buộc)</span></label><textarea formControlName="note" class="form-control" id="note" rows="3" [readonly]="isPaymentLocked"
                 placeholder="Ví dụ: Giao hàng trong giờ hành chính"></textarea></div>
           </div>
         </form>
@@ -149,15 +149,23 @@
             <h6>Không thể tạo mã thanh toán</h6>
             <p class="text-muted mb-2">{{ qrCodeError }}</p><button type="button" class="btn btn-outline-primary btn-sm"
               (click)="retryQrCode()">Thử lại</button>
-          </div>} @else if (paymentData) {@if (!isPaymentSuccess) {<img [src]="paymentData.qrDataURL"
-            alt="Mã QR thanh toán" class="qr-code-image">} @else {<ng-lottie [options]="successOptions"
-            class="qr-animation"></ng-lottie>}<div>
-            <h6 [class.text-success]="isPaymentSuccess">{{ isPaymentSuccess ? 'Đã thanh toán thành công' : 'Quét mã QR để thanh toán' }}</h6>
-            <p class="mb-1">Số tiền: <strong>{{ paymentData.amount | thousandSeparator }}₫</strong></p>
-            <p class="mb-0 text-muted">Mã đơn hàng: {{ paymentData.snapshotId }}</p>
-          </div>}
+          </div>} 
+          @else if (paymentData) {
+            @if (!isPaymentSuccess) {
+              <img [src]="paymentData.qrDataURL"
+            alt="Mã QR thanh toán" class="qr-code-image">} 
+            @else {
+              <ng-lottie [options]="successOptions" class="qr-animation"></ng-lottie>
+            }
+            <div>
+              <h6 [class.text-success]="isPaymentSuccess">{{ isPaymentSuccess ? 'Đã thanh toán thành công' : 'Quét mã QR để thanh toán' }}</h6>
+              <p class="mb-1">Số tiền: <strong>{{ paymentData.amount | thousandSeparator }}₫</strong></p>
+              <p class="mb-0 text-muted">Mã đơn hàng: {{ paymentData.snapshotId }}</p>
+            </div>
+          }
         </div>
-      </section>}
+      </section>
+    }
     </div>
     <div class="col-lg-4">
       <aside class="order-summary">
@@ -174,7 +182,9 @@
           paymentMethodEnum.COD ? 'Đang tạo đơn...' : 'Đang tạo mã...' }} } @else {<i class="bi me-2"
             [ngClass]="selectedpaymentMethodId === paymentMethodEnum.COD ? 'bi-bag-check' : 'bi-qr-code'"></i>{{
           selectedpaymentMethodId === paymentMethodEnum.COD ? 'Xác nhận đặt hàng' : 'Nhận mã thanh toán' }}
-          }</button><button type="button" class="btn btn-link back-button" (click)="backToCart()"
+          }</button>@if (paymentData && !isPaymentSuccess) {<button type="button"
+          class="btn btn-outline-primary checkout-button" (click)="changeOrderInformation()">
+          <i class="bi bi-pencil-square me-2"></i>Thay đổi thông tin</button>}<button type="button" class="btn btn-link back-button" (click)="backToCart()"
           [disabled]="isSubmitting || isPaymentLocked"><i class="bi bi-arrow-left me-1"></i> Quay lại giỏ hàng</button>
         <p class="checkout-note"><i class="bi bi-lock"></i> Thông tin của bạn được bảo mật và chỉ dùng để xử lý đơn
           hàng.</p>

@@ -18,7 +18,7 @@
   "Order": {
     "UserOrders": "orders?page={0}&pageSize={1}",
     "CreateCodOrder": "orders/cod-order",
-    "CreatePrepayOrder": "orders/prepay-order",
+    "CreateSnapshotOrder": "orders/create-snapshot-order",
     "CancelOrder": "orders/{0}/cancel",
     "OrderDetails": "orders/{0}",
     "UpdateOrder": "orders/{0}"
@@ -61,7 +61,7 @@
     "GetInvoice": "invoices/{0}"
   },
   "Payment": {
-    "GetpaymentData": "payments/create-payment-pre-order",
+    "GetPaymentQrForSnapshot": "payments/get-payment-qr-for-snapshot/{0}",
     "PaymentHub": "payments/hub"
   },
   "Voucher": {

@@ -3,13 +3,8 @@ import { TransferHttpService } from "../../transfer-http/transfer-http.service";
 import { map, switchMap } from "rxjs";
 import { ApiResponse } from "../../../models/models/api-response.model";
 
-import { ListItemOrderModel } from "../../../models/models/order/list-item-order.model";
 import { LinkSettingsService } from "./link-settings.service";
-import { OrderItemModel } from "../../../models/models/order/order-item.model";
-import { CartItem } from "../../../models/models/cart/cart-item.model";
-import { OrderCreateModel } from "../../../models/models/order/cod-order-create.model";
-import { OrderModel } from "../../../models/models/order/order.model";
-import { PrepayOrderResult } from "../../../models/models/order/prepay-order-result.model";
+import { PaymentDataForSnapshotModel } from "../../../models/models/payment/payment-qr-for-snapshot.model";
 
 @Injectable({ providedIn: 'root' })
 export class PaymentService {
@@ -19,17 +14,17 @@ export class PaymentService {
         private linkSettingsService: LinkSettingsService
     ) { }
 
-    getPaymentData(paymentId: string) {
+    GetPaymentQrForSnapshot(snapshotId: string) {
         return this.linkSettingsService
-            .getResLinkSetting('Payment', 'GetpaymentData', paymentId)
+            .getResLinkSetting('Payment', 'GetPaymentQrForSnapshot', snapshotId)
             .pipe(
                 switchMap((apiUrl) => {
                     if (!apiUrl) {
-                        throw new Error('Không tìm thấy URL API cho Tạo đơn hàng Prepay');
+                        throw new Error('Không tìm thấy URL API cho mã qr thanh toán');
                     }
                     return this.transferHttp.get(apiUrl);
                 }),
-                map((res: ApiResponse<PrepayOrderResult>) => res)
+                map((res: ApiResponse<PaymentDataForSnapshotModel>) => res)
             );
     }
 

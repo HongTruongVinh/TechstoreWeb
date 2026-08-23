@@ -112,7 +112,7 @@ export class CartComponent {
     this.selectedItems$.pipe(take(1)).subscribe(selectedItems => {
       if (selectedItems.length === 0) return;
 
-      this.sessionStorageService.createOrder(selectedItems);
+      this.sessionStorageService.saveOrderItems(selectedItems);
       this.router.navigate(['/user/create-order']);
     });
   }
