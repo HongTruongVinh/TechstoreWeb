@@ -16,6 +16,7 @@ import { MessengerServices } from '../../../../core/services/ui/messenger.servic
 export class PurchesComponent {
   isLoading = false;
   allOrders: ListItemOrderModel[] = [];
+  snapshots: ListItemOrderModel[] = [];
   currentTab = 'allOrders';
 
   constructor(

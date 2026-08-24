@@ -17,7 +17,7 @@
   },
   "Order": {
     "UserOrders": "orders?page={0}&pageSize={1}",
-    "CreateCodOrder": "orders/cod-order",
+    "CreateCodOrder": "orders/create-cod-order",
     "CreateSnapshotOrder": "orders/create-snapshot-order",
     "CancelOrder": "orders/{0}/cancel",
     "OrderDetails": "orders/{0}",

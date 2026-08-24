@@ -1,6 +1,12 @@
 <div class="wrapper">
     <div class="order-tabs-wrapper">
         <ul class="nav nav-pills arrow-navtabs nav-secondary gap-2" role="tablist">
+            <li *ngIf="snapshots.length > 0" class="nav-item" role="presentation">
+                <a class="nav-link" [class.active]="currentTab === 'snapshots'" (click)="changeTab('allOrders')" role="tab">
+                    Đang chờ thanh toán ({{ snapshots.length }})
+                </a>
+            </li>
+
             <li class="nav-item" role="presentation">
                 <a class="nav-link" [class.active]="currentTab === 'allOrders'" (click)="changeTab('allOrders')" role="tab">
                     Tất cả ({{ allOrders.length }})
@@ -41,6 +47,13 @@
         </ul>
     </div>
     <div class="tab-content">
+        <div [hidden]="currentTab !== 'snapshots'" class="tab-pane active" id="snapshots" role="tabpanel">
+            <div class="list-item">
+                @for(snapshot of snapshots; track snapshot.id){
+                <app-order-card [order]="snapshot"></app-order-card>
+                }
+            </div>
+        </div>
         <div [hidden]="currentTab !== 'allOrders'" class="tab-pane active" id="allOrders" role="tabpanel">
             <div class="list-item">
                 @for(order of allOrders; track order.id){

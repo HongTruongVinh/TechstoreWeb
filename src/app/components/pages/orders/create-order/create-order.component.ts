@@ -245,8 +245,10 @@ export class CreateOrderComponent implements OnDestroy {
           this.messengerServices.successes("Đặt hàng thành công");
           this.sessionStorageService.setOrderCreateModel(newOrder);
           this.sessionStorageService.clearOrder();
+          this.idempotencyService.clearOrderKey();
           this.router.navigate(['/user/purchase']);
         } else {
+          this.messengerServices.errorNotification(res.message);
           return;
         }
       }, error: () => this.messengerServices.errorNotification('Không thể tạo đơn hàng. Vui lòng thử lại sau.') });

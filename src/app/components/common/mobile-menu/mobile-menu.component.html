@@ -36,7 +36,7 @@
     <small>Đăng nhập</small>
   </a>
 
-  <a routerLinkActive="active" (click)="openPersonalZone()">
+  <a *ngIf="tks.isLoggedIn()" routerLinkActive="active" (click)="openPersonalZone()">
     <span><i class="bi bi-person"></i></span>
     <small>Tôi</small>
   </a>

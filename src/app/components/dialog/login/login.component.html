@@ -30,17 +30,18 @@
         <hr class="flex-grow-1">
       </div>
       <div class="d-flex justify-content-between mb-3 gap-2">
-        <button type="button"
+        <button type="button" (click)="showSocialMessage('Google')"
           class="btn btn-light social-btn flex-grow-1 d-flex align-items-center justify-content-center">
           <img src="assets/images/icons/google-icon-48.png" alt="Google" class="social-logo">
           Google
         </button>
-        <button type="button"
+        <button type="button" (click)="showSocialMessage('Zalo')"
           class="btn btn-light social-btn flex-grow-1 d-flex align-items-center justify-content-center">
           <img src="assets/images/icons/zalo-icon-48.png" alt="Zalo" class="social-logo">
           Zalo
         </button>
       </div>
+        <label class="text-danger mb-2" *ngIf="isShowSocialMessage"> {{socialMessage}}</label>
       <div class="text-center mt-2">
         <span class="text-muted">Bạn chưa có tài khoản?</span>
         <a href="#" class="text-danger ms-1" (click)="openRegisterModal(); $event.preventDefault()">Đăng ký ngay</a>

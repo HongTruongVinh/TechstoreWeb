@@ -122,5 +122,12 @@ export class LoginComponent {
   close() {
     this.dialogRef.close(this.loginResult);
   }
+
+  isShowSocialMessage = false;
+  socialMessage = '';
+  showSocialMessage(social: string){
+    this.isShowSocialMessage = true;
+    this.socialMessage = "Chưa hỗ đăng nhập bằng " + social;
+  }
 }
 

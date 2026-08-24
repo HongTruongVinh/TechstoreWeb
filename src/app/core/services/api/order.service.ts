@@ -59,7 +59,7 @@ export class OrderService {
                     if (!apiUrl) {
                         throw new Error('Không tìm thấy URL API cho Tạo đơn hàng COD');
                     }
-                    return this.transferHttp.post(apiUrl, newOrder);
+                    return this.transferHttp.post(apiUrl, newOrder, this.idempotencyService.getOrderKey());
                 }),
                 map((res: ApiResponse<CreateCODOnlineOrderResult>) => res)
             );

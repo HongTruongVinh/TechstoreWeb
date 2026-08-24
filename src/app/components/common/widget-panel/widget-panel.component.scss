@@ -149,3 +149,8 @@
         transition: transform 0.2s ease;
     }
 }
+
+.warning-btn {
+    width: clamp(40px, 6vw, 60px);
+    height: clamp(40px, 6vw, 60px);
+}
