@@ -1,11 +1,19 @@
 <div class="widget-panel">
-    <div class="messenger-float" (click)="openMesage()">
-        <span class="tooltip">Thử nghiệm</span>
+    @if (systemConfigService.getSystemConfigsFromSession()?.isShowImportantNotification) {
+        <div class="messenger-float" (click)="openMesage()">
+            <span class="tooltip">Thử nghiệm</span>
+            <img class="warning-btn"
+                src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Warningfv3.png/500px-Warningfv3.png?utm_source=commons.wikimedia.org&amp;utm_campaign=imageinfo&amp;utm_content=thumbnail"
+                alt="Warning" />
+        </div>
+    }
+
+    <div class="messenger-float" (click)="openAiChat()">
+        <span class="tooltip">Trợ lý AI</span>
         <img class="warning-btn"
-          src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Warningfv3.png/500px-Warningfv3.png?utm_source=commons.wikimedia.org&amp;utm_campaign=imageinfo&amp;utm_content=thumbnail"
-          alt="Warning"
+          src="assets/images/icons/Chatbot.png"
+          alt="Chatbot"
         />
-        <!-- <p><a href="https://commons.wikimedia.org/wiki/File:Warningfv3.png#/media/File:Warningfv3.png"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Warningfv3.png/500px-Warningfv3.png?utm_source=commons.wikimedia.org&amp;utm_campaign=imageinfo&amp;utm_content=thumbnail" alt="File:Warningfv3.png" height="500" width="500"></a><br>By <a href="//commons.wikimedia.org/w/index.php?title=User:Filiepveiga&amp;action=edit&amp;redlink=1" class="new" title="User:Filiepveiga (page does not exist)">filipev</a> - <span class="int-own-work" lang="en">Own work</span>, <a href="https://creativecommons.org/licenses/by-sa/4.0" title="Creative Commons Attribution-Share Alike 4.0">CC BY-SA 4.0</a>, <a href="https://commons.wikimedia.org/w/index.php?curid=132731350">Link</a></p> -->
     </div>
 
     <div class="messenger-float" (click)="openMessenger()">

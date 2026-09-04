@@ -1,0 +1,85 @@
+<section class="ai-chat" aria-label="Tư vấn sản phẩm với Techie">
+	<header class="chat-header">
+		<div class="assistant-identity">
+			<!-- <div class="assistant-avatar" aria-hidden="true">✦</div> -->
+			 <img class="assistant-avatar" src="assets/images/icons/Chatbot.png" alt="Techie" />
+			<div>
+				<p class="eyebrow">TECHSTORE AI</p>
+				<h2>Trợ lý Techie</h2>
+				<div class="status-line"><span class="status-dot"></span> Đang trực tuyến</div>
+			</div>
+		</div>
+		<button type="button" class="icon-button" aria-label="Đóng hộp chat" title="Đóng hộp chat" (click)="closeChat()">×</button>
+	</header>
+
+	<div #chatContent class="chat-content">
+		<div class="welcome-note">
+			<span class="welcome-mark" aria-hidden="true">✦</span>
+			<div>
+				<strong>Chào bạn, mình là Techie!</strong>
+				<p>Mình có thể giúp bạn tìm món đồ công nghệ phù hợp với nhu cầu và ngân sách.</p>
+			</div>
+		</div>
+
+		<div class="message-list" aria-live="polite">
+			@for (message of chatbotService.getMessages(); track $index) {
+				<div class="message-row" [class.user-message]="message.sender === 'user'">
+					@if (message.sender === 'ai') {
+					<!-- <div class="message-avatar" aria-hidden="true">✦</div> -->
+					<img class="message-avatar" src="assets/images/icons/Chatbot.png" alt="Techie" />
+					}
+					<div class="message-bubble">
+						<p>{{ message.text }}</p>
+						@if (message.sender === 'ai' && message.recommendationProducts && message.recommendationProducts.length > 0) {
+							<div class="search-result">
+								<div class="result-heading">
+									<span class="result-icon" aria-hidden="true">✦</span>
+									<div>
+										<strong>Sản phẩm Techie đề xuất</strong>
+										<span>{{ message.recommendationProducts.length }} lựa chọn phù hợp</span>
+									</div>
+								</div>
+
+							@for (product of message.recommendationProducts; track product.productId) {
+								<button type="button" class="product-item" (click)="viewProductDetails(buildProductUrl(product.slug, product.productId))">
+									<div class="product-visual">
+										<span class="product-badge">Gợi ý</span>
+										<img [src]="product.imgUrl | fullImageUrl" [alt]="product.productName" class="product-image">
+									</div>
+									<div class="product-info">
+										<span class="product-name">{{ product.productName }}</span>
+										<strong class="product-price">{{ product.price | number:'1.0-0' }} đ</strong>
+										<span class="product-link">Xem chi tiết <span aria-hidden="true">→</span></span>
+									</div>
+								</button>
+								<p class="product-reason"><span aria-hidden="true">💡</span> {{ product.reason }}</p>
+							}
+						</div>
+						}
+						<time class="recommendation-time">{{ message.time }}</time>
+					</div>
+				</div>
+			}
+			@if (isTyping) {
+				<div class="message-row">
+					<!-- <div class="message-avatar" aria-hidden="true">✦</div> -->
+					<img class="message-avatar" src="assets/images/icons/Chatbot.png" alt="Techie" />
+					<div class="message-bubble typing" aria-label="Techie đang nhập"><span></span><span></span><span></span></div>
+				</div>
+			}
+		</div>
+
+		<div class="suggestion-list" aria-label="Gợi ý câu hỏi">
+			@for (suggestion of suggestions; track suggestion) {
+				<button type="button" class="suggestion-chip" (click)="sendMessage(suggestion)">{{ suggestion }}</button>
+			}
+		</div>
+	</div>
+
+	<form class="chat-composer" (ngSubmit)="sendMessage()">
+		<label class="visually-hidden" for="ai-chat-input">Nhập câu hỏi</label>
+		<input id="ai-chat-input" name="message" [(ngModel)]="draftMessage" autocomplete="off" placeholder="Hỏi Techie về sản phẩm..." [disabled]="isTyping">
+		<button type="submit" class="send-button" aria-label="Gửi tin nhắn" title="Gửi tin nhắn" [disabled]="!draftMessage.trim() || isTyping">➤</button>
+		<p class="composer-hint">Techie có thể mắc lỗi. Hãy kiểm tra lại thông tin sản phẩm.</p>
+	</form>
+</section>

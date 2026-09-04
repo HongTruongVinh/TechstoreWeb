@@ -7,6 +7,7 @@ import { ProductListItemModel } from "../../../models/models/product/product-lis
 import { ProductDetailsModel } from "../../../models/models/product/product-details";
 import { Category } from "../../../models/models/category/category.model";
 import { ApiResponse } from "../../../models/models/api-response.model";
+import { SystemConfigs } from "../../../models/models/home/system-configs.model";
 
 
 
@@ -46,20 +47,4 @@ export class HomeService {
                 map((res: ApiResponse<ProductListItemModel[]>) => res)
             );
     }
-
-    // getSamsungProducts() {
-    //     return this.linkSettingsService
-    //         .getResLinkSetting('Home', 'GetSamsungProducts')
-    //         .pipe(
-    //             switchMap((apiUrl) => {
-    //                 if (!apiUrl) {
-    //                     throw new Error('Không tìm thấy URL API cho Samsung Products');
-    //                 }
-
-    //                 return this.transferHttp.get(apiUrl);
-    //             }),
-    //             map((res: ApiResponseModel<ProductListItemModel[]>) => res)
-    //         );
-    // }
-
 }

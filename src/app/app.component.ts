@@ -13,6 +13,7 @@ import { LoadingComponent } from "./components/common/loading/loading.component"
 import { Store } from '@ngrx/store';
 import { loadCartItem } from './store/cart/cart.actions';
 import { TokenStorageService } from './core/services/ui/token-storage.service';
+import { SystemConfigService } from './core/services/api/system-config.service';
 
 @Component({
   selector: 'app-root',
@@ -43,12 +44,15 @@ export class AppComponent {
 
   device = inject(DeviceService);
   private store = inject(Store);
+  private systemConfigService = inject(SystemConfigService);
   tks = inject(TokenStorageService);
 
   constructor(public uiState: UiStateService) { }
 
   ngOnInit(): void {
     this.updateIsMobile();
+
+    this.systemConfigService.loadSystemConfigs();
 
      this.loadStore();
   }

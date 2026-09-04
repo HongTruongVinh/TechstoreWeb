@@ -13,7 +13,8 @@
   },
   "Home": {
     "GetFeatureProducts": "home/feature",
-    "GetProductsByBrandName": "home/products?brandName={0}&page={1}&pageSize={2}"
+    "GetProductsByBrandName": "home/products?brandName={0}&page={1}&pageSize={2}",
+    "GetSystemConfigs": "home/system-configs"
   },
   "Order": {
     "UserOrders": "orders?page={0}&pageSize={1}",
@@ -70,5 +71,8 @@
   },
   "MockingDataAPI": {
     "PaymentHub": "PaymentWebhook/verify-payment-of-snapshot"
+  },
+  "Chatbot": {
+    "SendMessage": "ai/recommend-products"
   }
 }
