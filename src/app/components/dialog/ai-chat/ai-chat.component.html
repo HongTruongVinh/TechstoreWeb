@@ -6,7 +6,12 @@
 			<div>
 				<p class="eyebrow">TECHSTORE AI</p>
 				<h2>Trợ lý Techie</h2>
-				<div class="status-line"><span class="status-dot"></span> Đang trực tuyến</div>
+				@if(systemConfigService.getSystemConfigsFromSession()?.isAiChatbotEnabled) {
+					<div class="status-line"><span class="status-dot"></span> Đang trực tuyến</div>
+				}
+				@else {
+					<div class="status-line"><span class="status-dot offline"></span> Đang ngoại tuyến để bảo trì</div>
+				}
 			</div>
 		</div>
 		<button type="button" class="icon-button" aria-label="Đóng hộp chat" title="Đóng hộp chat" (click)="closeChat()">×</button>

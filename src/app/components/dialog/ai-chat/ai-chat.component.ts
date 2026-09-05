@@ -5,6 +5,7 @@ import { ChatbotService } from '../../../core/services/api/chatbot.service';
 import { FullImageUrlPipe } from "../../../pipes/full-image-url.pipe";
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { SystemConfigService } from '../../../core/services/api/system-config.service';
 
 @Component({
   selector: 'app-ai-chat',
@@ -26,6 +27,7 @@ export class AiChatComponent implements AfterViewChecked {
 
   chatbotService = inject(ChatbotService);
   router = inject(Router);
+  systemConfigService = inject(SystemConfigService);
 
   ngAfterViewChecked(): void {
     if (!this.shouldScrollToBottom || !this.chatContent) return;
@@ -42,56 +44,62 @@ export class AiChatComponent implements AfterViewChecked {
     this.dialogRef.close();
   }
 
-  // sendMessage(message = this.draftMessage): void {
-  //   const text = message.trim();
-  //   if (!text || this.isTyping) return;
+  notificationMessage(message = this.draftMessage): void {
+    const text = message.trim();
+    if (!text || this.isTyping) return;
 
-  //   this.chatbotService.pushMessage({ sender: 'user', text, time: 'Vừa xong' });
-  //   this.draftMessage = '';
-  //   this.isTyping = true;
+    this.chatbotService.pushMessage({ sender: 'user', text, time: 'Vừa xong' });
+    this.draftMessage = '';
+    this.isTyping = true;
 
-  //   window.setTimeout(() => {
-  //     this.chatbotService.pushMessage({ sender: 'ai', text: 'Mình đã ghi nhận nhu cầu của bạn. Khi kết nối Gemini, Techie sẽ phân tích và đề xuất những sản phẩm phù hợp nhất.', time: 'Vừa xong' });
-  //     this.isTyping = false;
-  //   }, 700);
-  // }
+    window.setTimeout(() => {
+      this.chatbotService.pushMessage({ sender: 'ai', text: 'AI đang được bảo trì, vui lòng quay lại sau.', time: 'Vừa xong' });
+      this.isTyping = false;
+    }, 700);
+  }
 
   sendMessage(message = this.draftMessage): void {
     const text = message.trim();
     if (!text || this.isTyping) return;
 
-    this.shouldScrollToBottom = true;
-    this.chatbotService.pushMessage({ sender: 'user', text, time: 'Vừa xong' });
-    this.draftMessage = '';
-    this.isTyping = true;
+    if (this.systemConfigService.getSystemConfigsFromSession()?.isAiChatbotEnabled) {
 
-    const aiChatRequest = {
-      message: message,
-    };
+      this.shouldScrollToBottom = true;
+      this.chatbotService.pushMessage({ sender: 'user', text, time: 'Vừa xong' });
+      this.draftMessage = '';
+      this.isTyping = true;
 
-    this.chatbotService.sendMessageAsyns(aiChatRequest).subscribe({
-      next: (res) => {
-        if (res && res.data) {
-          var aiMessage: any = { sender: 'ai', text: res.data.summary, time: 'Vừa xong' };
-          if (res.data.recommendations && res.data.recommendations.length > 0) {
-            aiMessage.recommendationProducts = res.data.recommendations;
+      const aiChatRequest = {
+        message: message,
+      };
+
+      this.chatbotService.sendMessageAsyns(aiChatRequest).subscribe({
+        next: (res) => {
+          if (res && res.data) {
+            var aiMessage: any = { sender: 'ai', text: res.data.summary, time: 'Vừa xong' };
+            if (res.data.recommendations && res.data.recommendations.length > 0) {
+              aiMessage.recommendationProducts = res.data.recommendations;
+            }
+
+            this.chatbotService.pushMessage(aiMessage);
+
+          } else {
+            this.chatbotService.pushMessage({ sender: 'ai', text: 'Xin lỗi, mình không tìm thấy sản phẩm phù hợp với nhu cầu của bạn.', time: 'Vừa xong' });
           }
-
-          this.chatbotService.pushMessage(aiMessage);
-
-        } else {
-          this.chatbotService.pushMessage({ sender: 'ai', text: 'Xin lỗi, mình không tìm thấy sản phẩm phù hợp với nhu cầu của bạn.', time: 'Vừa xong' });
+          this.shouldScrollToBottom = true;
+          this.isTyping = false;
+        },
+        error: (err) => {
+          console.error('Lỗi khi gửi tin nhắn đến API Chatbot:', err);
+          this.chatbotService.pushMessage({ sender: 'ai', text: 'Xin lỗi, đã xảy ra lỗi khi kết nối với dịch vụ Chatbot.', time: 'Vừa xong' });
+          this.shouldScrollToBottom = true;
+          this.isTyping = false;
         }
-        this.shouldScrollToBottom = true;
-        this.isTyping = false;
-      },
-      error: (err) => {
-        console.error('Lỗi khi gửi tin nhắn đến API Chatbot:', err);
-        this.chatbotService.pushMessage({ sender: 'ai', text: 'Xin lỗi, đã xảy ra lỗi khi kết nối với dịch vụ Chatbot.', time: 'Vừa xong' });
-        this.shouldScrollToBottom = true;
-        this.isTyping = false;
-      }
-    });
+      });
+    }
+    else {
+      this.notificationMessage(message);
+    }
   }
 
   viewProductDetails(slugWithId: string) {
