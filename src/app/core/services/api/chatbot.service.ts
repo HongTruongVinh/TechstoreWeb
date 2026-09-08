@@ -3,12 +3,14 @@ import { TransferHttpService } from "../../transfer-http/transfer-http.service";
 import { map, switchMap } from "rxjs";
 import { ApiResponse } from "../../../models/models/api-response.model";
 import { LinkSettingsService } from "./link-settings.service";
-import { ProductRecommendationResponse } from "../../../models/models/chatbot/product-recommendation.model";
+import { AiChatResponse } from "../../../models/models/chatbot/product-recommendation.model";
 import { ChatMessage } from "../../../models/models/chatbot/chat-message.model";
 import { AiChatRequest } from "../../../models/models/chatbot/ai-chat-request.model";
+import { TokenStorageService } from "../ui/token-storage.service";
 
 
 const MESSAGES_KEY = 'messages';
+const CONVERSATION_ID = 'conversation';
 @Injectable({ providedIn: 'root' })
 export class ChatbotService {
 
@@ -19,9 +21,12 @@ export class ChatbotService {
         // { sender: 'ai', text: 'Tuyệt! Bạn ưu tiên hiệu năng, thời lượng pin hay thiết kế gọn nhẹ? Ngân sách dự kiến của bạn là bao nhiêu?', time: 'Vừa xong' }
     ];
 
+    private conversationId: string | null = null;
+
     constructor(
         private transferHttp: TransferHttpService,
-        private linkSettingsService: LinkSettingsService
+        private linkSettingsService: LinkSettingsService,
+        private tks: TokenStorageService
     ) { }
 
     sendMessageAsyns(message: AiChatRequest) {
@@ -33,9 +38,9 @@ export class ChatbotService {
                         throw new Error('Không tìm thấy URL API cho Chatbot');
                     }
 
-                    return this.transferHttp.post(apiUrl, message);
+                    return this.transferHttp.post(apiUrl, message, undefined, this.tks.getGuestId() || undefined);
                 }),
-                map((res: ApiResponse<ProductRecommendationResponse>) => res)
+                map((res: ApiResponse<AiChatResponse>) => res)
             );
     }
 
@@ -63,5 +68,22 @@ export class ChatbotService {
 
     clearMessages(): void {
         sessionStorage.removeItem(MESSAGES_KEY);
+    }
+
+    setConversationId(conversationId: string): void {
+        this.conversationId = conversationId;
+        sessionStorage.setItem(CONVERSATION_ID, conversationId);
+    }
+
+    getConversationId(): string | null {
+        if (this.conversationId) {
+            return this.conversationId;
+        }
+        const storedId = sessionStorage.getItem(CONVERSATION_ID);
+        if (storedId) {
+            this.conversationId = storedId;
+            return storedId;
+        }
+        return null;
     }
 }

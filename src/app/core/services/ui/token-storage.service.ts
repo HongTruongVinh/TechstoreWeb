@@ -3,18 +3,19 @@ import { User } from '../../../models/models/user/user.model';
 
 const TOKEN_KEY = 'auth-token';
 const USER_KEY = 'currentUser';
+const GUEST_KEY = 'currentGuest';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TokenStorageService {
   isLoggedIn = signal(false);
-  
+
   constructor() {
     if (this.getToken() != null) {
       this.isLoggedIn.set(true);
     }
-   }
+  }
 
   signOut(): void {
     sessionStorage.clear();
@@ -38,15 +39,33 @@ export class TokenStorageService {
   }
 
   public getUser(): User | null {
-  const userJson = sessionStorage.getItem(USER_KEY);
-  if (userJson) {
-    try {
-      return JSON.parse(userJson) as User;
-    } catch (e) {
-      console.error('Lỗi khi parse user từ sessionStorage:', e);
-      return null;
+    const userJson = sessionStorage.getItem(USER_KEY);
+    if (userJson) {
+      try {
+        return JSON.parse(userJson) as User;
+      } catch (e) {
+        console.error('Lỗi khi parse user từ sessionStorage:', e);
+        return null;
+      }
     }
+    return null;
   }
-  return null;
-}
+
+  public saveGuestId(guest: string): void {
+    sessionStorage.removeItem(GUEST_KEY);
+    sessionStorage.setItem(GUEST_KEY, JSON.stringify(guest));
+  }
+
+  public getGuestId(): string | null {
+    const guestJson = sessionStorage.getItem(GUEST_KEY);
+    if (guestJson) {
+      try {
+        return JSON.parse(guestJson) as string;
+      } catch (e) {
+        console.error('Lỗi khi parse guestId từ sessionStorage:', e);
+        return null;
+      }
+    }
+    return null;
+  }
 }

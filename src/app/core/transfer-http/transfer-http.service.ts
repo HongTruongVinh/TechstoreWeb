@@ -23,7 +23,7 @@ export class TransferHttpService {
   }
 
   get<T>(url: string, contentType?: EContentType) {
-    return this.mapshare(this.http.get<T>(this.Host + url, this.buildHeader(undefined, contentType)));
+    return this.mapshare(this.http.get<T>(this.Host + url, this.buildHeader(undefined, undefined, contentType)));
   }
 
   // getFile(url: string, contentType?: EContentType) {
@@ -52,25 +52,25 @@ export class TransferHttpService {
   //     .pipe(map((res: any) => res));
   // }
 
-  post(url: string, body: any, idempotencyKey?: string, contentType?: EContentType) {
-    return this.mapshare(this.http.post(this.Host + url, body, this.buildHeader(idempotencyKey, contentType)));
+  post(url: string, body: any, idempotencyKey?: string, guestId?: string, contentType?: EContentType) {
+    return this.mapshare(this.http.post(this.Host + url, body, this.buildHeader(idempotencyKey, guestId, contentType)));
   }
 
   // postUpload(url: string, body: FormData) {
   //   return (this.mapshare(this.http.post(this.Host + url, body, this.jwtUploadFile())));
   // }
 
-  put(url: string, body: any, idempotencyKey?: string, contentType?: EContentType) {
-    return this.mapshare(this.http.put(this.Host + url, body, this.buildHeader(idempotencyKey, contentType)));
+  put(url: string, body: any, idempotencyKey?: string, guestId?: string, contentType?: EContentType) {
+    return this.mapshare(this.http.put(this.Host + url, body, this.buildHeader(idempotencyKey, guestId, contentType)));
   }
 
-  putUrl(url: string, idempotencyKey?: string, contentType?: EContentType) {
-    const options = this.buildHeader(idempotencyKey, contentType);
+  putUrl(url: string, idempotencyKey?: string, guestId?: string, contentType?: EContentType) {
+    const options = this.buildHeader(idempotencyKey, guestId, contentType);
     return this.mapshare(this.http.put(this.Host + url, null, options));
   }
 
-  delete(url: string, idempotencyKey?: string, contentType?: EContentType) {
-    return this.mapshare(this.http.delete(this.Host + url, this.buildHeader(idempotencyKey, contentType)));
+  delete(url: string, idempotencyKey?: string, guestId?: string, contentType?: EContentType) {
+    return this.mapshare(this.http.delete(this.Host + url, this.buildHeader(idempotencyKey, guestId, contentType)));
   }
 
   private mapshare(data: Observable<any>) {
@@ -172,7 +172,7 @@ export class TransferHttpService {
       ?? null;
   }
 
-  private buildHeader(idempotencyKey?: string, contentType?: EContentType) {
+  private buildHeader(idempotencyKey?: string, guestId?: string, contentType?: EContentType) {
     // create authorization header with jwt token
     const sContent: string = this.contentType(contentType === undefined ? EContentType.json : contentType);
     let httpHeaders = new HttpHeaders({
@@ -195,6 +195,10 @@ export class TransferHttpService {
 
     if (idempotencyKey) {
       httpHeaders = httpHeaders.set('Idempotency-Key', idempotencyKey);
+    }
+
+    if (guestId) {
+      httpHeaders = httpHeaders.set('Guest-Id', guestId);
     }
 
     return { headers: httpHeaders };

@@ -6,6 +6,7 @@ import { FullImageUrlPipe } from "../../../pipes/full-image-url.pipe";
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { SystemConfigService } from '../../../core/services/api/system-config.service';
+import { TokenStorageService } from '../../../core/services/ui/token-storage.service';
 
 @Component({
   selector: 'app-ai-chat',
@@ -28,6 +29,7 @@ export class AiChatComponent implements AfterViewChecked {
   chatbotService = inject(ChatbotService);
   router = inject(Router);
   systemConfigService = inject(SystemConfigService);
+  tks = inject(TokenStorageService);
 
   ngAfterViewChecked(): void {
     if (!this.shouldScrollToBottom || !this.chatContent) return;
@@ -71,14 +73,23 @@ export class AiChatComponent implements AfterViewChecked {
 
       const aiChatRequest = {
         message: message,
+        conversationId: this.chatbotService.getConversationId() || undefined,
       };
 
       this.chatbotService.sendMessageAsyns(aiChatRequest).subscribe({
         next: (res) => {
           if (res && res.data) {
-            var aiMessage: any = { sender: 'ai', text: res.data.summary, time: 'Vừa xong' };
+            var aiMessage: any = { sender: 'ai', text: res.data.content, time: 'Vừa xong' };
             if (res.data.recommendations && res.data.recommendations.length > 0) {
               aiMessage.recommendationProducts = res.data.recommendations;
+            }
+
+            if(res.data.guestId != null) {
+              this.tks.saveGuestId(res.data.guestId);
+            }
+
+            if (res.data.conversationId && this.chatbotService.getConversationId() === null) {
+              this.chatbotService.setConversationId(res.data.conversationId);
             }
 
             this.chatbotService.pushMessage(aiMessage);

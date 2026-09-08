@@ -8,7 +8,9 @@ export interface ProductRecommendation {
     reason: string;
 }
 
-export interface ProductRecommendationResponse {
-    summary: string;
+export interface AiChatResponse {
+    content: string;
+    conversationId: string;
+    guestId?: string;
     recommendations: ProductRecommendation[];
 }
