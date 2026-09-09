@@ -83,7 +83,7 @@
 
 	<form class="chat-composer" (ngSubmit)="sendMessage()">
 		<label class="visually-hidden" for="ai-chat-input">Nhập câu hỏi</label>
-		<input id="ai-chat-input" name="message" [(ngModel)]="draftMessage" autocomplete="off" placeholder="Hỏi Techie về sản phẩm..." [disabled]="isTyping">
+		<textarea #messageInput id="ai-chat-input" name="message" [(ngModel)]="draftMessage" rows="1" autocomplete="off" placeholder="Hỏi Techie về sản phẩm..." [disabled]="isTyping" (input)="adjustInputHeight()"></textarea>
 		<button type="submit" class="send-button" aria-label="Gửi tin nhắn" title="Gửi tin nhắn" [disabled]="!draftMessage.trim() || isTyping">➤</button>
 		<p class="composer-hint">Techie có thể mắc lỗi. Hãy kiểm tra lại thông tin sản phẩm.</p>
 	</form>

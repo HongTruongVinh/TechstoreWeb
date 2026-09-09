@@ -8,12 +8,20 @@
         </div>
     }
 
-    <div class="messenger-float" (click)="openAiChat()">
-        <span class="tooltip">Trợ lý AI</span>
-        <img class="warning-btn"
-          src="assets/images/icons/Chatbot.png"
-          alt="Chatbot"
-        />
+    <div class="chatbot-widget">
+        <div class="messenger-float" (click)="openAiChat()">
+            <span class="tooltip">Trợ lý AI</span>
+            <img class="warning-btn"
+              src="assets/images/icons/Chatbot.png"
+              alt="Chatbot"
+            />
+        </div>
+
+        @if (isChatMessageVisible) {
+            <div class="chat-message" aria-live="polite">
+                Bạn muốn tìm laptop hay điện thoại? Tôi sẽ giúp bạn.
+            </div>
+        }
     </div>
 
     <div class="messenger-float" (click)="openMessenger()">

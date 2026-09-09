@@ -1,4 +1,4 @@
-import { Component, HostListener, inject } from '@angular/core';
+import { Component, HostListener, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import Swal from "sweetalert2";
 import { Dialog, DialogRef } from '@angular/cdk/dialog';
@@ -12,11 +12,13 @@ import { SystemConfigService } from '../../../core/services/api/system-config.se
   templateUrl: './widget-panel.component.html',
   styleUrl: './widget-panel.component.scss'
 })
-export class WidgetPanelComponent {
+export class WidgetPanelComponent implements OnDestroy {
   isVisibleScrollTop = false;
+  isChatMessageVisible = false;
   phoneNumber = '0393574180';
 
   private aiChatDialogRef?: DialogRef<unknown, AiChatComponent>;
+  private chatMessageTimer?: ReturnType<typeof setTimeout>;
   private dialog = inject(Dialog);
   systemConfigService = inject(SystemConfigService);
 
@@ -24,7 +26,24 @@ export class WidgetPanelComponent {
   ) { }
 
   ngOnInit(): void {
+    this.scheduleChatMessage();
+  }
 
+  ngOnDestroy(): void {
+    if (this.chatMessageTimer) {
+      clearTimeout(this.chatMessageTimer);
+    }
+  }
+
+  private scheduleChatMessage(delay = 3000): void {
+    this.chatMessageTimer = setTimeout(() => {
+      this.isChatMessageVisible = true;
+
+      this.chatMessageTimer = setTimeout(() => {
+        this.isChatMessageVisible = false;
+        this.scheduleChatMessage(15000);
+      }, 6000);
+    }, delay);
   }
 
   openMesage() {
@@ -40,19 +59,24 @@ export class WidgetPanelComponent {
 
   openAiChat() {
     if (this.aiChatDialogRef) {
-          return; // dialog đang mở, không mở thêm
-        }
-    
-        this.aiChatDialogRef = this.dialog.open(
-          AiChatComponent,
-          {
-            id: 'ai-chat-modal',
-          }
-        );
-    
-        this.aiChatDialogRef.closed.subscribe(result => {
-          this.aiChatDialogRef = undefined; // reset dialog ref khi đóng
-        });
+      return; // dialog đang mở, không mở thêm
+    }
+
+    if (this.chatMessageTimer) {
+      this.isChatMessageVisible = false;
+      clearTimeout(this.chatMessageTimer);
+    }
+
+    this.aiChatDialogRef = this.dialog.open(
+      AiChatComponent,
+      {
+        id: 'ai-chat-modal',
+      }
+    );
+
+    this.aiChatDialogRef.closed.subscribe(result => {
+      this.aiChatDialogRef = undefined; // reset dialog ref khi đóng
+    });
   }
 
   openMessenger() {

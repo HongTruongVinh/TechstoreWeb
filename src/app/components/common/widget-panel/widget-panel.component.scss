@@ -13,6 +13,40 @@
     overflow: visible;
 }
 
+.chatbot-widget {
+    position: relative;
+}
+
+.chat-message {
+    position: absolute;
+    right: calc(100% + 12px);
+    top: 50%;
+    width: max-content;
+    max-width: min(280px, 70vw);
+    transform: translateY(-50%);
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: #fff;
+    color: #263238;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    line-height: 1.4;
+    pointer-events: none;
+    animation: chatMessageIn 0.3s ease-out;
+}
+
+@keyframes chatMessageIn {
+    from {
+        opacity: 0;
+        transform: translate(8px, -50%);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(0, -50%);
+    }
+}
+
 //mesenger, zalo chat widget styles
 .messenger-float,
 .zalo-float {

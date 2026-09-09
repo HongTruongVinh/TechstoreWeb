@@ -1,5 +1,5 @@
 import { DialogRef } from '@angular/cdk/dialog';
-import { AfterViewChecked, Component, ElementRef, EventEmitter, inject, Output, ViewChild } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, Component, ElementRef, EventEmitter, inject, Output, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ChatbotService } from '../../../core/services/api/chatbot.service';
 import { FullImageUrlPipe } from "../../../pipes/full-image-url.pipe";
@@ -15,9 +15,10 @@ import { TokenStorageService } from '../../../core/services/ui/token-storage.ser
   templateUrl: './ai-chat.component.html',
   styleUrl: './ai-chat.component.scss'
 })
-export class AiChatComponent implements AfterViewChecked {
+export class AiChatComponent implements AfterViewChecked, AfterViewInit {
   @Output() closed = new EventEmitter<void>();
   @ViewChild('chatContent') private chatContent?: ElementRef<HTMLDivElement>;
+  @ViewChild('messageInput') private messageInput?: ElementRef<HTMLTextAreaElement>;
   private dialogRef = inject(DialogRef);
   private shouldScrollToBottom = true;
 
@@ -41,6 +42,20 @@ export class AiChatComponent implements AfterViewChecked {
     });
   }
 
+  ngAfterViewInit(): void {
+    this.adjustInputHeight();
+  }
+
+  adjustInputHeight(): void {
+    const input = this.messageInput?.nativeElement;
+    if (!input) return;
+
+    input.style.height = '44px';
+    const maxHeight = 120;
+    input.style.height = `${Math.min(input.scrollHeight, maxHeight)}px`;
+    input.style.overflowY = input.scrollHeight > maxHeight ? 'auto' : 'hidden';
+  }
+
   closeChat(): void {
     this.closed.emit();
     this.dialogRef.close();
@@ -52,6 +67,7 @@ export class AiChatComponent implements AfterViewChecked {
 
     this.chatbotService.pushMessage({ sender: 'user', text, time: 'Vừa xong' });
     this.draftMessage = '';
+    this.adjustInputHeight();
     this.isTyping = true;
 
     window.setTimeout(() => {
@@ -69,6 +85,7 @@ export class AiChatComponent implements AfterViewChecked {
       this.shouldScrollToBottom = true;
       this.chatbotService.pushMessage({ sender: 'user', text, time: 'Vừa xong' });
       this.draftMessage = '';
+      this.adjustInputHeight();
       this.isTyping = true;
 
       const aiChatRequest = {
