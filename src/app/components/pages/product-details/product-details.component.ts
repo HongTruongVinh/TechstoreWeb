@@ -281,6 +281,7 @@ export class ProductDetailsComponent {
   }
 
   showImageModal = false;
+  showTechnicalSpecsModal = false;
   currentImage = '';
   selectedImageIndex = 0;
 
@@ -294,10 +295,20 @@ export class ProductDetailsComponent {
     this.showImageModal = false;
   }
 
+  showTechnicalSpecs() {
+    this.showTechnicalSpecsModal = true;
+  }
+
+  closeTechnicalSpecs() {
+    this.showTechnicalSpecsModal = false;
+  }
+
   @HostListener('document:keydown.escape')
   closeImageModalOnEscape() {
     if (this.showImageModal) {
       this.closeImageModal();
+    } else if (this.showTechnicalSpecsModal) {
+      this.closeTechnicalSpecs();
     }
   }
 

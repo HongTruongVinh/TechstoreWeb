@@ -50,6 +50,21 @@ export interface ProductVariantModel {
     saleEnd?: Date;
 
     options: ProductVariantOptionModel[];
+    
+    // Performance
+    operatingSystem?: string;
+    cpu?: string;
+    gpu?: string;
+    ram?: string;
+    storage?: string;
+    availableStorage?: string;
+
+    // Battery
+    batteryCapacity?: string;
+    batteryType?: string;
+    chargingWattage?: string;
+    batteryEngine?: string;
+    
 }
 
 export interface ProductVariantOptionModel{
@@ -61,38 +76,4 @@ export interface ProductVariantOptionModel{
     stock: number;
     price?: number; 
 }
-
-// export interface ProductDetailsModel {
-//     productId: string;
-//     name: string;
-//     shortDescription: string;
-
-//     description: string;
-//     mainImageUrl: string;
-//     galleryImageUrls?: string[];
-
-//     stock: number;
-//     price: number;
-//     soldCount: number;
-
-//     salePrice: number;
-//     saleStart?: Date;
-//     saleEnd?: Date;
-
-//     catagoryId: string;
-//     categoryName: string;
-
-//     brandId: string;
-//     brandName: string;
-
-//     ratedCount: number;
-//     averageRating: number;
-
-//     slug:string;
-//     tags?: string[];
-    
-//     isOnSale: boolean;
-//     isFeatured: boolean;
-// }
-
 

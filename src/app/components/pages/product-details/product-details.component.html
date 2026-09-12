@@ -215,7 +215,14 @@
                     <div class="card">
                         <div class="card-body p-4">
                             <div>
-                                <h5 class="fs-md mb-3">Chi tiết sản phẩm</h5>
+                                <div class="description-header">
+                                    <h5 class="description-title mb-0">Mô tả sản phẩm</h5>
+                                    <button type="button" class="technical-specs-button"
+                                        (click)="showTechnicalSpecs()">
+                                        <i class="bi bi-sliders2-vertical" aria-hidden="true"></i>
+                                        <span>Thông số kỹ thuật</span>
+                                    </button>
+                                </div>
                                 <div class="mb-2 description" [innerHTML]="selectedVariant.description"></div>
                                 @if(product.description.length > 100) {
                                 <div class="mb-2 description" [innerHTML]="product.description"></div>
@@ -320,3 +327,73 @@
 @if (showImageModal) {
 <div class="modal-backdrop fade show"></div>
 }
+
+@if (showTechnicalSpecsModal && selectedVariant) {
+<div class="modal fade technical-specs-modal show" tabindex="-1" role="dialog"
+    aria-modal="true" aria-labelledby="technical-specs-title"
+    (click)="closeTechnicalSpecs()">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document"
+        (click)="$event.stopPropagation()">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <p class="modal-eyebrow mb-1">Thông số phiên bản</p>
+                    <h5 class="modal-title mb-0" id="technical-specs-title">{{ selectedVariant.name }}</h5>
+                </div>
+                <button type="button" class="btn-close" aria-label="Đóng thông số kỹ thuật"
+                    (click)="closeTechnicalSpecs()"></button>
+            </div>
+            <div class="modal-body">
+
+                <div class="spec-section">
+                    <h6>Hiệu năng</h6>
+                    <dl class="spec-list">
+                        @if (selectedVariant.operatingSystem) {
+                        <div><dt>Hệ điều hành</dt><dd>{{ selectedVariant.operatingSystem }}</dd></div>
+                        }
+                        @if (selectedVariant.cpu) {
+                        <div><dt>CPU</dt><dd>{{ selectedVariant.cpu }}</dd></div>
+                        }
+                        @if (selectedVariant.gpu) {
+                        <div><dt>GPU</dt><dd>{{ selectedVariant.gpu }}</dd></div>
+                        }
+                        @if (selectedVariant.ram) {
+                        <div><dt>RAM</dt><dd>{{ selectedVariant.ram }}</dd></div>
+                        }
+                        @if (selectedVariant.storage) {
+                        <div><dt>Bộ nhớ trong</dt><dd>{{ selectedVariant.storage }}</dd></div>
+                        }
+                        @if (selectedVariant.availableStorage) {
+                        <div><dt>Dung lượng khả dụng</dt><dd>{{ selectedVariant.availableStorage }}</dd></div>
+                        }
+                    </dl>
+                </div>
+
+                @if (selectedVariant.batteryCapacity || selectedVariant.batteryType ||
+                selectedVariant.chargingWattage || selectedVariant.batteryEngine) {
+                <div class="spec-section">
+                    <h6>Pin và sạc</h6>
+                    <dl class="spec-list">
+                        @if (selectedVariant.batteryCapacity) {
+                        <div><dt>Dung lượng pin</dt><dd>{{ selectedVariant.batteryCapacity }}</dd></div>
+                        }
+                        @if (selectedVariant.batteryType) {
+                        <div><dt>Loại pin</dt><dd>{{ selectedVariant.batteryType }}</dd></div>
+                        }
+                        @if (selectedVariant.chargingWattage) {
+                        <div><dt>Công suất sạc</dt><dd>{{ selectedVariant.chargingWattage }}</dd></div>
+                        }
+                        @if (selectedVariant.batteryEngine) {
+                        <div><dt>Công nghệ pin</dt><dd>{{ selectedVariant.batteryEngine }}</dd></div>
+                        }
+                    </dl>
+                </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-backdrop fade show" (click)="closeTechnicalSpecs()"></div>
+}
+
+
