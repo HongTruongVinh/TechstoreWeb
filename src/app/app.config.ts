@@ -20,6 +20,8 @@ import { cartItemReducer } from './store/cart/cart.reducer';
 import { CartItemEffects } from './store/cart/cart.effects';
 import { CategoryService } from './core/services/api/category.service';
 import { BrandService } from './core/services/api/brand.service';
+import { authInterceptor } from './core/interceptors/auth.interceptor';
+import { refreshTokenInterceptor } from './core/interceptors/refresh-token.interceptor';
 
 const store = {
   // categories: categoryReducer,
@@ -55,9 +57,11 @@ export const appConfig: ApplicationConfig = {
     ),
 
     provideHttpClient(
-      // withInterceptors([
-      //   loadingInterceptor
-      // ])
+      withInterceptors([
+        // loadingInterceptor,
+        authInterceptor,
+        refreshTokenInterceptor
+      ])
     ),
 
     provideStore(store),

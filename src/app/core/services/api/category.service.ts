@@ -1,13 +1,11 @@
 import { Injectable } from "@angular/core";
 import { TransferHttpService } from "../../transfer-http/transfer-http.service";
-import { firstValueFrom, map, switchMap } from "rxjs";
+import { firstValueFrom, map } from "rxjs";
 import { ApiResponse } from "../../../models/models/api-response.model";
-import { LinkSettingsService } from "./link-settings.service";
 
 import { Category } from "../../../models/models/category/category.model";
-import { EErrorType } from "../../../models/enum/etype_project.enum";
 import { PriceFilter } from "../../../models/models/product/price-fillter.model";
-
+import { apiEndpoints } from '../../constants/api-endpoints'
 
 @Injectable({ providedIn: 'root' })
 export class CategoryService {
@@ -16,21 +14,13 @@ export class CategoryService {
     private priceFilters: PriceFilter[] = [];
 
     constructor(
-        private transferHttp: TransferHttpService,
-        private linkSettingsService: LinkSettingsService
+        private transferHttp: TransferHttpService
     ) { }
 
     fetchCategories() {
-        return this.linkSettingsService
-            .getResLinkSetting('Category', 'GetCategories')
+        return this.transferHttp
+            .get(apiEndpoints.category.getCategories)
             .pipe(
-                switchMap((apiUrl) => {
-                    if (!apiUrl) {
-                        throw new Error('Không tìm thấy URL API cho Category');
-                    }
-
-                    return this.transferHttp.get(apiUrl);
-                }),
                 map((res: ApiResponse<Category[]>) => res)
             );
     }

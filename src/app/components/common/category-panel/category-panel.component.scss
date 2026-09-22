@@ -101,6 +101,12 @@ $background-color: #5983de;
         font-size: 1.2rem;
         cursor: pointer;
         color: #000000;
+
+        .panel-title{
+          color: inherit;
+          text-decoration: none;
+        }
+
       }
 
       .filter-section {
@@ -140,6 +146,10 @@ $background-color: #5983de;
           cursor: pointer;
           transition: all 0.2s ease;
           border: 1px solid transparent;
+
+          color: inherit;
+          text-decoration: none;
+
 
           &:hover {
             background: rgba(120, 103, 103, 0.15);
@@ -283,6 +293,11 @@ $background-color: #5983de;
 
         .brand-item {
           cursor: pointer;
+          color: inherit;
+          text-decoration: none;
+          color: inherit;
+          text-decoration: none;
+
 
           .brand-logo {
             width: 40px;

@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 import { TransferHttpService } from "../../transfer-http/transfer-http.service";
-import { map, switchMap } from "rxjs";
+import { map } from "rxjs";
 import { ApiResponse } from "../../../models/models/api-response.model";
-import { LinkSettingsService } from "./link-settings.service";
+import { apiEndpoints } from '../../constants/api-endpoints'
 import { AiChatResponse } from "../../../models/models/chatbot/product-recommendation.model";
 import { ChatMessage } from "../../../models/models/chatbot/chat-message.model";
 import { AiChatRequest } from "../../../models/models/chatbot/ai-chat-request.model";
@@ -25,34 +25,22 @@ export class ChatbotService {
 
     constructor(
         private transferHttp: TransferHttpService,
-        private linkSettingsService: LinkSettingsService,
         private tks: TokenStorageService
     ) { }
 
     sendMessageAsyns(message: AiChatRequest) {
-        return this.linkSettingsService
-            .getResLinkSetting('Chatbot', 'SendMessage')
-            .pipe(
-                switchMap((apiUrl) => {
-                    if (!apiUrl) {
-                        throw new Error('Không tìm thấy URL API cho Chatbot');
-                    }
-
-                    return this.transferHttp.post(apiUrl, message, undefined, this.tks.getGuestId() || undefined);
-                }),
-                map((res: ApiResponse<AiChatResponse>) => res)
-            );
+        return this.transferHttp
+            .post(apiEndpoints.chatbot.sendMessage, message, { guestId: this.tks.getGuestId() || undefined })
+            .pipe(map((res: ApiResponse<AiChatResponse>) => res))
     }
 
     pushMessage(message: ChatMessage): void {
-        // this.messages.push(message);
         const messages = this.getMessages() || [];
         messages.push(message);
         sessionStorage.setItem(MESSAGES_KEY, JSON.stringify(messages));
     }
 
     getMessages(): ChatMessage[] {
-        // return this.messages;
         const messageJson = sessionStorage.getItem(MESSAGES_KEY);
         if (messageJson) {
             try {

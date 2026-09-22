@@ -12,7 +12,7 @@ export class TokenStorageService {
   isLoggedIn = signal(false);
 
   constructor() {
-    if (this.getToken() != null) {
+    if (this.getUser() != null) {
       this.isLoggedIn.set(true);
     }
   }

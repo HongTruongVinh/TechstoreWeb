@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 import { ConfigForApp } from '../../library/share-function/config-app';
 import { EContentType } from '../../library/enum/econtenttype';
 import { TokenStorageService } from '../services/ui/token-storage.service';
+import { HttpOptions } from './http-options';
 
 @Injectable({
   providedIn: 'root'
@@ -16,62 +17,99 @@ export class TransferHttpService {
   private readonly Host: string;
   private baseUrl = environment.baseUrl;
 
-  constructor(private http: HttpClient,
-    private tokenStorageService: TokenStorageService,
-    private router: Router,) {
+  constructor(
+    private http: HttpClient
+  ) {
     this.Host = this.baseUrl;
   }
 
-  get<T>(url: string, contentType?: EContentType) {
-    return this.mapshare(this.http.get<T>(this.Host + url, this.buildHeader(undefined, undefined, contentType)));
+
+  get<T>(
+    url: string,
+    options: HttpOptions = {}
+  ) {
+    return this.mapshare(
+      this.http.get<T>(
+        this.Host + url,
+        this.buildHeader(
+          options.idempotencyKey,
+          options.guestId,
+          options.contentType
+        )
+      )
+    );
   }
 
-  // getFile(url: string, contentType?: EContentType) {
-  //   // tslint:disable-next-line: prefer-const
-  //   let sContent: string = this.contentType(contentType === undefined ? EContentType.json : contentType);
-  //   let httpHeaders = new HttpHeaders({
-  //     'Content-Type': sContent
-  //   });
-
-  //   if (LocalStorageConfig.GetUser() != null) {
-  //     // tslint:disable-next-line: prefer-const
-  //     let currentUser = LocalStorageConfig.GetUser();
-  //     const returnToken = currentUser.Data;
-  //     if (currentUser && returnToken.Token) {
-  //       httpHeaders = new HttpHeaders(
-  //         {
-  //           // tslint:disable-next-line: object-literal-key-quotes
-  //           'Authorization': 'Bearer ' + returnToken.Token,
-  //           'Content-Type': sContent
-  //         },
-  //       );
-  //     }
-  //   }
-  //   // return this.mapshare(this.http.get(this.Host + url, { observe:'response', responseType: 'blob' }));
-  //   return this.http.get(this.Host + url, { headers: httpHeaders, observe: 'response', responseType: 'blob' })
-  //     .pipe(map((res: any) => res));
-  // }
-
-  post(url: string, body: any, idempotencyKey?: string, guestId?: string, contentType?: EContentType) {
-    return this.mapshare(this.http.post(this.Host + url, body, this.buildHeader(idempotencyKey, guestId, contentType)));
+  post(
+    url: string,
+    body: any,
+    options: HttpOptions = {}
+  ) {
+    return this.mapshare(
+      this.http.post(
+        this.Host + url,
+        body,
+        this.buildHeader(
+          options.idempotencyKey,
+          options.guestId,
+          options.contentType
+        )
+      )
+    );
   }
 
-  // postUpload(url: string, body: FormData) {
-  //   return (this.mapshare(this.http.post(this.Host + url, body, this.jwtUploadFile())));
-  // }
-
-  put(url: string, body: any, idempotencyKey?: string, guestId?: string, contentType?: EContentType) {
-    return this.mapshare(this.http.put(this.Host + url, body, this.buildHeader(idempotencyKey, guestId, contentType)));
+  put(
+    url: string,
+    body: any,
+    options: HttpOptions = {}
+  ) {
+    return this.mapshare(
+      this.http.put(
+        this.Host + url,
+        body,
+        this.buildHeader(
+          options.idempotencyKey,
+          options.guestId,
+          options.contentType
+        )
+      )
+    );
   }
 
-  putUrl(url: string, idempotencyKey?: string, guestId?: string, contentType?: EContentType) {
-    const options = this.buildHeader(idempotencyKey, guestId, contentType);
-    return this.mapshare(this.http.put(this.Host + url, null, options));
+  putUrl(
+    url: string,
+    options: HttpOptions = {}
+  ) {
+    return this.mapshare(
+      this.http.put(
+        this.Host + url,
+        null,
+        this.buildHeader(
+          options.idempotencyKey,
+          options.guestId,
+          options.contentType
+        )
+      )
+    );
   }
 
-  delete(url: string, idempotencyKey?: string, guestId?: string, contentType?: EContentType) {
-    return this.mapshare(this.http.delete(this.Host + url, this.buildHeader(idempotencyKey, guestId, contentType)));
+  delete(
+    url: string,
+    options: HttpOptions = {}
+  ) {
+    return this.mapshare(
+      this.http.delete(
+        this.Host + url,
+        this.buildHeader(
+          options.idempotencyKey,
+          options.guestId,
+          options.contentType
+        )
+      )
+    );
   }
+
+
 
   private mapshare(data: Observable<any>) {
     return data.pipe(
@@ -179,19 +217,19 @@ export class TransferHttpService {
       'Content-Type': sContent,
     });
 
-    if (this.tokenStorageService.getUser() != null) {
-      const currentUser = this.tokenStorageService.getUser();
-      const returnToken = this.tokenStorageService.getToken();
-      if (currentUser && returnToken) {
-        httpHeaders = new HttpHeaders(
-          {
-            // tslint:disable-next-line: object-literal-key-quotes
-            'Authorization': 'Bearer ' + returnToken,
-            'Content-Type': sContent
-          },
-        );
-      }
-    }
+    // if (this.tokenStorageService.getUser() != null) {
+    //   const currentUser = this.tokenStorageService.getUser();
+    //   const returnToken = this.tokenStorageService.getToken();
+    //   if (currentUser && returnToken) {
+    //     httpHeaders = new HttpHeaders(
+    //       {
+    //         // tslint:disable-next-line: object-literal-key-quotes
+    //         'Authorization': 'Bearer ' + returnToken,
+    //         'Content-Type': sContent
+    //       },
+    //     );
+    //   }
+    // }
 
     if (idempotencyKey) {
       httpHeaders = httpHeaders.set('Idempotency-Key', idempotencyKey);

@@ -92,7 +92,7 @@ export class RegisterComponent {
             const data = res.data;
             if (data) {
               this.tokenStorageService.saveUser(data.user);
-              this.tokenStorageService.saveToken(data.token);
+              // this.tokenStorageService.saveToken(data.token);
 
               this.messengerService.successes('Đăng ký thành công! Vui lòng đăng nhập.');
 

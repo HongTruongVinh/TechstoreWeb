@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output, ElementRef, HostListener, Input, inject } from '@angular/core';
 import { Category } from '../../../models/models/category/category.model';
 import { BrandModel } from '../../../models/models/brand/brand.model';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { CategoryService } from '../../../core/services/api/category.service';
 import { BrandService } from '../../../core/services/api/brand.service';
 import { EErrorType } from '../../../models/enum/etype_project.enum';
@@ -14,7 +14,7 @@ import { SessionStorageService } from '../../../core/services/ui/session-storage
 @Component({
   selector: 'app-category-panel',
   standalone: true,
-  imports: [CommonModule, FullImageUrlPipe],
+  imports: [CommonModule, FullImageUrlPipe, RouterLink],
   templateUrl: './category-panel.component.html',
   styleUrl: './category-panel.component.scss'
 })

@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { ProductListItemModel } from '../../../models/models/product/product-list-item.model';
 import { FullImageUrlPipe } from '../../../pipes/full-image-url.pipe';
 import { BuildProductUrlPipe } from '../../../pipes/product-url.pipe';
@@ -10,6 +11,7 @@ import { BuildProductUrlPipe } from '../../../pipes/product-url.pipe';
   standalone: true,
   imports: [
     CommonModule,
+    RouterLink,
     FullImageUrlPipe
   ],
   templateUrl: './product-card.component.html',

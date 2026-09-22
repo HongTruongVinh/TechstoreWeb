@@ -10,7 +10,8 @@ export class FullImageUrlPipe implements PipeTransform {
 
   transform(path: string): string {
 
-    if (!path) return '';
+    if (!path) return 'https://i.imgur.com/wLJJctg.png';
+
 
     // Nếu path đã là URL tuyệt đối thì không thay đổi
     if (path.startsWith('http://') || path.startsWith('https://')) {

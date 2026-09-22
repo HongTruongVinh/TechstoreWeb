@@ -1,5 +1,5 @@
 import * as signalR from '@microsoft/signalr';
-import { LinkSettingsService } from '../api/link-settings.service';
+import { apiEndpoints } from '../../constants/api-endpoints'
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { environment } from '../../../../environments/environment';
@@ -23,52 +23,51 @@ export class PaymentSignalrService {
     paymentFailed$: Observable<any> = this.paymentFailedSource.asObservable();
 
     constructor(
-        private lss: LinkSettingsService
     ) { }
 
     async startConnection(orderId: string) {
-        this.lss.getResLinkSetting('Payment', 'PaymentHub').subscribe(async (apiUrl) => {
-            if (!apiUrl) {
-                throw new Error('Không tìm thấy URL API cho SignalR Hub');
+
+        let apiUrl = apiEndpoints.payment.paymentHub;
+
+        if (!apiUrl) {
+            throw new Error('Không tìm thấy URL API cho SignalR Hub');
+        }
+
+        if (!apiUrl.startsWith('http')) {
+            apiUrl = this.baseHost + apiUrl;
+        }
+
+        this.hubConnection = new signalR.HubConnectionBuilder()
+            .withUrl(apiUrl)
+            .withAutomaticReconnect()
+            .build();
+
+        console.log('Waiting for payment updates:', orderId);
+
+        await this.hubConnection.start();
+
+        await this.hubConnection.invoke(
+            'JoinPaymentGroup',
+            orderId
+        );
+
+        this.hubConnection.on(
+            'PaymentSuccess',
+            (data) => {
+                console.log('Payment success:', data);
+
+                this.paymentSuccessSource.next(data);
             }
+        );
 
-            if (!apiUrl.startsWith('http')) {
-                apiUrl = this.baseHost + apiUrl;
+        this.hubConnection.on(
+            'PaymentFailed',
+            (data) => {
+                console.log('Payment failed:', data);
+
+                this.paymentFailedSource.next(data);
             }
-
-            // apiUrl = 'https://localhost:5001/payments/hub';
-            this.hubConnection = new signalR.HubConnectionBuilder()
-                .withUrl(apiUrl)
-                .withAutomaticReconnect()
-                .build();
-
-            console.log('waiting for payment updates:', orderId);
-
-            await this.hubConnection.start();
-
-            await this.hubConnection.invoke(
-                'JoinPaymentGroup',
-                orderId
-            );
-
-            this.hubConnection.on(
-                'PaymentSuccess',
-                (data) => {
-
-                    console.log('Payment success:', data);
-
-                    this.paymentSuccessSource.next(data);
-                });
-
-            this.hubConnection.on(
-                'PaymentFailed',
-                (data) => {
-
-                    console.log('Payment failed:', data);
-
-                    this.paymentFailedSource.next(data);
-                });
-        });
+        );
     }
 
     async stopConnection() {

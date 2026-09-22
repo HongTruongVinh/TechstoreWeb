@@ -48,6 +48,7 @@
   },
   "Authentication": {
     "RegisterUser": "authentication/register",
+    "Refresh": "authentication/refresh",
     "LoginNormalAccount": "authentication/login",
     "ChangePassword": "authentication/change-password",
     "LoginWithGoogle": "authentication/login-google",

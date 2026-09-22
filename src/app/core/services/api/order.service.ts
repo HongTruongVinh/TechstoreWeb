@@ -1,10 +1,10 @@
 import { Injectable } from "@angular/core";
 import { TransferHttpService } from "../../transfer-http/transfer-http.service";
-import { map, switchMap } from "rxjs";
-import { ApiResponse} from "../../../models/models/api-response.model";
+import { map } from "rxjs";
+import { ApiResponse } from "../../../models/models/api-response.model";
 
 import { ListItemOrderModel } from "../../../models/models/order/list-item-order.model";
-import { LinkSettingsService } from "./link-settings.service";
+import { apiEndpoints } from '../../constants/api-endpoints'
 import { OrderCreateModel } from "../../../models/models/order/cod-order-create.model";
 import { OrderModel } from "../../../models/models/order/order.model";
 import { CancelOrderModel } from "../../../models/models/order/cancel-order.model";
@@ -18,92 +18,42 @@ export class OrderService {
 
     constructor(
         private transferHttp: TransferHttpService,
-        private linkSettingsService: LinkSettingsService,
         private idempotencyService: IdempotencyService
     ) { }
 
     getUserOrders(page: number, pageSize: number) {
-        return this.linkSettingsService
-            .getResLinkSetting('Order', 'UserOrders', page, pageSize)
-            .pipe(
-                switchMap((apiUrl) => {
-                    if (!apiUrl) {
-                        throw new Error('Không tìm thấy URL API cho Order');
-                    }
-
-                    return this.transferHttp.get(apiUrl);
-                }),
-                map((res: ApiResponse<ListItemOrderModel[]>) => res)
-            );
+        return this.transferHttp
+            .get(apiEndpoints.order.userOrders(page, pageSize))
+            .pipe(map((res: ApiResponse<ListItemOrderModel[]>) => res))
     }
 
     getOrderDetail(orderId: string) {
-        return this.linkSettingsService
-            .getResLinkSetting('Order', 'OrderDetails', orderId)
-            .pipe(
-                switchMap((apiUrl) => {
-                    if (!apiUrl) {
-                        throw new Error('Không tìm thấy URL API cho Chi tiết đơn hàng');
-                    }
-                    return this.transferHttp.get(apiUrl);
-                }),
-                map((res: ApiResponse<OrderModel>) => res)
-            );
+        return this.transferHttp
+            .get(apiEndpoints.order.orderDetails(orderId))
+            .pipe(map((res: ApiResponse<OrderModel>) => res))
     }
 
     createCodOrder(newOrder: OrderCreateModel) {
-        return this.linkSettingsService
-            .getResLinkSetting('Order', 'CreateCodOrder')
-            .pipe(
-                switchMap((apiUrl) => {
-                    if (!apiUrl) {
-                        throw new Error('Không tìm thấy URL API cho Tạo đơn hàng COD');
-                    }
-                    return this.transferHttp.post(apiUrl, newOrder, this.idempotencyService.getOrderKey());
-                }),
-                map((res: ApiResponse<CreateCODOnlineOrderResult>) => res)
-            );
+        return this.transferHttp
+            .post(apiEndpoints.order.createCodOrder, newOrder, { idempotencyKey: this.idempotencyService.getOrderKey() })
+            .pipe(map((res: ApiResponse<CreateCODOnlineOrderResult>) => res))
     }
 
     createSnapshotOrder(newOrder: OrderCreateModel) {
-        return this.linkSettingsService
-            .getResLinkSetting('Order', 'CreateSnapshotOrder')
-            .pipe(
-                switchMap((apiUrl) => {
-                    if (!apiUrl) {
-                        throw new Error('Không tìm thấy URL API cho Tạo đơn hàng Prepay');
-                    }
-                    return this.transferHttp.post(apiUrl, newOrder, this.idempotencyService.getOrderKey());
-                }),
-                map((res: ApiResponse<CreatePaymentSnapshotResult>) => res)
-            );
+        return this.transferHttp
+            .post(apiEndpoints.order.createSnapshotOrder, newOrder, { idempotencyKey: this.idempotencyService.getOrderKey() })
+            .pipe(map((res: ApiResponse<CreatePaymentSnapshotResult>) => res))
     }
 
-    updateOrder(orderId: string, model: UpdateOrderModel){
-        return this.linkSettingsService
-            .getResLinkSetting('Order', 'UpdateOrder', orderId)
-            .pipe(
-                switchMap((apiUrl) => {
-                    if (!apiUrl) {
-                        throw new Error('Không tìm thấy URL API cho Tạo đơn hàng COD');
-                    }
-                    return this.transferHttp.put(apiUrl, model);
-                }),
-                map((res: ApiResponse<boolean>) => res)
-            );
+    updateOrder(orderId: string, model: UpdateOrderModel) {
+        return this.transferHttp
+            .put(apiEndpoints.order.updateOrder(orderId), model)
+            .pipe(map((res: ApiResponse<boolean>) => res))
     }
 
     cancelOrder(id: string, model: CancelOrderModel) {
-        return this.linkSettingsService
-            .getResLinkSetting('Order', 'CancelOrder', id)
-            .pipe(
-                switchMap((apiUrl) => {
-                    if (!apiUrl) {
-                        throw new Error('Không tìm thấy URL API cho Tạo đơn hàng COD');
-                    }
-                    return this.transferHttp.put(apiUrl, model);
-                }),
-                map((res: ApiResponse<boolean>) => res)
-            );
+        return this.transferHttp
+            .put(apiEndpoints.order.cancelOrder(id), model)
+            .pipe(map((res: ApiResponse<boolean>) => res))
     }
 }
