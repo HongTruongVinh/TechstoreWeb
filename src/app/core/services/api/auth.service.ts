@@ -39,7 +39,13 @@ export class AuthenticationService {
 
   refreshToken() {
     return this.transferHttp
-      .post(apiEndpoints.authentication.refresh, null, { idempotencyKey: this.idempotencyService.getOrderKey() })
-      .pipe(map((res: ApiResponse<any>) => res))
+      .post(apiEndpoints.authentication.refresh, null, { idempotencyKey: this.idempotencyService.getRefreshTokenKey() })
+      .pipe(map((res: ApiResponse<boolean>) => res))
+  }
+
+  logout(){
+    return this.transferHttp
+      .post(apiEndpoints.authentication.logout, null)
+      .pipe(map((res: ApiResponse<boolean>) => res))
   }
 }

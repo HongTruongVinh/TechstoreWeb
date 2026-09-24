@@ -48,7 +48,7 @@ export class LoginComponent {
 
   ngOnInit(): void {
     this.loginForm = this.formBuilder.group({
-      loginIdentifier: ['', [Validators.required]],     //  0123456001
+      loginIdentifier: ['', [Validators.required]],     //  0345678900
       password: ['', [Validators.required]],    //  Abcd1234
     });
   }
@@ -72,6 +72,7 @@ export class LoginComponent {
             const data = res.data;
             if (data) {
               this.tokenStorageService.saveUser(data);
+              this.tokenStorageService.isLoggedIn.set(true);
               // this.tokenStorageService.saveToken(data.token);
               this.store.dispatch(loadCartItem());
 

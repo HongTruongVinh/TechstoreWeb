@@ -25,7 +25,7 @@ export class AiChatComponent implements AfterViewChecked, AfterViewInit {
   draftMessage = '';
   isTyping = false;
 
-  suggestions = ['Laptop 15 đến 25 triệu học lập trình C# và chơi game LMHT', 'Điện thoại từ 4 đến 10 chơi Liên Quân Mobile'];
+  suggestions = ['Laptop 15 đến 25 triệu học lập trình C# và chơi game LMHT', 'Điện thoại từ 4 đến 10 triệu chơi Liên Quân Mobile'];
 
   chatbotService = inject(ChatbotService);
   router = inject(Router);

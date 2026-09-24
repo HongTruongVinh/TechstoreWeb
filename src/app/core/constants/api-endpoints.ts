@@ -129,16 +129,12 @@ export const apiEndpoints = {
 
   authentication: {
     registerUser: 'authentication/register',
-
     refresh: 'authentication/refresh',
-
     loginNormalAccount: 'authentication/login',
-
     changePassword: 'authentication/change-password',
-
     loginWithGoogle: 'authentication/login-google',
-
     loginWithFacebook: 'authentication/login-facebook',
+    logout: 'authentication/logout',
   },
 
   shipper: {

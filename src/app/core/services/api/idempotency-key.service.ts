@@ -6,6 +6,7 @@ import { Injectable } from "@angular/core";
 export class IdempotencyService {
 
     private readonly orderKey = 'order-idempotency-key';
+    private readonly refreshTokenKey = 'refresh-token-idempotency-key';
 
     getOrderKey(): string {
 
@@ -23,8 +24,28 @@ export class IdempotencyService {
         return key;
     }
 
+    getRefreshTokenKey(): string {
+
+        let key = sessionStorage.getItem(this.refreshTokenKey);
+
+        if (!key) {
+            key = crypto.randomUUID();
+
+            sessionStorage.setItem(
+                this.refreshTokenKey,
+                key
+            );
+        }
+
+        return key;
+    }
+
     clearOrderKey(): void {
         sessionStorage.removeItem(this.orderKey);
+    }
+
+    clearRefreshTokenKey(): void {
+        sessionStorage.removeItem(this.refreshTokenKey);
     }
 
     clearAllKeys(): void {

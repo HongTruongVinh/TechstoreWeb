@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { TokenStorageService } from '../../../../core/services/ui/token-storage.service';
 import { User } from '../../../../models/models/user/user.model';
 import { UiStateService } from '../../../../core/services/ui/ui-state.service';
+import { AuthenticationService } from '../../../../core/services/api/auth.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -18,6 +19,8 @@ export class SidebarComponent {
   currentUrl = this.router.url;
 
   uiState = inject(UiStateService);
+  authService = inject(AuthenticationService);
+
   constructor(
     private readonly router: Router,
     private readonly tks: TokenStorageService,
@@ -74,7 +77,28 @@ export class SidebarComponent {
   }
 
   logout() {
-    this.tks.signOut();
-    this.router.navigate(['/']).then(() => window.location.reload());
+    // this.tks.signOut();
+    this.authService.logout();
+
+    this.authService.logout().subscribe({
+      next: (res) => {
+        if (res.success == true) {
+          const data = res.data;
+          if (data) {
+            this.tks.signOut();
+            this.router.navigate(['/']).then(() => window.location.reload());
+          }
+        }
+        else {
+
+        }
+      },
+      error: (error) => {
+
+      },
+      complete: () => {
+      }
+    });
+
   }
 }

@@ -22,13 +22,19 @@ import {
   take
 } from 'rxjs/operators';
 
+import { Router } from '@angular/router';
+
 import { AuthenticationService } from '../services/api/auth.service';
 import { IdempotencyService } from '../services/api/idempotency-key.service';
+import { AuthDialogService } from '../services/ui/AuthDialogService';
+import { TokenStorageService } from '../services/ui/token-storage.service';
+import { MessengerServices } from '../services/ui/messenger.service';
 
 
 let isRefreshing = false;
 
-const refreshSubject = new BehaviorSubject<boolean | null>(null);
+const refreshSubject =
+  new BehaviorSubject<boolean | null>(null);
 
 
 const AUTH_ENDPOINTS = [
@@ -66,6 +72,10 @@ export const refreshTokenInterceptor: HttpInterceptorFn = (
 
   const authService = inject(AuthenticationService);
   const idempotencyService = inject(IdempotencyService);
+  const router = inject(Router);
+  const authDialog = inject(AuthDialogService);
+  const tks = inject(TokenStorageService);
+  const msgService = inject(MessengerServices);
 
   /*
    * Auth API không đi qua logic refresh.
@@ -73,6 +83,7 @@ export const refreshTokenInterceptor: HttpInterceptorFn = (
    * Nhưng vẫn gửi Cookie.
    */
   if (isAuthEndpoint(request.url)) {
+
     return next(
       request.clone({
         withCredentials: true
@@ -118,10 +129,18 @@ export const refreshTokenInterceptor: HttpInterceptorFn = (
 
           switchMap(isSuccess => {
 
+            /*
+             * Refresh thất bại.
+             *
+             * Không retry request hiện tại.
+             */
             if (!isSuccess) {
               return throwError(() => error);
             }
 
+            /*
+             * Refresh thành công.
+             */
             return retryRequest(
               request,
               next
@@ -135,7 +154,6 @@ export const refreshTokenInterceptor: HttpInterceptorFn = (
        * Request đầu tiên bắt đầu refresh.
        */
       isRefreshing = true;
-
       refreshSubject.next(null);
 
 
@@ -148,7 +166,7 @@ export const refreshTokenInterceptor: HttpInterceptorFn = (
 
           refreshSubject.next(true);
 
-          idempotencyService.clearAllKeys();
+          idempotencyService.clearRefreshTokenKey();
 
           return retryRequest(
             request,
@@ -159,13 +177,58 @@ export const refreshTokenInterceptor: HttpInterceptorFn = (
 
         /*
          * Refresh thất bại.
+         *
+         * Trường hợp quan trọng:
+         *
+         * - refresh token hết hạn
+         * - refresh token bị revoke
+         * - refresh token không tồn tại
+         * - refresh token không hợp lệ
          */
-        catchError((refreshError) => {
+        catchError((refreshError: HttpErrorResponse) => {
 
+          /*
+           * Báo cho tất cả request đang chờ rằng
+           * refresh đã thất bại.
+           */
           refreshSubject.next(false);
 
-          return throwError(
-            () => refreshError
+
+          /*
+           * Refresh token không còn hợp lệ.
+           *
+           * Logout chỉ nhằm yêu cầu BE xóa HttpOnly cookies.
+           */
+          return authService.logout().pipe(
+
+            /*
+             * Logout có thể thất bại vì network/server.
+             * Không được để điều đó ngăn redirect.
+             */
+            catchError(() => {
+              return throwError(() => refreshError);
+            }),
+
+            finalize(() => {
+
+              /*
+               * Dù logout thành công hay thất bại,
+               * user vẫn phải quay về login.
+               */
+              // router.navigate(['/login']);
+              
+              msgService.warringWithMessage("Phiên đăng nhập đã hết. Vui lòng đăng nhập lại");
+              tks.signOut();
+              router.navigate(['/']);
+              const ref = authDialog.openLogin();
+            }),
+
+            /*
+             * Giữ nguyên lỗi refresh ban đầu.
+             */
+            switchMap(() => {
+              return throwError(() => refreshError);
+            })
           );
         }),
 
@@ -175,9 +238,7 @@ export const refreshTokenInterceptor: HttpInterceptorFn = (
          * thực hiện refresh mới.
          */
         finalize(() => {
-
           isRefreshing = false;
-
         })
       );
     })
