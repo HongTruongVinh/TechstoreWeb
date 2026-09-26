@@ -8,7 +8,6 @@ import { CartComponent } from './components/pages/user/cart/cart.component';
 import { CreateOrderComponent } from './components/pages/orders/create-order/create-order.component';
 import { PurchesComponent } from './components/pages/user/purches/purches.component';
 import { AuthGuard } from './core/guards/auth.guard';
-import { OrderDetailComponent } from './components/pages/orders/order-detail/order-detail.component';
 import { OrderOverviewComponent } from './components/pages/orders/order-overview/order-overview.component';
 
 export const routes: Routes = [

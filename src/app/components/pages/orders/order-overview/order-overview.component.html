@@ -2,355 +2,469 @@
 
 @if(order){
 
-<div class="row mb-2">
-    <div class="col-lg-12">
-        <div class="card">
-            <div class="card-header d-flex align-items-center flex-wrap gap-2">
-                <h6 class="card-title flex-grow-1 mb-0">Mã đơn hàng #{{order.id}}</h6>
+<!-- Order Header -->
+<div class="order-header-card card mb-4 border-0 shadow-sm">
+    <div class="card-body py-3">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+            <div class="d-flex align-items-center gap-3">
+                <div class="order-id-badge">
+                    <i class="ph-hash-straight"></i>
+                </div>
+                <div>
+                    <h5 class="mb-1 fw-semibold">Đơn hàng #{{order.id}}</h5>
+                    <p class="text-muted mb-0 fs-sm">
+                        <i class="ph-calendar-blank me-1"></i>Ngày đặt: {{order.createdAt | dateToString:'getDate'}}
+                    </p>
+                </div>
             </div>
+            <div class="d-flex align-items-center gap-2">
+                <span class="badge rounded-pill fs-sm px-3 py-2" [ngClass]="order.orderStatus | orderStatus:'class'">
+                    {{ order.orderStatus | orderStatus:'label' }}
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Order Progress Tracker -->
+<div class="card mb-4 border-0 shadow-sm">
+    <div class="card-body py-4">
+        <div class="order-tracker">
+            <div class="tracker-step" [class.active]="order.orderStatus >= 0" [class.current]="order.orderStatus === 0">
+                <div class="step-icon-wrapper">
+                    <div class="step-icon">
+                        <i class="ph-bag"></i>
+                    </div>
+                    <span class="step-number">1</span>
+                </div>
+                <div class="step-label">
+                    {{ order.orderStatus === 0 ? (order.orderStatus | orderStatus:'label') : 'Chờ duyệt' }}
+                </div>
+            </div>
+            <div class="tracker-connector" [class.active]="order.orderStatus >= 1"></div>
+            <div class="tracker-step" [class.active]="order.orderStatus >= 1" [class.current]="order.orderStatus === 1">
+                <div class="step-icon-wrapper">
+                    <div class="step-icon">
+                        <i class="ph-package"></i>
+                    </div>
+                    <span class="step-number">2</span>
+                </div>
+                <div class="step-label">
+                    {{ order.orderStatus === 1 ? (order.orderStatus | orderStatus:'label') : 'Đóng gói' }}
+                </div>
+            </div>
+            <div class="tracker-connector" [class.active]="order.orderStatus >= 2"></div>
+            <div class="tracker-step" [class.active]="order.orderStatus >= 2" [class.current]="order.orderStatus === 2">
+                <div class="step-icon-wrapper">
+                    <div class="step-icon">
+                        <i class="ph-truck"></i>
+                    </div>
+                    <span class="step-number">3</span>
+                </div>
+                <div class="step-label">
+                    {{ order.orderStatus === 2 ? (order.orderStatus | orderStatus:'label') : 'Vận chuyển' }}
+                </div>
+            </div>
+            <div class="tracker-connector" [class.active]="order.orderStatus >= 3"></div>
+            <div class="tracker-step" [class.active]="order.orderStatus >= 3" [class.current]="order.orderStatus === 3">
+                <div class="step-icon-wrapper">
+                    <div class="step-icon">
+                        <i class="ph-bicycle"></i>
+                    </div>
+                    <span class="step-number">4</span>
+                </div>
+                <div class="step-label">Chờ giao</div>
+            </div>
+            <div class="tracker-connector" [class.active]="order.orderStatus === 3 || order.orderStatus === 4"></div>
+            <div class="tracker-step" [class.active]="order.orderStatus === 3 || order.orderStatus === 4" [class.current]="order.orderStatus === 4">
+                <div class="step-icon-wrapper">
+                    <div class="step-icon">
+                        <i class="ph-house-line"></i>
+                    </div>
+                    <span class="step-number">5</span>
+                </div>
+                <div class="step-label">
+                    {{ order.orderStatus === 3 || order.orderStatus === 4 ? (order.orderStatus | orderStatus:'label') : 'Hoàn thành' }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Expanded Card Backdrop -->
+<div class="card-backdrop" [class.active]="expandedCard !== null" (click)="expandedCard = null"></div>
+
+<!-- Info Cards Row -->
+<div class="row g-3 mb-4">
+    <!-- Customer Info -->
+    <div class="col-xxl-3 col-md-6">
+        <div class="card info-card info-card-expandable border-0 shadow-sm h-100"
+             [class.expanded]="expandedCard === 'customer'" (click)="toggleCard('customer')">
             <div class="card-body">
-                <div class="progress progress-step-arrow progress-info">
+                <button *ngIf="expandedCard === 'customer'" type="button" class="expand-close-btn" (click)="$event.stopPropagation(); expandedCard = null">
+                    <i class="ph-x"></i>
+                </button>
+                <div class="d-flex align-items-start gap-3">
+                    <div class="info-icon-box bg-secondary-subtle text-secondary">
+                        <i class="ph-user"></i>
+                    </div>
+                    <div class="flex-grow-1 min-w-0">
+                        <h6 class="card-title text-uppercase fs-xs text-muted fw-semibold mb-2">Khách hàng</h6>
+                        <p class="fw-semibold mb-1" [class.text-truncate]="expandedCard !== 'customer'">{{order.customerName}}</p>
+                        <p class="text-muted mb-1 fs-sm"><i class="ph-phone me-1"></i>{{order.customerPhonenumber}}</p>
+                        <p class="text-muted mb-0 fs-sm" [class.text-wrap]="expandedCard === 'customer'"><i class="ph-map-pin me-1"></i>{{order.shippingAddress}}</p>
 
-                    <a href="javascript:void(0);" class="progress-bar" [ngClass]="{
-                                     'active': order.orderStatus >= 0
-                                   }" role="progressbar" style="width: 100%">
-                        <i class="ph-bag align-baseline me-1 d-none d-lg-inline-block"></i> 
-                        {{ order.orderStatus === 0 ? (order.orderStatus | orderStatus:'label') : 'Đang chờ duyệt'
-                        }}
-                    </a>
-
-                    <a href="javascript:void(0);" class="progress-bar" [ngClass]="{
-                                     'active': order.orderStatus >= 1
-                                   }" role="progressbar" style="width: 100%">
-                        <i class="ph-package align-middle me-1"></i> 
-                        {{ order.orderStatus === 1 ? (order.orderStatus | orderStatus:'label') : 'Đang đóng gói'
-                        }}
-                    </a>
-
-                    <a href="javascript:void(0);" class="progress-bar" [ngClass]="{
-                                     'active': order.orderStatus >= 2,
-                                     'pending': order.orderStatus === 2
-                                   }" role="progressbar" style="width: 100%">
-                        <i class="ph-truck align-baseline me-1 d-none d-lg-inline-block"></i>
-                        {{ order.orderStatus === 2 ? (order.orderStatus | orderStatus:'label') : 'Đang vận chuyển'
-                        }}
-                    </a>
-
-                    <a href="javascript:void(0);" class="progress-bar" [ngClass]="{
-                                     'active': order.orderStatus >= 3
-                                   }" role="progressbar" style="width: 100%">
-                        <i class="ph-bicycle align-baseline me-1 d-none d-lg-inline-block"></i>
-                        Đang chờ giao hàng
-                    </a>
-
-                    <a href="javascript:void(0);" class="progress-bar" [ngClass]="{
-                                     'active': order.orderStatus === 3 || order.orderStatus === 4
-                                   }" role="progressbar" style="width: 100%">
-                        <i class="ph-house-line align-baseline me-1 d-none d-lg-inline-block"></i>
-                        {{ order.orderStatus === 3 || order.orderStatus === 4 ? (order.orderStatus |
-                        orderStatus:'label') : 'Đã giao hàng' }}
-                    </a>
+                        <!-- Extra info visible only when expanded -->
+                        <div *ngIf="expandedCard === 'customer'" class="expanded-extra mt-3 pt-3 border-top">
+                            <p class="text-muted mb-1 fs-sm"><i class="ph-envelope-simple me-1"></i>{{order.customerEmail || 'Chưa có email'}}</p>
+                        </div>
+                    </div>
                 </div>
-
-                <!-- <div id="map" class="leaflet-map leaflet-gray" style="height: 380px;"></div> -->
             </div>
-
         </div>
-    </div><!--end col-->
-</div><!--end row-->
+    </div>
 
-<div class="row mb-3">
+    <!-- Shipping Info -->
     <div class="col-xxl-3 col-md-6">
-        <div class="card border-bottom border-2 border-secondary">
-            <div class="card-body d-flex gap-3">
-                <div class="flex-grow-1">
-                    <!-- <h6 class="card-title mb-3">{{order.customerName}}</h6> -->
-                    <h6 class="card-title mb-3">Thông tin khách hàng</h6>
-                    <p class="fw-medium fs-md mb-1">{{order.customerName}}</p>
-                    <p class="text-muted mb-1 text-nowrap overflow-visible">SĐT: {{order.customerPhonenumber}}</p>
-                    <p class="text-muted mb-0 ">{{order.shippingAddress}}</p>
-                </div>
-                <div class="flex-shrink-0">
-                    <img src="assets/images/users/48/avatar-1.jpg" alt="" class="avatar-sm rounded img-thumbnail">
-                </div>
-            </div>
-        </div>
-    </div><!--end col-->
-    <div class="col-xxl-3 col-md-6">
-        <div class="card border-bottom border-2 border-primary">
-            <div class="card-body d-flex gap-3">
-                <div class="flex-grow-1">
-                    <h6 class="card-title mb-3">Thông tin giao hàng</h6>
-                    <p class="fw-medium fs-md mb-1">Đơn vị: {{order.shippingDetail?.shipperName}}</p>
-                    <p class="text-muted mb-1 text-nowrap overflow-visible">Mã vận đơn: {{order.shippingDetail?.trackingNumber??'chưa có'}}</p>
-                    <p class="text-muted mb-0 text-nowrap overflow-visible">Dự kiến giao: {{order.shippingDetail? (order.shippingDetail.estimatedArrival? (order.shippingDetail.estimatedArrival | dateToString:'getDate') : 'chưa có') : 'chưa có'}}</p>
-                </div>
-                <div class="flex-shrink-0">
-                    <div class="avatar-sm">
-                        <div class="avatar-title bg-primary-subtle text-primary fs-3 rounded">
-                            <i class="ph-truck"></i>
-                        </div>
+        <div class="card info-card info-card-expandable border-0 shadow-sm h-100"
+             [class.expanded]="expandedCard === 'shipping'" (click)="toggleCard('shipping')">
+            <div class="card-body">
+                <button *ngIf="expandedCard === 'shipping'" type="button" class="expand-close-btn" (click)="$event.stopPropagation(); expandedCard = null">
+                    <i class="ph-x"></i>
+                </button>
+                <div class="d-flex align-items-start gap-3">
+                    <div class="info-icon-box bg-primary-subtle text-primary">
+                        <i class="ph-truck"></i>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div><!--end col-->
-    <div *ngIf="order.invoice" class="col-xxl-3 col-md-6 show-invoice-btn"  (click)="showInvoiceDetail()">
-        <div class="card border-bottom border-2 border-info">
-            <div class="card-body d-flex gap-3">
-                <div class="flex-grow-1">
-                    <h6 class="card-title mb-3">Thông tin hóa đơn</h6>
-                    <p class="fw-medium fs-md mb-1">{{order.invoice ? order.invoice.id : 'chưa có'}}</p>
-                    <p class="text-muted mb-1 text-nowrap overflow-visible">Số tiền: <b class="text-black" >{{order.invoice.totalPrice | thousandSeparator}}</b></p>
-                    <p class="text-muted mb-0 text-nowrap overflow-visible">Trạng thái: <b [ngClass]="order.invoice.invoiceStatus | invoiceStatus : 'class'">{{order.invoice.invoiceStatus | invoiceStatus}}</b></p>
-                </div>
-                <div class="flex-shrink-0">
-                    <div class="avatar-sm">
-                        <div class="avatar-title bg-info-subtle text-info fs-3 rounded">
-                            <i class="ph-file-text"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="tooltip">
-            Nhấn để xem lịch sử thanh toán 
-        </div>
-    </div><!--end col-->
-    <div *ngIf="order.invoice" class="col-xxl-3 col-md-6 actiopn-btn" (click)="showInvoiceDetail()">
-        <div class="card border-bottom border-2 border-light">
-            <div class="card-body d-flex gap-3">
-                <div class="flex-grow-1">
-                    <h6 class="card-title mb-3">Thông tin thanh toán</h6>
-                    <p class="fw-medium fs-md mb-1">ID: #TBS3650259845</p>
-                    <p class="text-muted mb-1 text-nowrap overflow-visible">Đã thanh toán: <b class="text-black" >{{order.invoice.paidAmount | thousandSeparator}}</b></p>
-                    <p class="text-muted mb-0 text-nowrap overflow-visible">Còn nợ: <b class="text-black" [ngClass]="order.invoice.invoiceStatus | invoiceStatus : 'class'">{{order.invoice.remainingAmount | thousandSeparator}}</b></p>
-                </div>
-                <div class="flex-shrink-0">
-                    <div class="avatar-sm">
-                        <div class="avatar-title bg-light text-body fs-3 rounded">
-                            <i class="ph-currency-circle-dollar"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div><!--end col-->
-</div><!--end row-->
+                    <div class="flex-grow-1 min-w-0">
+                        <h6 class="card-title text-uppercase fs-xs text-muted fw-semibold mb-2">Giao hàng</h6>
+                        <p class="fw-semibold mb-1" [class.text-truncate]="expandedCard !== 'shipping'">{{order.shippingDetail?.shipperName}}</p>
+                        <p class="text-muted mb-1 fs-sm"><i class="ph-barcode me-1"></i>{{order.shippingDetail?.trackingNumber ?? 'Chưa có'}}</p>
+                        <p class="text-muted mb-0 fs-sm"><i class="ph-clock me-1"></i>Dự kiến: {{order.shippingDetail? (order.shippingDetail.estimatedArrival? (order.shippingDetail.estimatedArrival | dateToString:'getDate') : 'Chưa có') : 'Chưa có'}}</p>
 
-<div class="row">
+                        <!-- Extra info visible only when expanded -->
+                        <div *ngIf="expandedCard === 'shipping'" class="expanded-extra mt-3 pt-3 border-top">
+                            <p class="text-muted mb-1 fs-sm"><i class="ph-map-trifold me-1"></i>Địa chỉ giao: {{order.shippingAddress}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Invoice Info -->
+    <div *ngIf="order.invoice" class="col-xxl-3 col-md-6">
+        <div class="card info-card info-card-expandable border-0 shadow-sm h-100"
+             [class.expanded]="expandedCard === 'invoice'" (click)="toggleCard('invoice')">
+            <div class="card-body">
+                <button *ngIf="expandedCard === 'invoice'" type="button" class="expand-close-btn" (click)="$event.stopPropagation(); expandedCard = null">
+                    <i class="ph-x"></i>
+                </button>
+                <div class="d-flex align-items-start gap-3">
+                    <div class="info-icon-box bg-info-subtle text-info">
+                        <i class="ph-file-text"></i>
+                    </div>
+                    <div class="flex-grow-1 min-w-0">
+                        <h6 class="card-title text-uppercase fs-xs text-muted fw-semibold mb-2">
+                            Hóa đơn
+                            <i class="ph-arrows-out ms-1 fs-sm"></i>
+                        </h6>
+                        <p class="fw-semibold mb-1">{{order.invoice.totalPrice | thousandSeparator}} <span class="text-muted fw-normal fs-sm">VND</span></p>
+                        <p class="mb-0">
+                            <span class="badge rounded-pill" [ngClass]="order.invoice.invoiceStatus | invoiceStatus : 'class'">
+                                {{order.invoice.invoiceStatus | invoiceStatus}}
+                            </span>
+                        </p>
+
+                        <!-- Extra info visible only when expanded -->
+                        <div *ngIf="expandedCard === 'invoice'" class="expanded-extra mt-3 pt-3 border-top">
+                            <p class="text-muted mb-1 fs-sm"><i class="ph-identification-card me-1"></i>Mã HĐ: {{order.invoice.id}}</p>
+                            <a href="javascript:void(0)" class="btn btn-sm btn-outline-info mt-2" (click)="$event.stopPropagation(); expandedCard = null; showInvoiceDetail()">
+                                <i class="ph-eye me-1"></i>Xem chi tiết hóa đơn
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Info -->
+    <div *ngIf="order.invoice" class="col-xxl-3 col-md-6">
+        <div class="card info-card info-card-expandable border-0 shadow-sm h-100"
+             [class.expanded]="expandedCard === 'payment'" (click)="toggleCard('payment')">
+            <div class="card-body">
+                <button *ngIf="expandedCard === 'payment'" type="button" class="expand-close-btn" (click)="$event.stopPropagation(); expandedCard = null">
+                    <i class="ph-x"></i>
+                </button>
+                <div class="d-flex align-items-start gap-3">
+                    <div class="info-icon-box bg-success-subtle text-success">
+                        <i class="ph-currency-circle-dollar"></i>
+                    </div>
+                    <div class="flex-grow-1 min-w-0">
+                        <h6 class="card-title text-uppercase fs-xs text-muted fw-semibold mb-2">Thanh toán</h6>
+                        <p class="fw-semibold mb-1 text-success">Đã trả: {{order.invoice.paidAmount | thousandSeparator}} <span class="fw-normal fs-sm">VND</span></p>
+                        <p class="mb-0 text-danger fw-semibold">Còn nợ: {{order.invoice.remainingAmount | thousandSeparator}} <span class="fw-normal fs-sm">VND</span></p>
+
+                        <!-- Extra info visible only when expanded -->
+                        <div *ngIf="expandedCard === 'payment'" class="expanded-extra mt-3 pt-3 border-top">
+                            <a href="javascript:void(0)" class="btn btn-sm btn-outline-success mt-1" (click)="$event.stopPropagation(); expandedCard = null; showInvoiceDetail()">
+                                <i class="ph-clock-counter-clockwise me-1"></i>Xem lịch sử thanh toán
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="row g-4">
+    <!-- Products Table -->
     <div class="col-xxl-9">
-        <div class="card">
-            <div class="card-header d-flex align-items-center gap-3">
-                <h6 class="card-title mb-0 flex-grow-1">Các mặt hàng</h6>
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-transparent border-bottom d-flex align-items-center gap-3 py-3">
+                <div class="d-flex align-items-center gap-2 flex-grow-1">
+                    <i class="ph-shopping-cart-simple text-primary fs-5"></i>
+                    <h6 class="card-title mb-0">Các mặt hàng</h6>
+                    <span class="badge bg-primary-subtle text-primary rounded-pill ms-1">{{order.items.length}} sản phẩm</span>
+                </div>
             </div>
-            <div class="card-body">
+            <div class="card-body p-0">
                 <div class="table-responsive">
-                    <table class="table align-middle table-nowrap table-borderless">
-                        <thead class="table-active">
+                    <table class="table align-middle table-nowrap mb-0 product-table">
+                        <thead>
                             <tr>
-                                <th>Mặt hàng</th>
+                                <th class="ps-4">Mặt hàng</th>
                                 <th>Đơn giá</th>
-                                <th>Số lượng</th>
-                                <th class="text-end">Thành tiền</th>
+                                <th class="text-center">Số lượng</th>
+                                <th class="text-end pe-4">Thành tiền</th>
                             </tr>
                         </thead>
                         <tbody>
                             @for (orderItem of order.items; track $index)
                             {
                             <tr>
-                                <td>
-                                    <div class="product-item d-flex align-items-center gap-2">
-                                        <div class="avatar-sm flex-shrink-0">
-                                            <div class="avatar-title bg-light rounded">
-                                                <img [src]="orderItem.imageUrl | fullImageUrl" alt="" class="avatar-xs">
-                                            </div>
+                                <td class="ps-4">
+                                    <div class="product-item d-flex align-items-center gap-3">
+                                        <div class="product-img-wrapper flex-shrink-0">
+                                            <img [src]="orderItem.imageUrl | fullImageUrl" alt="" class="product-img">
                                         </div>
-                                        <div class="flex-grow-1">
-                                            <h6 class="fs-md"><a routerLink="/ecommerce/product-details"
-                                                    class="text-reset">{{orderItem.productName}}</a></h6>
-                                            <p class="text-muted mb-0"><a href="javascript:void(0);"
-                                                    class="text-reset">{{orderItem.categoryName}}</a></p>
+                                        <div class="flex-grow-1 min-w-0">
+                                            <h6 class="fs-sm mb-1 text-truncate">
+                                                <a routerLink="/ecommerce/product-details" class="text-reset">{{orderItem.productName}}</a>
+                                            </h6>
+                                            <p class="text-muted mb-0 fs-xs">{{orderItem.categoryName}}</p>
                                         </div>
                                     </div>
                                 </td>
-                                <td>{{orderItem.priceAtOrderTime | thousandSeparator}} VND</td>
-                                <td>{{orderItem.quantity}}</td>
-                                <td class="fw-medium text-end">{{orderItem.totalPrice | thousandSeparator}} VND</td>
+                                <td class="text-muted">{{orderItem.priceAtOrderTime | thousandSeparator}} <span class="fs-xs">VND</span></td>
+                                <td class="text-center">
+                                    <span class="badge bg-light text-body rounded-pill px-3">×{{orderItem.quantity}}</span>
+                                </td>
+                                <td class="fw-semibold text-end pe-4">{{orderItem.totalPrice | thousandSeparator}} <span class="text-muted fw-normal fs-xs">VND</span></td>
                             </tr>
                             }
                         </tbody>
                     </table>
                 </div>
-                <div class="row gy-3">
-                    <div class="col-sm-6 col-lg-6 col-xl-3">
-                        <div class="text-center border border-dashed p-3 rounded">
-                            <p class="text-muted mb-2">Ngày đặt hàng</p>
-                            <h6 class="fs-md mb-0">{{order.createdAt | dateToString:'getDate'}}</h6>
+
+                <!-- Order Metrics -->
+                <div class="p-3 pt-0">
+                    <div class="row g-3 mt-1">
+                        <div class="col-sm-6 col-lg-6 col-xl-3">
+                            <div class="metric-box text-center">
+                                <i class="ph-calendar-blank text-primary mb-2 fs-4"></i>
+                                <p class="text-muted mb-1 fs-xs text-uppercase fw-semibold">Ngày đặt</p>
+                                <h6 class="fs-sm mb-0">{{order.createdAt | dateToString:'getDate'}}</h6>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-sm-6 col-lg-6 col-xl-3">
-                        <div class="text-center border border-dashed p-3 rounded">
-                            <p class="text-muted mb-2">Ngày vận chuyển</p>
-                            <h6 class="fs-md mb-0">{{order.updatedAt | dateToString:'getDate'}}</h6>
+                        <div class="col-sm-6 col-lg-6 col-xl-3">
+                            <div class="metric-box text-center">
+                                <i class="ph-truck text-info mb-2 fs-4"></i>
+                                <p class="text-muted mb-1 fs-xs text-uppercase fw-semibold">Ngày cập nhật</p>
+                                <h6 class="fs-sm mb-0">{{order.updatedAt | dateToString:'getDate'}}</h6>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-sm-6 col-lg-6 col-xl-3">
-                        <div class="text-center border border-dashed p-3 rounded">
-                            <p class="text-muted mb-2">Trạng thái</p>
-                            <h6 class="fs-md mb-0" [ngClass]="order.orderStatus | orderStatus:'class'">
-                                {{ order.orderStatus | orderStatus:'label' }}
-                            </h6>
+                        <div class="col-sm-6 col-lg-6 col-xl-3">
+                            <div class="metric-box text-center">
+                                <i class="ph-flag-banner text-warning mb-2 fs-4"></i>
+                                <p class="text-muted mb-1 fs-xs text-uppercase fw-semibold">Trạng thái</p>
+                                <h6 class="fs-sm mb-0" [ngClass]="order.orderStatus | orderStatus:'class'">
+                                    {{ order.orderStatus | orderStatus:'label' }}
+                                </h6>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-sm-6 col-lg-6 col-xl-3">
-                        <div class="text-center border border-dashed p-3 rounded">
-                            <p class="text-muted mb-2">Tổng tiền</p>
-                            <h6 class="fs-md mb-0">{{order.finalAmount| thousandSeparator}} VND</h6>
+                        <div class="col-sm-6 col-lg-6 col-xl-3">
+                            <div class="metric-box text-center">
+                                <i class="ph-wallet text-success mb-2 fs-4"></i>
+                                <p class="text-muted mb-1 fs-xs text-uppercase fw-semibold">Tổng tiền</p>
+                                <h6 class="fs-sm mb-0 text-success">{{order.finalAmount| thousandSeparator}} VND</h6>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div><!--end card-->
-    </div><!--end col-->
+        </div>
+    </div>
+
+    <!-- Sidebar -->
     <div class="col-xxl-3">
-        <div class="row">
+        <div class="row g-3">
+            <!-- Payment Summary -->
             <div class="col-xxl-12 col-lg-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h6 class="card-title">Tổng thanh toán</h6>
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-transparent border-bottom py-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="ph-receipt text-primary fs-5"></i>
+                            <h6 class="card-title mb-0">Tổng thanh toán</h6>
+                        </div>
                     </div>
-                    <div class="card-body pt-4">
+                    <div class="card-body">
                         <div class="table-responsive table-card">
-                            <table class="table table-borderless mb-0">
+                            <table class="table table-borderless mb-0 summary-table">
                                 <tbody>
                                     <tr>
-                                        <td>Tổng giá</td>
-                                        <td class="text-end">{{order.totalPrice| thousandSeparator}}</td>
+                                        <td class="text-muted">Tổng giá</td>
+                                        <td class="text-end fw-medium">{{order.totalPrice| thousandSeparator}}</td>
                                     </tr>
                                     <tr>
-                                        <td>Giảm giá</td>
-                                        <td class="text-end">-{{order.discountAmount | thousandSeparator}}</td>
+                                        <td class="text-muted">Giảm giá</td>
+                                        <td class="text-end fw-medium text-danger">-{{order.discountAmount | thousandSeparator}}</td>
                                     </tr>
                                     <tr>
-                                        <td>Phí giao hàng</td>
-                                        <td class="text-end">{{order.shippingCharge | thousandSeparator}}</td>
+                                        <td class="text-muted">Phí giao hàng</td>
+                                        <td class="text-end fw-medium">{{order.shippingCharge | thousandSeparator}}</td>
                                     </tr>
                                     <tr>
-                                        <td>Chi phí phát sinh</td>
-                                        <td class="text-end">0</td>
-                                    </tr>
-                                    <tr class="border-top border-top-dashed">
-                                        <th scope="row">Tổng (VND) :</th>
-                                        <th class="text-end">{{order.finalAmount | thousandSeparator}}</th>
+                                        <td class="text-muted">Phát sinh</td>
+                                        <td class="text-end fw-medium">0</td>
                                     </tr>
                                 </tbody>
+                                <tfoot>
+                                    <tr class="total-row">
+                                        <th>Tổng (VND)</th>
+                                        <th class="text-end text-primary fs-6">{{order.finalAmount | thousandSeparator}}</th>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
                     </div>
                 </div>
             </div>
-            <!--end col-->
+
+            <!-- Notes -->
             <div *ngIf="order.notes" class="col-xxl-12 col-lg-6">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center">
-                            <h5 class="card-title flex-grow-1 mb-0">Ghi chú</h5>
-                            <!-- <div class="flex-shrink-0">
-                                <a href="javascript:void(0);" class="badge bg-secondary-subtle text-secondary">Track
-                                    Order</a>
-                            </div> -->
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-transparent border-bottom py-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="ph-note-pencil text-warning fs-5"></i>
+                            <h6 class="card-title mb-0">Ghi chú</h6>
                         </div>
                     </div>
-                    <div class="card-body border-top border-dashed">
-                        <div>
-                            <!-- <p class="text-muted mb-2 mb-md-0">Quét mã QR để theo dõi đơn hàng </p>
-                            <div class="text-center p-3 pb-0">
-                                <div *ngIf="order.qrCode"><img [src]="order.qrCode  | base64Image " alt="QR Code" class="qr-small">
-                                </div>
-                            </div> -->
-                            <p>{{ order.notes }}</p>
+                    <div class="card-body">
+                        <div class="note-content">
+                            <p class="mb-0">{{ order.notes }}</p>
                         </div>
                     </div>
                 </div>
             </div>
-            <!--end col-->
-        </div><!--end row-->
-    </div><!--end col-->
-</div><!--end row-->
-
-    <div *ngIf="isOrderInProcessing(order.orderStatus)" class="row mt-2 mb-2">
-    <div class="col-xxl-12">
-        <div class="d-flex justify-content-between gap-3">
-            <button *ngIf="!showCancelReasonSelection" type="button" class="btn btn-secondary" (click)="showCancelReasonSelection = true ; buildUpdateOrderForm()">Hủy đơn hàng</button>
-            <button *ngIf="showCancelReasonSelection" type="button" class="btn btn-secondary" (click)="showCancelReasonSelection = false">Không hủy</button>
         </div>
+    </div>
+</div>
+
+<!-- Cancel / Edit Section -->
+<div *ngIf="isOrderInProcessing(order.orderStatus)" class="mt-4 mb-3">
+    <div class="d-flex justify-content-start">
+        <button *ngIf="!showCancelReasonSelection" type="button"
+                class="btn btn-outline-danger btn-sm d-flex align-items-center gap-2"
+                (click)="showCancelReasonSelection = true ; buildUpdateOrderForm()">
+            <i class="ph-x-circle"></i> Hủy đơn hàng
+        </button>
+        <button *ngIf="showCancelReasonSelection" type="button"
+                class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-2"
+                (click)="showCancelReasonSelection = false">
+            <i class="ph-arrow-u-up-left"></i> Không hủy
+        </button>
     </div>
 </div>
 }
 
 @if(showCancelReasonSelection){
-<div class="mt-3">
-    <label for="reason-cancel-note" class="form-label">Lý do từ hủy<span class="text-danger">*</span></label>
-    <div class="row mb-3">
-        <select [(ngModel)]="selectedCancelReasonId" class="form-select" >
-            <option *ngFor="let reason of cancelReasons" [ngValue]="reason.reasonId">
-                {{ reason.value }}
-            </option>
-        </select>
-    </div>
-    <div class="row" *ngIf="selectedCancelReasonId == 3">
-        <input [(ngModel)]="cancelReason" type="text" id="reason-cancel-note" class="form-control mb-3" placeholder="Chi tiết lý do">
-    </div>
-    <div *ngIf="selectedCancelReasonId != 0" class="row hstack gap-2 justify-content-end">
-        <button class="btn btn-danger" (click)="CancelOrder()"><i class="bi bi-x-lg align-baseline me-1"></i>Xác nhận hủy đơn hàng</button>
-    </div>
-    <div class="row" *ngIf="selectedCancelReasonId == 0">
-        <div class="card border-bottom border-2 mb-2">
-    <div class="card-body d-flex gap-3">
-        <div class="flex-grow-1">
-            <h6 class="card-title mb-3">Khách hàng</h6>
-            <form id="newOrderForm" (ngSubmit)="saveAction()" [formGroup]="updateOrderForm" class="tablelist-form" novalidate
-                autocomplete="off">
-            
-                <div class="d-flex align-items-center mb-3">
-                    <label for="customerName" class="form-label me-3 mb-0" style="width: 120px;">Tên <span
-                            class="text-danger">*</span></label>
-                    <input formControlName="customerName" type="text" class="form-control" id="customerName"
-                        placeholder="Nhập tên khách hàng" required>
-                </div>
-            
-                <div class="d-flex align-items-center mb-3">
-                    <label for="customerPhoneNumber" class="form-label me-3 mb-0" style="width: 120px;">SĐT
-                        <span class="text-danger">*</span></label>
-                    <input formControlName="customerPhoneNumber" type="text" class="form-control" id="customerPhoneNumber"
-                        placeholder="Nhập số điện thoại" required>
-                </div>
-            
-                <div class="d-flex align-items-center mb-3">
-                    <label for="customerAddress" class="form-label me-3 mb-0" style="width: 120px;">Địa chỉ nhận
-                        <span class="text-danger">*</span></label>
-                    <input formControlName="customerAddress" type="text" class="form-control" id="customerAddress"
-                        placeholder="Nhập địa chỉ nhận hàng" required>
-                </div>
-            
-                <div class="d-flex align-items-center mb-3">
-                    <label for="note" class="form-label me-3 mb-0" style="width: 120px;">Ghi chú</label>
-                    <input formControlName="note" type="text" class="form-control" id="note" placeholder="Nhập ghi chú">
-                </div>
-            </form>
+<div class="card border-0 shadow-sm cancel-section mt-2 mb-3">
+    <div class="card-body">
+        <h6 class="mb-3 d-flex align-items-center gap-2">
+            <i class="ph-warning-circle text-danger fs-5"></i>
+            Lý do hủy đơn hàng <span class="text-danger">*</span>
+        </h6>
+        <div class="mb-3">
+            <select [(ngModel)]="selectedCancelReasonId" class="form-select">
+                <option *ngFor="let reason of cancelReasons" [ngValue]="reason.reasonId">
+                    {{ reason.value }}
+                </option>
+            </select>
         </div>
-    </div>
-</div>
-        <button class="btn btn-success" (click)="saveAction()"><i class="bi bi-check-lg align-baseline me-1"></i>Lưu</button>
+        <div *ngIf="selectedCancelReasonId == 3" class="mb-3">
+            <input [(ngModel)]="cancelReason" type="text" id="reason-cancel-note" class="form-control"
+                   placeholder="Chi tiết lý do hủy...">
+        </div>
+        <div *ngIf="selectedCancelReasonId != 0 && selectedCancelReasonId != -1" class="d-flex justify-content-end">
+            <button class="btn btn-danger d-flex align-items-center gap-2" (click)="CancelOrder()">
+                <i class="bi bi-x-lg"></i> Xác nhận hủy đơn hàng
+            </button>
+        </div>
+
+        <!-- Update Order Form -->
+        <div *ngIf="selectedCancelReasonId == 0">
+            <div class="card bg-light border-0 mt-3">
+                <div class="card-body">
+                    <h6 class="mb-3 d-flex align-items-center gap-2">
+                        <i class="ph-pencil-simple text-primary fs-5"></i>
+                        Cập nhật thông tin nhận hàng
+                    </h6>
+                    <form id="newOrderForm" (ngSubmit)="saveAction()" [formGroup]="updateOrderForm"
+                          class="tablelist-form" novalidate autocomplete="off">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="customerName" class="form-label">Tên <span class="text-danger">*</span></label>
+                                <input formControlName="customerName" type="text" class="form-control" id="customerName"
+                                       placeholder="Nhập tên khách hàng" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="customerPhoneNumber" class="form-label">SĐT <span class="text-danger">*</span></label>
+                                <input formControlName="customerPhoneNumber" type="text" class="form-control"
+                                       id="customerPhoneNumber" placeholder="Nhập số điện thoại" required>
+                            </div>
+                            <div class="col-12">
+                                <label for="customerAddress" class="form-label">Địa chỉ nhận <span class="text-danger">*</span></label>
+                                <input formControlName="customerAddress" type="text" class="form-control"
+                                       id="customerAddress" placeholder="Nhập địa chỉ nhận hàng" required>
+                            </div>
+                            <div class="col-12">
+                                <label for="note" class="form-label">Ghi chú</label>
+                                <input formControlName="note" type="text" class="form-control" id="note"
+                                       placeholder="Nhập ghi chú">
+                            </div>
+                        </div>
+                    </form>
+                    <div class="d-flex justify-content-end mt-3">
+                        <button class="btn btn-success d-flex align-items-center gap-2" (click)="saveAction()">
+                            <i class="bi bi-check-lg"></i> Lưu thay đổi
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 }
 
+<!-- Invoice Detail Modal -->
 @if(order){
 <div bsModal #invoiceModal="bs-modal" class="modal fade modal-xl" id="invoiceModal">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0">
+        <div class="modal-content border-0 shadow">
 
             <!-- Header -->
             <div class="modal-header header-background-color p-3">
@@ -536,4 +650,3 @@
     </div>
 </div>
 }
-

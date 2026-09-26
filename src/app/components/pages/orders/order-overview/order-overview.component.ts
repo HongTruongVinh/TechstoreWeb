@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, HostListener, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
@@ -63,6 +63,7 @@ export class OrderOverviewComponent {
   cancelReason: string = '';
   selectedCancelReasonId: number = -1;
   updateOrderForm!: UntypedFormGroup;
+  expandedCard: string | null = null;
 
   constructor(
     private titleService: Title,
@@ -145,6 +146,15 @@ export class OrderOverviewComponent {
 
   isOrderInProcessing(orderStatusId: number): boolean {
     return [0, 1, 2].includes(orderStatusId);
+  }
+
+  toggleCard(cardName: string): void {
+    this.expandedCard = this.expandedCard === cardName ? null : cardName;
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscapeKey(): void {
+    this.expandedCard = null;
   }
 
   async saveAction() {
