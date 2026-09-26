@@ -18,28 +18,28 @@ export class TokenStorageService {
   }
 
   signOut(): void {
-    sessionStorage.clear();
+    localStorage.clear();
     this.isLoggedIn.set(false);
   }
 
   public saveToken(token: string): void {
     sessionStorage.removeItem(TOKEN_KEY);
-    sessionStorage.setItem(TOKEN_KEY, token);
+    localStorage.setItem(TOKEN_KEY, token);
     this.isLoggedIn.set(true);
   }
 
   public getToken(): string | null {
     //return localStorage.getItem('token');
-    return sessionStorage.getItem(TOKEN_KEY);
+    return localStorage.getItem(TOKEN_KEY);
   }
 
   public saveUser(user: User): void {
-    sessionStorage.removeItem(USER_KEY);
-    sessionStorage.setItem(USER_KEY, JSON.stringify(user));
+    localStorage.removeItem(USER_KEY);
+    localStorage.setItem(USER_KEY, JSON.stringify(user));
   }
 
   public getUser(): User | null {
-    const userJson = sessionStorage.getItem(USER_KEY);
+    const userJson = localStorage.getItem(USER_KEY);
     if (userJson) {
       try {
         return JSON.parse(userJson) as User;
@@ -52,12 +52,12 @@ export class TokenStorageService {
   }
 
   public saveGuestId(guest: string): void {
-    sessionStorage.removeItem(GUEST_KEY);
-    sessionStorage.setItem(GUEST_KEY, JSON.stringify(guest));
+    localStorage.removeItem(GUEST_KEY);
+    localStorage.setItem(GUEST_KEY, JSON.stringify(guest));
   }
 
   public getGuestId(): string | null {
-    const guestJson = sessionStorage.getItem(GUEST_KEY);
+    const guestJson = localStorage.getItem(GUEST_KEY);
     if (guestJson) {
       try {
         return JSON.parse(guestJson) as string;
