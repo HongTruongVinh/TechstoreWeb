@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Router } from '@angular/router';
-import { catchError, map, Observable, throwError } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 import Swal from 'sweetalert2';
 import { ConfigForApp } from '../../library/share-function/config-app';
 import { EContentType } from '../../library/enum/econtenttype';
-import { TokenStorageService } from '../services/ui/token-storage.service';
 import { HttpOptions } from './http-options';
 
 @Injectable({

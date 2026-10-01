@@ -73,7 +73,6 @@ export class LoginComponent {
             if (data) {
               this.tokenStorageService.saveUser(data);
               this.tokenStorageService.isLoggedIn.set(true);
-              // this.tokenStorageService.saveToken(data.token);
               this.store.dispatch(loadCartItem());
 
               this.loginResult = { success: true };

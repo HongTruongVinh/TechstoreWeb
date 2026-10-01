@@ -8,7 +8,6 @@ import { environment } from '../../../../environments/environment';
     providedIn: 'root'
 })
 export class PaymentSignalrService {
-    private baseHost = environment.baseHost;
     private hubConnection?: signalR.HubConnection;
 
     // SOURCE
@@ -27,18 +26,10 @@ export class PaymentSignalrService {
 
     async startConnection(orderId: string) {
 
-        let apiUrl = apiEndpoints.payment.paymentHub;
-
-        if (!apiUrl) {
-            throw new Error('Không tìm thấy URL API cho SignalR Hub');
-        }
-
-        if (!apiUrl.startsWith('http')) {
-            apiUrl = this.baseHost + apiUrl;
-        }
+        const hubUrl = `${environment.baseHost}${apiEndpoints.payment.paymentHub}`;
 
         this.hubConnection = new signalR.HubConnectionBuilder()
-            .withUrl(apiUrl)
+            .withUrl(hubUrl)
             .withAutomaticReconnect()
             .build();
 

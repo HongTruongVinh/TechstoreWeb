@@ -7,7 +7,6 @@ import { apiEndpoints } from '../../constants/api-endpoints'
 import { BrandModel as Brand } from '../../../models/models/brand/brand.model';
 
 
-const BRANDS_KEY = 'brands';
 @Injectable({ providedIn: 'root' })
 export class BrandService {
     private brands: Brand[] = [];

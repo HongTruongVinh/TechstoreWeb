@@ -24,6 +24,7 @@ import {
 
 import { Router } from '@angular/router';
 
+import { apiEndpoints } from '../constants/api-endpoints'
 import { AuthenticationService } from '../services/api/auth.service';
 import { IdempotencyService } from '../services/api/idempotency-key.service';
 import { AuthDialogService } from '../services/ui/AuthDialogService';
@@ -220,7 +221,7 @@ export const refreshTokenInterceptor: HttpInterceptorFn = (
               msgService.warringWithMessage("Phiên đăng nhập đã hết. Vui lòng đăng nhập lại");
               tks.signOut();
               router.navigate(['/']);
-              const ref = authDialog.openLogin();
+              // const ref = authDialog.openLogin();
             }),
 
             /*
