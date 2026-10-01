@@ -151,9 +151,12 @@
               (click)="retryQrCode()">Thử lại</button>
           </div>} 
           @else if (paymentData) {
-            @if (!isPaymentSuccess) {
+            @if (!isPaymentSuccess && paymentSecondsRemaining > 0) {
               <img [src]="paymentData.qrDataURL"
             alt="Mã QR thanh toán" class="qr-code-image">} 
+            @else if (!isPaymentSuccess) {
+              <div class="qr-error-icon"><i class="bi bi-clock-history"></i></div>
+            }
             @else {
               <ng-lottie [options]="successOptions" class="qr-animation"></ng-lottie>
             }
@@ -161,6 +164,12 @@
               <h6 [class.text-success]="isPaymentSuccess">{{ isPaymentSuccess ? 'Đã thanh toán thành công' : 'Quét mã QR để thanh toán' }}</h6>
               <p class="mb-1">Số tiền: <strong>{{ paymentData.amount | thousandSeparator }}₫</strong></p>
               <p class="mb-0 text-muted">Mã đơn hàng: {{ paymentData.snapshotId }}</p>
+              @if (!isPaymentSuccess && paymentSecondsRemaining > 0) {
+                <p class="mb-0 mt-2" [class.text-danger]="paymentSecondsRemaining === 0">
+                  Mã thanh toán sẽ hết hạn sau:
+                  <strong>{{ paymentCountdownText }}</strong>
+                </p>
+              }
             </div>
           }
         </div>

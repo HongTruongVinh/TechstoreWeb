@@ -72,6 +72,8 @@ export class CreateOrderComponent implements OnDestroy {
 
   user!: User;
   paymentData?: PaymentDataForSnapshotModel;
+  paymentSecondsRemaining = 0;
+  private paymentCountdownInterval?: ReturnType<typeof setInterval>;
   voucher?: Voucher | null = null;
   vouchers: Voucher[] = [];
   isApplyVoucher: boolean = false;
@@ -282,6 +284,7 @@ export class CreateOrderComponent implements OnDestroy {
       next: (res) => {
         if (res.data) {
           this.paymentData = res.data;
+          this.startPaymentCountdown(res.data.expiredAt);
 
           this.paymentSignalrService.startConnection(res.data.snapshotId);
 
@@ -313,6 +316,43 @@ export class CreateOrderComponent implements OnDestroy {
         this.qrCodeError = error.error?.message || 'Không thể kết nối đến hệ thống thanh toán. Vui lòng thử lại.';
       }
     })
+  }
+
+  private startPaymentCountdown(expiredAt: Date | string): void {
+    if (this.paymentCountdownInterval) {
+      clearInterval(this.paymentCountdownInterval);
+    }
+
+    const expirationTime = new Date(expiredAt).getTime();
+    const updateRemainingTime = () => {
+      this.paymentSecondsRemaining = Math.max(0, Math.ceil((expirationTime - Date.now()) / 1000));
+      if (this.paymentSecondsRemaining === 0 && this.paymentCountdownInterval) {
+        clearInterval(this.paymentCountdownInterval);
+        this.paymentCountdownInterval = undefined;
+      }
+      
+      if (this.paymentSecondsRemaining === 0) {
+        this.createNewSnapshotOrder();
+      }
+    };
+
+    updateRemainingTime();
+    if (this.paymentSecondsRemaining > 0) {
+      this.paymentCountdownInterval = setInterval(updateRemainingTime, 1000);
+    }
+  }
+
+  get paymentCountdownText(): string {
+    const minutes = Math.floor(this.paymentSecondsRemaining / 60).toString().padStart(2, '0');
+    const seconds = (this.paymentSecondsRemaining % 60).toString().padStart(2, '0');
+    return `${minutes}:${seconds}`;
+  }
+
+  createNewSnapshotOrder() {
+    this.idempotencyService.clearOrderKey();
+    this.isSubmitting = false;
+    this.isLoadingQrCode = false;
+    this.paymentData = undefined;
   }
 
   paymentRequest?: PaymentForSnapshotWebhookRequest;
@@ -483,6 +523,9 @@ export class CreateOrderComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
+    if (this.paymentCountdownInterval) {
+      clearInterval(this.paymentCountdownInterval);
+    }
     this.destroy$.next();
     this.destroy$.complete();
     void this.paymentSignalrService.stopConnection();
