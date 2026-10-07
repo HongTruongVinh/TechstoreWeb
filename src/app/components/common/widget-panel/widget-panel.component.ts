@@ -49,7 +49,7 @@ export class WidgetPanelComponent implements OnDestroy {
   openMesage() {
     Swal.fire({
       title: 'Chú ý',
-      text: `Website này được lập ra với mục đích học tập và thử nghiệm, sẽ không có đơn hàng thật nào được gửi đến bạn. Bạn có thể đăng nhập bằng SĐT "0345678900", mật khẩu "Abcd1234", dùng mã Voucher "D99" để thử nghiệm chức năng thanh toán bằng mã QR với giá được giảm 99.99%.`,
+      text: `Website này được lập ra với mục đích học tập và thử nghiệm, sẽ không có đơn hàng thật nào được gửi đến bạn. Account test SDT "0345678900", password "Abcd1234", dùng mã Voucher "D99" để thử nghiệm chức năng thanh toán`,
       icon: 'warning',
       confirmButtonColor: '#dfe777ff',
       confirmButtonText: 'OK',

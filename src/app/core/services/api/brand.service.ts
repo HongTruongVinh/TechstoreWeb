@@ -4,7 +4,7 @@ import { TransferHttpService } from '../../transfer-http/transfer-http.service';
 import { ApiResponse } from '../../../models/models/api-response.model';
 import { apiEndpoints } from '../../constants/api-endpoints'
 
-import { BrandModel as Brand } from '../../../models/models/brand/brand.model';
+import { Brand as Brand } from '../../../models/models/brand/brand.model';
 
 
 @Injectable({ providedIn: 'root' })

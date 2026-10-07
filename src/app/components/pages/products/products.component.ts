@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ProductCardComponent } from '../../common/product-card/product-card.component';
 import { ProductListItemModel } from '../../../models/models/product/product-list-item.model';
 import { Category } from '../../../models/models/category/category.model';
-import { BrandModel } from '../../../models/models/brand/brand.model';
+import { Brand } from '../../../models/models/brand/brand.model';
 import { ProductService } from '../../../core/services/api/product.service';
 import { ActivatedRoute } from '@angular/router';
 import { BreadcrumbComponent, BreadcrumbItem } from "../../common/breadcrumb/breadcrumb.component";
@@ -38,7 +38,7 @@ export class ProductsComponent {
 
   products: ProductListItemModel[] = [];
   categories: Category[] = [];
-  brands: BrandModel[] = [];
+  brands: Brand[] = [];
   priceFilter = {
     minPrice: '',
     maxPrice: ''

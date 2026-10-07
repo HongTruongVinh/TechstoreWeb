@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output, ElementRef, HostListener, Input, inject } from '@angular/core';
 import { Category } from '../../../models/models/category/category.model';
-import { BrandModel } from '../../../models/models/brand/brand.model';
+import { Brand } from '../../../models/models/brand/brand.model';
 import { Router, RouterLink } from '@angular/router';
 import { CategoryService } from '../../../core/services/api/category.service';
 import { BrandService } from '../../../core/services/api/brand.service';
@@ -22,7 +22,6 @@ export class CategoryPanelComponent {
   hoveredCategoryId: string | null = null;
   hoveredCategory: Category | undefined;
   categories!: Category[];
-  brands!: BrandModel[];
   priceFilters!: PriceFilter[];
   isMobile: boolean = false;
 
@@ -46,7 +45,6 @@ export class CategoryPanelComponent {
   ngOnInit(): void {
     // this.loadData();
 
-    this.brands = this.brandService.getBrands();
     this.categories = this.categoryService.getCategories();
     this.priceFilters = this.categoryService.getPriceFilters();
     this.updateIsMobile();

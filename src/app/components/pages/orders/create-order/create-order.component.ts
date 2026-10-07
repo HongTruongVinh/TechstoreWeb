@@ -324,6 +324,7 @@ export class CreateOrderComponent implements OnDestroy {
     }
 
     const expirationTime = new Date(expiredAt).getTime();
+    
     const updateRemainingTime = () => {
       this.paymentSecondsRemaining = Math.max(0, Math.ceil((expirationTime - Date.now()) / 1000));
       if (this.paymentSecondsRemaining === 0 && this.paymentCountdownInterval) {

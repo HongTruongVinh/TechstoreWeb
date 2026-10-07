@@ -28,13 +28,13 @@
                 <h6 class="section-title">Các thương hiệu</h6>
 
                 <div class="brands-list">
-                    <a class="brand-item" *ngFor="let brand of brands"
+                    <a class="brand-item" *ngFor="let brand of hoveredCategory.brands"
                         [routerLink]="['/san-pham', hoveredCategory.slug, brand.slug]">
                         <img [src]="brand.iconImageUrl | fullImageUrl" [alt]="brand.name" class="brand-logo">
                         <span class="brand-name">{{ brand.name }}</span>
                     </a>
 
-                    <div *ngIf="brands.length === 0" class="no-brands">
+                    <div *ngIf="hoveredCategory.brands.length === 0" class="no-brands">
                         <p>Chưa có thương hiệu</p>
                     </div>
                 </div>
@@ -67,12 +67,12 @@
                         <div class="brand-item mt-2" (click)="searchProducts(selectedCategory.slug)">
                             <span class="brand-name">Xem tất cả></span>
                         </div>
-                        <div class="brand-item" *ngFor="let brand of brands"
+                        <div class="brand-item" *ngFor="let brand of selectedCategory.brands"
                             (click)="searchProducts(selectedCategory.slug, brand.slug)">
                             <img [src]="brand.iconImageUrl | fullImageUrl" [alt]="brand.name" class="brand-logo">
                             <span class="brand-name">{{ brand.name }}</span>
                         </div>
-                        <div *ngIf="brands.length === 0" class="no-brands">
+                        <div *ngIf="selectedCategory.brands.length === 0" class="no-brands">
                             <p>Chưa có thương hiệu</p>
                         </div>
                     </div>
