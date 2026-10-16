@@ -71,6 +71,7 @@ export class WidgetPanelComponent implements OnDestroy {
       AiChatComponent,
       {
         id: 'ai-chat-modal',
+        panelClass: 'ai-chat-dialog-panel',
       }
     );
 

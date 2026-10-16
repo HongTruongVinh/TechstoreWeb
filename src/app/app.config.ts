@@ -22,6 +22,7 @@ import { CategoryService } from './core/services/api/category.service';
 import { BrandService } from './core/services/api/brand.service';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { refreshTokenInterceptor } from './core/interceptors/refresh-token.interceptor';
+import { provideMarkdown } from 'ngx-markdown';
 
 const store = {
   // categories: categoryReducer,
@@ -63,6 +64,8 @@ export const appConfig: ApplicationConfig = {
         refreshTokenInterceptor
       ])
     ),
+
+    provideMarkdown(),
 
     provideStore(store),
 

@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ChatbotService } from '../../../core/services/api/chatbot.service';
 import { FullImageUrlPipe } from "../../../pipes/full-image-url.pipe";
 import { CommonModule } from '@angular/common';
+import { MarkdownModule } from 'ngx-markdown';
 import { Router } from '@angular/router';
 import { SystemConfigService } from '../../../core/services/api/system-config.service';
 import { TokenStorageService } from '../../../core/services/ui/token-storage.service';
@@ -11,7 +12,7 @@ import { TokenStorageService } from '../../../core/services/ui/token-storage.ser
 @Component({
   selector: 'app-ai-chat',
   standalone: true,
-  imports: [CommonModule, FormsModule, FullImageUrlPipe],
+  imports: [CommonModule, FormsModule, FullImageUrlPipe, MarkdownModule],
   templateUrl: './ai-chat.component.html',
   styleUrl: './ai-chat.component.scss'
 })
@@ -24,8 +25,18 @@ export class AiChatComponent implements AfterViewChecked, AfterViewInit {
 
   draftMessage = '';
   isTyping = false;
+  showScrollBottom = false;
 
-  suggestions = ['Laptop 15 đến 25 triệu học lập trình C# và chơi game LMHT', 'Điện thoại từ 4 đến 10 triệu chơi Liên Quân Mobile'];
+  suggestions = ['Tư vấn điện thoại', 'Laptop 15 đến 25 triệu học lập trình C# và chơi game LMHT', 'Điện thoại từ 4 đến 10 triệu chơi Liên Quân Mobile'];
+
+  get hasAiAnswered(): boolean {
+    const messages = this.chatbotService.getMessages();
+    const firstUserIndex = messages.findIndex(m => m.sender === 'user');
+    if (firstUserIndex === -1) {
+      return false;
+    }
+    return messages.slice(firstUserIndex + 1).some(m => m.sender === 'ai');
+  }
 
   chatbotService = inject(ChatbotService);
   router = inject(Router);
@@ -40,6 +51,23 @@ export class AiChatComponent implements AfterViewChecked, AfterViewInit {
       top: this.chatContent.nativeElement.scrollHeight,
       behavior: 'smooth'
     });
+    this.showScrollBottom = false;
+  }
+
+  onChatScroll(): void {
+    if (!this.chatContent) return;
+    const el = this.chatContent.nativeElement;
+    const distanceToBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
+    this.showScrollBottom = distanceToBottom > 120;
+  }
+
+  scrollToBottom(): void {
+    if (!this.chatContent) return;
+    this.chatContent.nativeElement.scrollTo({
+      top: this.chatContent.nativeElement.scrollHeight,
+      behavior: 'smooth'
+    });
+    this.showScrollBottom = false;
   }
 
   ngAfterViewInit(): void {
@@ -101,7 +129,7 @@ export class AiChatComponent implements AfterViewChecked, AfterViewInit {
               aiMessage.recommendationProducts = res.data.recommendations;
             }
 
-            if(res.data.guestId != null) {
+            if (res.data.guestId != null) {
               this.tks.saveGuestId(res.data.guestId);
             }
 
