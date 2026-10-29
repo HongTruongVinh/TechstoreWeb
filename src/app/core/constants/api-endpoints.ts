@@ -82,6 +82,18 @@ export const apiEndpoints = {
 
     updateOrder: (id: string) =>
       `orders/${id}`,
+
+    updateSnapshotOrder: (id: string) =>
+      `orders/snapshots/${id}`,
+
+    cancelSnapshotOrder: (id: string) =>
+      `orders/snapshots/${id}/cancel`,
+
+    SnapshotOrders: (page: number, pageSize: number) =>
+      `orders/snapshots?page=${page}&pageSize=${pageSize}`,
+
+    snapshotOrderDetails: (id: string) =>
+      `orders/snapshots/${id}`,
   },
 
   user: {

@@ -51,6 +51,26 @@ export class PurchesComponent implements OnInit {
         this.messengerService.errorNotification('Không thể tải danh sách đơn hàng. Vui lòng thử lại!');
       }
     });
+
+    this.isLoading = true;
+    this.orderService.getUserSnapshotOrders(1, 2000).subscribe({
+      next: (res) => {
+        if (res.data) {
+          this.snapshots = res.data;
+        } else {
+          this.snapshots = [];
+          if (res.message) {
+            this.messengerService.errorNotification(res.message);
+          }
+        }
+        this.isLoading = false;
+      },
+      error: () => {
+        this.snapshots = [];
+        this.isLoading = false;
+        this.messengerService.errorNotification('Không thể tải danh sách đơn hàng. Vui lòng thử lại!');
+      }
+    });
   }
 
   changeTab(tab: string) {

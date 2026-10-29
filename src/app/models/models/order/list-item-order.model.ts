@@ -7,8 +7,8 @@ export interface ListItemOrderModel {
     customerName: string;
 
     customerPhonenumber: string;
-    customerEmail: string;
-    orderStatus: EOrderStatus; 
+    customerEmail?: string;
+    orderStatus: EOrderStatus;
 
     shippingAddress: string;
     totalPrice: number;
@@ -21,6 +21,9 @@ export interface ListItemOrderModel {
     orderType: EOrderType;
     createdAt: Date;
     updatedAt: Date;
+
+    // for snapshot order
+    expiredAt?: Date;
 
     items: OrderItemModel[];
 }

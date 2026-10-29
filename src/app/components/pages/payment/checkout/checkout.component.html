@@ -1,0 +1,94 @@
+<app-breadcrumb [items]="breadcrumbItems"></app-breadcrumb>
+
+<div class="container checkout-container">
+    <div class="checkout-page">
+        <div class="checkout-heading">
+            <div>
+                <span class="checkout-eyebrow">Thanh toán</span>
+                <p class="text-muted mb-0">Quét mã QR bằng ứng dụng ngân hàng hoặc ví điện tử để thanh toán đơn hàng.
+                </p>
+            </div>
+            <span class="secure-checkout"><i class="bi bi-shield-check"></i> Thanh toán an toàn</span>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <section class="checkout-card qr-section">
+                    <div class="section-heading">
+                        <span class="section-icon"><i class="bi bi-qr-code"></i></span>
+                        <div>
+                            <h5>Mã thanh toán</h5>
+                            <p>Giữ trang này mở trong khi thực hiện thanh toán.</p>
+                        </div>
+                    </div>
+
+                    <div class="qr-content">
+                        @if (isLoadingQrCode) {
+                        <ng-lottie [options]="loadingOptions" class="qr-animation"></ng-lottie>
+                        <div>
+                            <h6>Đang tạo mã thanh toán...</h6>
+                            <p class="text-muted mb-0">Quá trình này chỉ mất vài giây.</p>
+                        </div>
+                        } @else if (qrCodeError) {
+                        <div class="qr-error-icon"><i class="bi bi-exclamation-triangle"></i></div>
+                        <div>
+                            <h6>Không thể tạo mã thanh toán</h6>
+                            <p class="text-muted mb-2">{{ qrCodeError }}</p>
+                            <button type="button" class="btn btn-outline-primary btn-sm" (click)="retryQrCode()">
+                                <i class="bi bi-arrow-clockwise me-1"></i>Thử lại
+                            </button>
+                        </div>
+                        } @else if (paymentData) {
+                        @if (!isPaymentSuccess && paymentSecondsRemaining > 0) {
+                        <img [src]="paymentData.qrDataURL" alt="Mã QR thanh toán" class="qr-code-image">
+                        } @else if (!isPaymentSuccess) {
+                        <div class="qr-error-icon"><i class="bi bi-clock-history"></i></div>
+                        } @else {
+                        <ng-lottie [options]="successOptions" class="qr-animation"></ng-lottie>
+                        }
+
+                        <div class="qr-details">
+                            <h6 [class.text-success]="isPaymentSuccess">
+                                {{ isPaymentSuccess ? 'Đã thanh toán thành công' : 'Quét mã QR để thanh toán' }}
+                            </h6>
+                            <p class="mb-1">Số tiền: <strong>{{ paymentData.amount | thousandSeparator }}₫</strong></p>
+                            <p class="mb-0 text-muted">Mã đơn hàng: {{ paymentData.snapshotId }}</p>
+
+                            @if (!isPaymentSuccess && paymentSecondsRemaining > 0) {
+                            <p class="mb-0 mt-2 countdown-text">
+                                Mã thanh toán sẽ hết hạn sau:
+                                <strong>{{ paymentCountdownText }}</strong>
+                            </p>
+                            } @else if (!isPaymentSuccess && paymentSecondsRemaining === 0) {
+                            <p class="mb-0 mt-2 text-danger">
+                                <i class="bi bi-exclamation-circle me-1"></i>Mã thanh toán đã hết hạn
+                            </p>
+                            <button type="button" class="btn btn-outline-primary btn-sm mt-2" (click)="retryQrCode()">
+                                <i class="bi bi-arrow-clockwise me-1"></i>Tạo lại mã thanh toán
+                            </button>
+                            }
+                        </div>
+                        } @else {
+                        <div class="empty-qr-state text-center py-4">
+                            <i class="bi bi-qr-code text-muted display-4 d-block mb-3"></i>
+                            <h6 class="text-muted">Chưa có thông tin thanh toán</h6>
+                            <p class="text-muted small mb-0">Vui lòng cung cấp mã đơn hàng để tải mã thanh toán.</p>
+                        </div>
+                        }
+                    </div>
+                </section>
+
+                <div class="checkout-actions d-flex flex-wrap gap-2 justify-content-between align-items-center mt-3">
+                    <button type="button" class="btn btn-outline-secondary" (click)="goBack()">
+                        <i class="bi bi-arrow-left me-1"></i>Tôi sẽ thanh toán sau
+                    </button>
+                </div>
+
+                <p class="checkout-note mt-3">
+                    <i class="bi bi-lock"></i>
+                    Thông tin của bạn được bảo mật và chỉ dùng để xử lý đơn hàng.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

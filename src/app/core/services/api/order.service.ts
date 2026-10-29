@@ -56,4 +56,28 @@ export class OrderService {
             .put(apiEndpoints.order.cancelOrder(id), model)
             .pipe(map((res: ApiResponse<boolean>) => res))
     }
+
+    getUserSnapshotOrders(page: number, pageSize: number) {
+        return this.transferHttp
+            .get(apiEndpoints.order.SnapshotOrders(page, pageSize))
+            .pipe(map((res: ApiResponse<ListItemOrderModel[]>) => res))
+    }
+
+    getSnapshotOrderDetail(snapshotOrderId: string) {
+        return this.transferHttp
+            .get(apiEndpoints.order.snapshotOrderDetails(snapshotOrderId))
+            .pipe(map((res: ApiResponse<OrderModel>) => res))
+    }
+
+    updateSnapshotOrder(orderId: string, model: UpdateOrderModel) {
+        return this.transferHttp
+            .put(apiEndpoints.order.updateSnapshotOrder(orderId), model)
+            .pipe(map((res: ApiResponse<boolean>) => res))
+    }
+
+    cancelSnapshotOrder(id: string) {
+        return this.transferHttp
+            .putUrl(apiEndpoints.order.cancelSnapshotOrder(id))
+            .pipe(map((res: ApiResponse<boolean>) => res))
+    }
 }

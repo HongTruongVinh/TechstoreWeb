@@ -135,9 +135,11 @@ $transition-base: all 0.25s ease;
   0% {
     box-shadow: 0 0 0 0 rgba($primary-color, 0.4);
   }
+
   70% {
     box-shadow: 0 0 0 10px rgba($primary-color, 0);
   }
+
   100% {
     box-shadow: 0 0 0 0 rgba($primary-color, 0);
   }
@@ -221,6 +223,7 @@ $transition-base: all 0.25s ease;
     opacity: 0.8;
     transform: translate(-50%, -50%) scale(0.85);
   }
+
   100% {
     opacity: 1;
     transform: translate(-50%, -50%) scale(1);
@@ -263,6 +266,7 @@ $transition-base: all 0.25s ease;
     opacity: 0;
     transform: translateY(-8px);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0);
@@ -484,4 +488,18 @@ $transition-base: all 0.25s ease;
       min-width: 16px;
     }
   }
+}
+
+// ─── Payment Action CTA ──────────────────────────────────
+.payment-action-box {
+  .fs-xs {
+    font-size: 0.75rem;
+  }
+}
+
+.checkout-button {
+  width: 100%;
+  min-height: 48px;
+  border-radius: 9px;
+  font-weight: 700;
 }

@@ -1,0 +1,145 @@
+:host {
+  display: block;
+}
+
+.checkout-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding-bottom: 2rem;
+}
+
+.checkout-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.checkout-eyebrow {
+  color: var(--bs-primary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.secure-checkout {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--bs-success);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.checkout-card {
+  background: var(--bs-body-bg);
+  border: 1px solid var(--bs-border-color);
+  border-radius: 14px;
+  box-shadow: 0 5px 20px rgba(30, 41, 59, 0.045);
+  padding: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.section-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin-bottom: 1.35rem;
+}
+
+.section-heading h5 {
+  margin: 0 0 0.2rem;
+  font-size: 1rem;
+}
+
+.section-heading p {
+  color: var(--bs-secondary-color);
+  font-size: 0.82rem;
+  margin: 0;
+}
+
+.section-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  color: var(--bs-primary);
+  background: rgba(var(--bs-primary-rgb), 0.1);
+  font-size: 1.1rem;
+}
+
+.qr-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  min-height: 190px;
+  padding: 1.5rem;
+  border-radius: 12px;
+  background: var(--bs-tertiary-bg);
+}
+
+.qr-code-image,
+.qr-animation {
+  width: 180px;
+  height: 180px;
+  flex: 0 0 auto;
+  object-fit: contain;
+}
+
+.qr-error-icon {
+  width: 68px;
+  height: 68px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--bs-danger);
+  background: rgba(var(--bs-danger-rgb), 0.1);
+  font-size: 1.8rem;
+}
+
+.qr-details {
+  min-width: 0;
+}
+
+.countdown-text {
+  font-size: 0.875rem;
+
+  strong {
+    color: var(--bs-danger);
+  }
+}
+
+.checkout-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.45rem;
+  color: var(--bs-secondary-color);
+  font-size: 0.75rem;
+  line-height: 1.45;
+}
+
+@media (max-width: 767.98px) {
+  .checkout-heading {
+    align-items: flex-start;
+  }
+
+  .secure-checkout {
+    display: none;
+  }
+
+  .checkout-card {
+    padding: 1rem;
+    border-radius: 11px;
+  }
+
+  .qr-content {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+

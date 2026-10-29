@@ -17,11 +17,20 @@
                     </p>
                 </div>
             </div>
+            @if(isSnaphotOrder && order.orderStatus == 0){
+            <div *ngIf="isSnaphotOrder" class="d-flex align-items-center gap-2">
+                <span class="badge rounded-pill fs-sm px-3 py-2" [ngClass]="order.orderStatus | orderStatus:'class'">
+                    Đang chờ thanh toán
+                </span>
+            </div>
+            }
+            @else {
             <div class="d-flex align-items-center gap-2">
                 <span class="badge rounded-pill fs-sm px-3 py-2" [ngClass]="order.orderStatus | orderStatus:'class'">
                     {{ order.orderStatus | orderStatus:'label' }}
                 </span>
             </div>
+            }
         </div>
     </div>
 </div>
@@ -76,7 +85,8 @@
                 <div class="step-label">Chờ giao</div>
             </div>
             <div class="tracker-connector" [class.active]="order.orderStatus === 3 || order.orderStatus === 4"></div>
-            <div class="tracker-step" [class.active]="order.orderStatus === 3 || order.orderStatus === 4" [class.current]="order.orderStatus === 4">
+            <div class="tracker-step" [class.active]="order.orderStatus === 3 || order.orderStatus === 4"
+                [class.current]="order.orderStatus === 4">
                 <div class="step-icon-wrapper">
                     <div class="step-icon">
                         <i class="ph-house-line"></i>
@@ -84,7 +94,8 @@
                     <span class="step-number">5</span>
                 </div>
                 <div class="step-label">
-                    {{ order.orderStatus === 3 || order.orderStatus === 4 ? (order.orderStatus | orderStatus:'label') : 'Hoàn thành' }}
+                    {{ order.orderStatus === 3 || order.orderStatus === 4 ? (order.orderStatus | orderStatus:'label') :
+                    'Hoàn thành' }}
                 </div>
             </div>
         </div>
@@ -99,9 +110,10 @@
     <!-- Customer Info -->
     <div class="col-xxl-3 col-md-6">
         <div class="card info-card info-card-expandable border-0 shadow-sm h-100"
-             [class.expanded]="expandedCard === 'customer'" (click)="toggleCard('customer')">
+            [class.expanded]="expandedCard === 'customer'" (click)="toggleCard('customer')">
             <div class="card-body">
-                <button *ngIf="expandedCard === 'customer'" type="button" class="expand-close-btn" (click)="$event.stopPropagation(); expandedCard = null">
+                <button *ngIf="expandedCard === 'customer'" type="button" class="expand-close-btn"
+                    (click)="$event.stopPropagation(); expandedCard = null">
                     <i class="ph-x"></i>
                 </button>
                 <div class="d-flex align-items-start gap-3">
@@ -110,13 +122,16 @@
                     </div>
                     <div class="flex-grow-1 min-w-0">
                         <h6 class="card-title text-uppercase fs-xs text-muted fw-semibold mb-2">Khách hàng</h6>
-                        <p class="fw-semibold mb-1" [class.text-truncate]="expandedCard !== 'customer'">{{order.customerName}}</p>
+                        <p class="fw-semibold mb-1" [class.text-truncate]="expandedCard !== 'customer'">
+                            {{order.customerName}}</p>
                         <p class="text-muted mb-1 fs-sm"><i class="ph-phone me-1"></i>{{order.customerPhonenumber}}</p>
-                        <p class="text-muted mb-0 fs-sm" [class.text-wrap]="expandedCard === 'customer'"><i class="ph-map-pin me-1"></i>{{order.shippingAddress}}</p>
+                        <p class="text-muted mb-0 fs-sm" [class.text-wrap]="expandedCard === 'customer'"><i
+                                class="ph-map-pin me-1"></i>{{order.shippingAddress}}</p>
 
                         <!-- Extra info visible only when expanded -->
                         <div *ngIf="expandedCard === 'customer'" class="expanded-extra mt-3 pt-3 border-top">
-                            <p class="text-muted mb-1 fs-sm"><i class="ph-envelope-simple me-1"></i>{{order.customerEmail || 'Chưa có email'}}</p>
+                            <p class="text-muted mb-1 fs-sm"><i
+                                    class="ph-envelope-simple me-1"></i>{{order.customerEmail || 'Chưa có email'}}</p>
                         </div>
                     </div>
                 </div>
@@ -127,9 +142,10 @@
     <!-- Shipping Info -->
     <div class="col-xxl-3 col-md-6">
         <div class="card info-card info-card-expandable border-0 shadow-sm h-100"
-             [class.expanded]="expandedCard === 'shipping'" (click)="toggleCard('shipping')">
+            [class.expanded]="expandedCard === 'shipping'" (click)="toggleCard('shipping')">
             <div class="card-body">
-                <button *ngIf="expandedCard === 'shipping'" type="button" class="expand-close-btn" (click)="$event.stopPropagation(); expandedCard = null">
+                <button *ngIf="expandedCard === 'shipping'" type="button" class="expand-close-btn"
+                    (click)="$event.stopPropagation(); expandedCard = null">
                     <i class="ph-x"></i>
                 </button>
                 <div class="d-flex align-items-start gap-3">
@@ -138,13 +154,18 @@
                     </div>
                     <div class="flex-grow-1 min-w-0">
                         <h6 class="card-title text-uppercase fs-xs text-muted fw-semibold mb-2">Giao hàng</h6>
-                        <p class="fw-semibold mb-1" [class.text-truncate]="expandedCard !== 'shipping'">{{order.shippingDetail?.shipperName}}</p>
-                        <p class="text-muted mb-1 fs-sm"><i class="ph-barcode me-1"></i>{{order.shippingDetail?.trackingNumber ?? 'Chưa có'}}</p>
-                        <p class="text-muted mb-0 fs-sm"><i class="ph-clock me-1"></i>Dự kiến: {{order.shippingDetail? (order.shippingDetail.estimatedArrival? (order.shippingDetail.estimatedArrival | dateToString:'getDate') : 'Chưa có') : 'Chưa có'}}</p>
+                        <p class="fw-semibold mb-1" [class.text-truncate]="expandedCard !== 'shipping'">
+                            {{order.shippingDetail?.shipperName}}</p>
+                        <p class="text-muted mb-1 fs-sm"><i
+                                class="ph-barcode me-1"></i>{{order.shippingDetail?.trackingNumber ?? 'Chưa có'}}</p>
+                        <p class="text-muted mb-0 fs-sm"><i class="ph-clock me-1"></i>Dự kiến: {{order.shippingDetail?
+                            (order.shippingDetail.estimatedArrival? (order.shippingDetail.estimatedArrival |
+                            dateToString:'getDate') : 'Chưa có') : 'Chưa có'}}</p>
 
                         <!-- Extra info visible only when expanded -->
                         <div *ngIf="expandedCard === 'shipping'" class="expanded-extra mt-3 pt-3 border-top">
-                            <p class="text-muted mb-1 fs-sm"><i class="ph-map-trifold me-1"></i>Địa chỉ giao: {{order.shippingAddress}}</p>
+                            <p class="text-muted mb-1 fs-sm"><i class="ph-map-trifold me-1"></i>Địa chỉ giao:
+                                {{order.shippingAddress}}</p>
                         </div>
                     </div>
                 </div>
@@ -155,9 +176,10 @@
     <!-- Invoice Info -->
     <div *ngIf="order.invoice" class="col-xxl-3 col-md-6">
         <div class="card info-card info-card-expandable border-0 shadow-sm h-100"
-             [class.expanded]="expandedCard === 'invoice'" (click)="toggleCard('invoice')">
+            [class.expanded]="expandedCard === 'invoice'" (click)="toggleCard('invoice')">
             <div class="card-body">
-                <button *ngIf="expandedCard === 'invoice'" type="button" class="expand-close-btn" (click)="$event.stopPropagation(); expandedCard = null">
+                <button *ngIf="expandedCard === 'invoice'" type="button" class="expand-close-btn"
+                    (click)="$event.stopPropagation(); expandedCard = null">
                     <i class="ph-x"></i>
                 </button>
                 <div class="d-flex align-items-start gap-3">
@@ -169,17 +191,21 @@
                             Hóa đơn
                             <i class="ph-arrows-out ms-1 fs-sm"></i>
                         </h6>
-                        <p class="fw-semibold mb-1">{{order.invoice.totalPrice | thousandSeparator}} <span class="text-muted fw-normal fs-sm">VND</span></p>
+                        <p class="fw-semibold mb-1">{{order.invoice.totalPrice | thousandSeparator}} <span
+                                class="text-muted fw-normal fs-sm">VND</span></p>
                         <p class="mb-0">
-                            <span class="badge rounded-pill" [ngClass]="order.invoice.invoiceStatus | invoiceStatus : 'class'">
+                            <span class="badge rounded-pill"
+                                [ngClass]="order.invoice.invoiceStatus | invoiceStatus : 'class'">
                                 {{order.invoice.invoiceStatus | invoiceStatus}}
                             </span>
                         </p>
 
                         <!-- Extra info visible only when expanded -->
                         <div *ngIf="expandedCard === 'invoice'" class="expanded-extra mt-3 pt-3 border-top">
-                            <p class="text-muted mb-1 fs-sm"><i class="ph-identification-card me-1"></i>Mã HĐ: {{order.invoice.id}}</p>
-                            <a href="javascript:void(0)" class="btn btn-sm btn-outline-info mt-2" (click)="$event.stopPropagation(); expandedCard = null; showInvoiceDetail()">
+                            <p class="text-muted mb-1 fs-sm"><i class="ph-identification-card me-1"></i>Mã HĐ:
+                                {{order.invoice.id}}</p>
+                            <a href="javascript:void(0)" class="btn btn-sm btn-outline-info mt-2"
+                                (click)="$event.stopPropagation(); expandedCard = null; showInvoiceDetail()">
                                 <i class="ph-eye me-1"></i>Xem chi tiết hóa đơn
                             </a>
                         </div>
@@ -192,9 +218,10 @@
     <!-- Payment Info -->
     <div *ngIf="order.invoice" class="col-xxl-3 col-md-6">
         <div class="card info-card info-card-expandable border-0 shadow-sm h-100"
-             [class.expanded]="expandedCard === 'payment'" (click)="toggleCard('payment')">
+            [class.expanded]="expandedCard === 'payment'" (click)="toggleCard('payment')">
             <div class="card-body">
-                <button *ngIf="expandedCard === 'payment'" type="button" class="expand-close-btn" (click)="$event.stopPropagation(); expandedCard = null">
+                <button *ngIf="expandedCard === 'payment'" type="button" class="expand-close-btn"
+                    (click)="$event.stopPropagation(); expandedCard = null">
                     <i class="ph-x"></i>
                 </button>
                 <div class="d-flex align-items-start gap-3">
@@ -203,12 +230,15 @@
                     </div>
                     <div class="flex-grow-1 min-w-0">
                         <h6 class="card-title text-uppercase fs-xs text-muted fw-semibold mb-2">Thanh toán</h6>
-                        <p class="fw-semibold mb-1 text-success">Đã trả: {{order.invoice.paidAmount | thousandSeparator}} <span class="fw-normal fs-sm">VND</span></p>
-                        <p class="mb-0 text-danger fw-semibold">Còn nợ: {{order.invoice.remainingAmount | thousandSeparator}} <span class="fw-normal fs-sm">VND</span></p>
+                        <p class="fw-semibold mb-1 text-success">Đã trả: {{order.invoice.paidAmount |
+                            thousandSeparator}} <span class="fw-normal fs-sm">VND</span></p>
+                        <p class="mb-0 text-danger fw-semibold">Còn nợ: {{order.invoice.remainingAmount |
+                            thousandSeparator}} <span class="fw-normal fs-sm">VND</span></p>
 
                         <!-- Extra info visible only when expanded -->
                         <div *ngIf="expandedCard === 'payment'" class="expanded-extra mt-3 pt-3 border-top">
-                            <a href="javascript:void(0)" class="btn btn-sm btn-outline-success mt-1" (click)="$event.stopPropagation(); expandedCard = null; showInvoiceDetail()">
+                            <a href="javascript:void(0)" class="btn btn-sm btn-outline-success mt-1"
+                                (click)="$event.stopPropagation(); expandedCard = null; showInvoiceDetail()">
                                 <i class="ph-clock-counter-clockwise me-1"></i>Xem lịch sử thanh toán
                             </a>
                         </div>
@@ -228,7 +258,8 @@
                 <div class="d-flex align-items-center gap-2 flex-grow-1">
                     <i class="ph-shopping-cart-simple text-primary fs-5"></i>
                     <h6 class="card-title mb-0">Các mặt hàng</h6>
-                    <span class="badge bg-primary-subtle text-primary rounded-pill ms-1">{{order.items.length}} sản phẩm</span>
+                    <span class="badge bg-primary-subtle text-primary rounded-pill ms-1">{{order.items.length}} sản
+                        phẩm</span>
                 </div>
             </div>
             <div class="card-body p-0">
@@ -253,22 +284,28 @@
                                         </div>
                                         <div class="flex-grow-1 min-w-0">
                                             <h6 class="fs-sm mb-1 text-truncate">
-                                                <a routerLink="/ecommerce/product-details" class="text-reset">{{orderItem.productName}}</a>
+                                                <a routerLink="/ecommerce/product-details"
+                                                    class="text-reset">{{orderItem.productName}}</a>
                                             </h6>
                                             <p class="text-muted mb-0 fs-xs">{{orderItem.categoryName}}</p>
                                         </div>
                                     </div>
                                 </td>
-                                <td class="text-muted">{{orderItem.priceAtOrderTime | thousandSeparator}} <span class="fs-xs">VND</span></td>
+                                <td class="text-muted">{{orderItem.priceAtOrderTime | thousandSeparator}} <span
+                                        class="fs-xs">VND</span></td>
                                 <td class="text-center">
-                                    <span class="badge bg-light text-body rounded-pill px-3">×{{orderItem.quantity}}</span>
+                                    <span
+                                        class="badge bg-light text-body rounded-pill px-3">×{{orderItem.quantity}}</span>
                                 </td>
-                                <td class="fw-semibold text-end pe-4">{{orderItem.totalPrice | thousandSeparator}} <span class="text-muted fw-normal fs-xs">VND</span></td>
+                                <td class="fw-semibold text-end pe-4">{{orderItem.totalPrice | thousandSeparator}} <span
+                                        class="text-muted fw-normal fs-xs">VND</span></td>
                             </tr>
                             }
                         </tbody>
                     </table>
                 </div>
+
+
 
                 <!-- Order Metrics -->
                 <div class="p-3 pt-0">
@@ -291,9 +328,18 @@
                             <div class="metric-box text-center">
                                 <i class="ph-flag-banner text-warning mb-2 fs-4"></i>
                                 <p class="text-muted mb-1 fs-xs text-uppercase fw-semibold">Trạng thái</p>
+
+                                @if(isSnaphotOrder && order.orderStatus == 0) {
+                                <h6 *ngIf="isSnaphotOrder && order.orderStatus == 0" class="fs-sm mb-0"
+                                    [ngClass]="order.orderStatus | orderStatus:'class'">
+                                    Đang chờ thanh toán
+                                </h6>
+                                }
+                                @else {
                                 <h6 class="fs-sm mb-0" [ngClass]="order.orderStatus | orderStatus:'class'">
                                     {{ order.orderStatus | orderStatus:'label' }}
                                 </h6>
+                                }
                             </div>
                         </div>
                         <div class="col-sm-6 col-lg-6 col-xl-3">
@@ -331,7 +377,8 @@
                                     </tr>
                                     <tr>
                                         <td class="text-muted">Giảm giá</td>
-                                        <td class="text-end fw-medium text-danger">-{{order.discountAmount | thousandSeparator}}</td>
+                                        <td class="text-end fw-medium text-danger">-{{order.discountAmount |
+                                            thousandSeparator}}</td>
                                     </tr>
                                     <tr>
                                         <td class="text-muted">Phí giao hàng</td>
@@ -344,11 +391,27 @@
                                 </tbody>
                                 <tfoot>
                                     <tr class="total-row">
-                                        <th>Tổng (VND)</th>
-                                        <th class="text-end text-primary fs-6">{{order.finalAmount | thousandSeparator}}</th>
+                                        <th>Tổng (VNĐ)</th>
+                                        <th class="text-end text-primary fs-6">{{order.finalAmount | thousandSeparator}}
+                                        </th>
                                     </tr>
+
                                 </tfoot>
                             </table>
+                        </div>
+
+                        <!-- Nút thanh toán đơn hàng (chỉ hiển thị khi order.expiredAt còn hiệu lực) -->
+                        <div *ngIf="isOrderPaymentAvailable" class="payment-action-box mt-3 pt-3 border-top">
+                            <div class="payment-expiry-notice d-flex align-items-center justify-content-between mb-2">
+                                <span class="text-muted fs-xs">
+                                    Đơn hàng sẽ bị hủy sau: <strong class="text-danger font-monospace fs-sm">{{
+                                        paymentCountdownText }}</strong>
+                                </span>
+                            </div>
+                            <button type="button" class="btn btn-primary checkout-button"
+                                (click)="goToCheckoutForSnapshot(order.id)">
+                                <i class="bi bi-qr-code me-2"></i>Mở trang thanh toán
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -378,13 +441,13 @@
 <div *ngIf="isOrderInProcessing(order.orderStatus)" class="mt-4 mb-3">
     <div class="d-flex justify-content-start">
         <button *ngIf="!showCancelReasonSelection" type="button"
-                class="btn btn-outline-danger btn-sm d-flex align-items-center gap-2"
-                (click)="showCancelReasonSelection = true ; buildUpdateOrderForm()">
+            class="btn btn-outline-danger btn-sm d-flex align-items-center gap-2"
+            (click)="showCancelReasonSelection = true ; buildUpdateOrderForm()">
             <i class="ph-x-circle"></i> Hủy đơn hàng
         </button>
         <button *ngIf="showCancelReasonSelection" type="button"
-                class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-2"
-                (click)="showCancelReasonSelection = false">
+            class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-2"
+            (click)="showCancelReasonSelection = false">
             <i class="ph-arrow-u-up-left"></i> Không hủy
         </button>
     </div>
@@ -407,7 +470,7 @@
         </div>
         <div *ngIf="selectedCancelReasonId == 3" class="mb-3">
             <input [(ngModel)]="cancelReason" type="text" id="reason-cancel-note" class="form-control"
-                   placeholder="Chi tiết lý do hủy...">
+                placeholder="Chi tiết lý do hủy...">
         </div>
         <div *ngIf="selectedCancelReasonId != 0 && selectedCancelReasonId != -1" class="d-flex justify-content-end">
             <button class="btn btn-danger d-flex align-items-center gap-2" (click)="CancelOrder()">
@@ -424,27 +487,30 @@
                         Cập nhật thông tin nhận hàng
                     </h6>
                     <form id="newOrderForm" (ngSubmit)="saveAction()" [formGroup]="updateOrderForm"
-                          class="tablelist-form" novalidate autocomplete="off">
+                        class="tablelist-form" novalidate autocomplete="off">
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <label for="customerName" class="form-label">Tên <span class="text-danger">*</span></label>
+                                <label for="customerName" class="form-label">Tên <span
+                                        class="text-danger">*</span></label>
                                 <input formControlName="customerName" type="text" class="form-control" id="customerName"
-                                       placeholder="Nhập tên khách hàng" required>
+                                    placeholder="Nhập tên khách hàng" required>
                             </div>
                             <div class="col-md-6">
-                                <label for="customerPhoneNumber" class="form-label">SĐT <span class="text-danger">*</span></label>
+                                <label for="customerPhoneNumber" class="form-label">SĐT <span
+                                        class="text-danger">*</span></label>
                                 <input formControlName="customerPhoneNumber" type="text" class="form-control"
-                                       id="customerPhoneNumber" placeholder="Nhập số điện thoại" required>
+                                    id="customerPhoneNumber" placeholder="Nhập số điện thoại" required>
                             </div>
                             <div class="col-12">
-                                <label for="customerAddress" class="form-label">Địa chỉ nhận <span class="text-danger">*</span></label>
+                                <label for="customerAddress" class="form-label">Địa chỉ nhận <span
+                                        class="text-danger">*</span></label>
                                 <input formControlName="customerAddress" type="text" class="form-control"
-                                       id="customerAddress" placeholder="Nhập địa chỉ nhận hàng" required>
+                                    id="customerAddress" placeholder="Nhập địa chỉ nhận hàng" required>
                             </div>
                             <div class="col-12">
                                 <label for="note" class="form-label">Ghi chú</label>
                                 <input formControlName="note" type="text" class="form-control" id="note"
-                                       placeholder="Nhập ghi chú">
+                                    placeholder="Nhập ghi chú">
                             </div>
                         </div>
                     </form>
@@ -473,9 +539,7 @@
                     Chi tiết hóa đơn
                 </h5>
 
-                <button type="button"
-                        class="btn-close btn-close-white"
-                        (click)="invoiceModal.hide()">
+                <button type="button" class="btn-close btn-close-white" (click)="invoiceModal.hide()">
                 </button>
             </div>
 
@@ -639,9 +703,7 @@
 
             <!-- Footer -->
             <div class="modal-footer">
-                <button type="button"
-                        class="btn btn-light"
-                        (click)="invoiceModal.hide()">
+                <button type="button" class="btn btn-light" (click)="invoiceModal.hide()">
                     Đóng
                 </button>
             </div>

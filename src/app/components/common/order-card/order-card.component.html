@@ -1,10 +1,5 @@
-<article
-  class="order-card"
-  role="button"
-  tabindex="0"
-  (click)="onViewDetails()"
-  (keydown.enter)="onViewDetails()"
-  (keydown.space)="onViewDetails()">
+<article class="order-card" role="button" tabindex="0" (click)="onViewDetails(order.expiredAt)"
+  (keydown.enter)="onViewDetails(order.expiredAt)" (keydown.space)="onViewDetails(order.expiredAt)">
 
   <header class="order-card__header">
     <div>
@@ -12,30 +7,42 @@
       <p class="order-card__updated">Cập nhật {{ order.updatedAt | dateToString: 'getDatetime' }}</p>
     </div>
 
-    <span class="order-card__status" [ngClass]="order.orderStatus | orderStatus: 'class'">
+    <span *ngIf="order.expiredAt == undefined" class="order-card__status"
+      [ngClass]="order.orderStatus | orderStatus: 'class'">
       <span class="order-card__status-dot"></span>
       {{ order.orderStatus | orderStatus: 'label' }}
     </span>
+
+    <span *ngIf="expiredAtDate && expiredAtDate >= now" class="order-card__status"
+      [ngClass]="order.orderStatus | orderStatus: 'class'">
+      <span class="order-card__status-dot"></span>
+      Đang chờ thanh toán, đơn hàng sẽ bị hủy sau {{ countdownText }}
+    </span>
+
+    <span *ngIf="expiredAtDate && expiredAtDate < now" class="order-card__status"
+      [ngClass]="order.orderStatus | orderStatus: 'class'">
+      <span class="order-card__status-dot"></span>
+      Đơn hàng đã bị hủy lúc
+      {{ order.expiredAt | dateToString: 'getDatetime' }}
+    </span>
+
   </header>
 
   <section class="order-card__products" aria-label="Sản phẩm trong đơn hàng">
     @if (order.items.length) {
-      <img
-        [src]="order.items[0].imageUrl | fullImageUrl"
-        [alt]="order.items[0].productName"
-        class="order-card__image">
+    <img [src]="order.items[0].imageUrl | fullImageUrl" [alt]="order.items[0].productName" class="order-card__image">
 
-      <div class="order-card__product-info">
-        <h3 class="order-card__name">{{ order.items[0].productName }}</h3>
-        <p class="order-card__quantity">Số lượng: x{{ order.items[0].quantity }}</p>
+    <div class="order-card__product-info">
+      <h3 class="order-card__name">{{ order.items[0].productName }}</h3>
+      <p class="order-card__quantity">Số lượng: x{{ order.items[0].quantity }}</p>
 
-        @if (order.items.length > 1) {
-          <p class="order-card__more-products">+{{ order.items.length - 1 }} sản phẩm khác</p>
-        }
-      </div>
+      @if (order.items.length > 1) {
+      <p class="order-card__more-products">+{{ order.items.length - 1 }} sản phẩm khác</p>
+      }
+    </div>
     } @else {
-      <div class="order-card__empty-image" aria-hidden="true">?</div>
-      <p class="order-card__empty-text">Đơn hàng chưa có sản phẩm</p>
+    <div class="order-card__empty-image" aria-hidden="true">?</div>
+    <p class="order-card__empty-text">Đơn hàng chưa có sản phẩm</p>
     }
   </section>
 

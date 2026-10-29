@@ -7,7 +7,7 @@ export interface OrderModel {
   customerId: string;
   customerName: string;
   customerPhonenumber: string;
-  customerEmail: string;
+  customerEmail?: string;
   orderStatus: EOrderStatus;
   shippingAddress: string;
   totalPrice: number;
@@ -17,6 +17,7 @@ export interface OrderModel {
   notes?: string;
   createdAt: Date;
   updatedAt: Date;
+  expiredAt?: Date;
 
   invoice?: InvoiceModel;
   shippingDetail?: ShippingModel;
