@@ -1,0 +1,332 @@
+// @use '../../../../assets/scss/variables' as v;
+
+// ─── Christmas palette ───
+$xmas-red: #c41e3a;
+$xmas-dark-red: #8b0000;
+$xmas-green: #165b33;
+$xmas-light-green: #1a7a42;
+$xmas-gold: #f5c542;
+$xmas-snow: #f8f9ff;
+$xmas-cream: #fff8f0;
+$border-radius: 18px;
+
+// ─── Host ───
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+// ─── Card ───
+.xmas-product-card {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.35s ease;
+  cursor: pointer;
+  border-radius: $border-radius;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-width: 270px;
+  margin: 0 auto;
+  color: inherit;
+  text-decoration: none;
+  border: 2px solid $xmas-red;
+  box-shadow:
+    0 12px 18px rgba(0, 0, 0, 0.08),
+    0 0 12px rgba($xmas-gold, 0.15);
+  background: $xmas-snow;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(ellipse at center,
+        rgba($xmas-gold, 0.06) 0%,
+        transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  &:hover {
+    transform: translateY(-6px);
+    box-shadow:
+      0 10px 30px rgba($xmas-red, 0.2),
+      0 0 20px rgba($xmas-gold, 0.25);
+    border-color: $xmas-gold;
+
+    .xmas-product-image img {
+      transform: scale(1.08);
+    }
+
+    .garland .bulb {
+      animation-play-state: running;
+    }
+  }
+}
+
+// ─── Snowflakes ───
+.snowflakes {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.snowflake {
+  position: absolute;
+  top: -20px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  animation: snowfall linear infinite;
+  text-shadow: 0 0 3px rgba(173, 216, 230, 0.6);
+
+  &:nth-child(1) {
+    left: 10%;
+    animation-duration: 8s;
+    animation-delay: 0s;
+    font-size: 12px;
+  }
+
+  &:nth-child(2) {
+    left: 30%;
+    animation-duration: 10s;
+    animation-delay: 1s;
+    font-size: 16px;
+  }
+
+  &:nth-child(3) {
+    left: 50%;
+    animation-duration: 7s;
+    animation-delay: 3s;
+    font-size: 10px;
+  }
+
+  &:nth-child(4) {
+    left: 70%;
+    animation-duration: 9s;
+    animation-delay: 2s;
+    font-size: 14px;
+  }
+
+  &:nth-child(5) {
+    left: 88%;
+    animation-duration: 11s;
+    animation-delay: 4s;
+    font-size: 12px;
+  }
+}
+
+@keyframes snowfall {
+  0% {
+    transform: translateY(-20px) rotate(0deg);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(380px) rotate(360deg);
+    opacity: 0.2;
+  }
+}
+
+// ─── Ribbon ───
+.xmas-ribbon {
+  position: absolute;
+  top: 14px;
+  right: -30px;
+  z-index: 3;
+  background: linear-gradient(135deg, $xmas-red, $xmas-dark-red);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 36px;
+  transform: rotate(40deg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  letter-spacing: 0.5px;
+
+  span {
+    display: inline-block;
+  }
+}
+
+// ─── Garland (lights) ───
+.garland {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  padding: 0 8px;
+  z-index: 2;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 6px;
+    left: 4px;
+    right: 4px;
+    height: 2px;
+    background: $xmas-green;
+    border-radius: 2px;
+  }
+}
+
+.bulb {
+  width: 8px;
+  height: 12px;
+  border-radius: 50% 50% 50% 50% / 30% 30% 70% 70%;
+  display: inline-block;
+  margin-top: 4px;
+  position: relative;
+  animation: bulbGlow 1.5s ease-in-out infinite alternate;
+  animation-play-state: paused;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    background: $xmas-green;
+    border-radius: 1px;
+  }
+}
+
+.bulb-red {
+  background: radial-gradient(circle at 35% 35%, #ff6b6b, $xmas-red);
+  box-shadow: 0 0 6px rgba($xmas-red, 0.6);
+}
+
+.bulb-gold {
+  background: radial-gradient(circle at 35% 35%, #ffe066, $xmas-gold);
+  box-shadow: 0 0 6px rgba($xmas-gold, 0.6);
+  animation-delay: 0.5s;
+}
+
+.bulb-green {
+  background: radial-gradient(circle at 35% 35%, #66d97a, $xmas-light-green);
+  box-shadow: 0 0 6px rgba($xmas-light-green, 0.6);
+  animation-delay: 1s;
+}
+
+@keyframes bulbGlow {
+  0% {
+    filter: brightness(0.7);
+    transform: scale(0.95);
+  }
+
+  100% {
+    filter: brightness(1.3);
+    transform: scale(1.05);
+  }
+}
+
+// ─── Product Image ───
+.xmas-product-image {
+  position: relative;
+  height: clamp(150px, 20vw, 220px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg,
+      rgba($xmas-green, 0.04) 0%,
+      #fff 40%);
+  border-radius: $border-radius $border-radius 0 0;
+  z-index: 1;
+
+  img {
+    width: 100%;
+    height: clamp(100px, 15vw, 180px);
+    object-fit: contain;
+    margin: auto;
+    display: block;
+    transition: transform 0.35s ease;
+    position: relative;
+    z-index: 1;
+  }
+}
+
+// ─── Product Info ───
+.xmas-product-info {
+  background: linear-gradient(180deg,
+      $xmas-cream 0%,
+      #fff 100%);
+  border-radius: 0 0 $border-radius $border-radius;
+  padding: 12px 14px 14px;
+  position: relative;
+  z-index: 1;
+  border-top: 2px dashed rgba($xmas-red, 0.2);
+}
+
+.xmas-product-title {
+  font-size: 0.92rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #222;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.35;
+  cursor: pointer;
+}
+
+// ─── Pricing ───
+.xmas-product-price {
+  margin-bottom: 6px;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.xmas-current-price {
+  font-weight: 800;
+  font-size: 1.05rem;
+  color: $xmas-red;
+  text-shadow: 0 0 1px rgba($xmas-red, 0.15);
+}
+
+.xmas-old-price {
+  font-size: 0.82rem;
+  color: #999;
+  text-decoration: line-through;
+}
+
+// ─── Rating ───
+.xmas-product-rating {
+  margin-bottom: 6px;
+
+  i {
+    color: $xmas-gold;
+    font-size: 0.85rem;
+  }
+
+  .xmas-sold-count {
+    font-size: 0.78rem;
+    color: #888;
+    margin-left: 4px;
+  }
+}
+
+// ─── Warranty ───
+.xmas-warranty {
+  margin: 0;
+  font-size: 0.8rem;
+  color: $xmas-green;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

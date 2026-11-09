@@ -14,6 +14,7 @@ import { Store } from '@ngrx/store';
 import { loadCartItem } from './store/cart/cart.actions';
 import { TokenStorageService } from './core/services/ui/token-storage.service';
 import { SystemConfigService } from './core/services/api/system-config.service';
+import { SnowComponent } from './components/shared/snow/snow.component';
 
 @Component({
   selector: 'app-root',
@@ -26,7 +27,8 @@ import { SystemConfigService } from './core/services/api/system-config.service';
     CategoryPanelComponent,
     MobileMenuComponent,
     WidgetPanelComponent,
-    LoadingComponent
+    LoadingComponent,
+    SnowComponent
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
@@ -54,7 +56,7 @@ export class AppComponent {
 
     this.systemConfigService.loadSystemConfigs();
 
-     this.loadStore();
+    this.loadStore();
   }
 
   @HostListener('window:scroll', ['$event'])
@@ -100,10 +102,10 @@ export class AppComponent {
   }
 
   loadStore() {
-    if(this.tks.isLoggedIn()){
+    if (this.tks.isLoggedIn()) {
       this.store.dispatch(
-      loadCartItem()
-    );
+        loadCartItem()
+      );
     }
   }
 

@@ -2,10 +2,10 @@
 @use '@angular/cdk/overlay-prebuilt';
 @use "assets/scss/plugins/icons/phosphor";
 
-body.home-background{
+body.home-background {
   // background-image:url('/assets/images/home/home-bg.png');
-  background-image: url('https://res.cloudinary.com/dc8ijvcze/image/upload/v1777281828/TechShop/images/advertisement/home-background/WorldCup-BG.png');
-  
+  background-image: url('https://res.cloudinary.com/dc8ijvcze/image/upload/v1777281828/TechShop/images/advertisement/home-background/christmas-BG.png');
+
   background-attachment: fixed;
 }
 
@@ -29,7 +29,7 @@ body.home-background{
     box-shadow: none !important;
     pointer-events: none !important;
 
-    > * {
+    >* {
       pointer-events: auto !important;
     }
   }

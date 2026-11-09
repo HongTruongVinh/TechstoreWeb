@@ -26,17 +26,14 @@
                 </div>
               </div>
             </div>
-            
+
             <!-- Carousel Indicators -->
             <div class="carousel-indicators">
-              <button 
-                *ngFor="let slide of carouselSlides; let i = index"
-                class="indicator"
-                [class.active]="i === currentSlide"
-                (click)="goToSlide(i)">
+              <button *ngFor="let slide of carouselSlides; let i = index" class="indicator"
+                [class.active]="i === currentSlide" (click)="goToSlide(i)">
               </button>
             </div>
-            
+
             <!-- Carousel Navigation -->
             <button class="carousel-nav prev" (click)="previousSlide()">
               <i class="bi bi-chevron-left"></i>
@@ -50,7 +47,7 @@
     </div>
 
     <!-- Promotions Section -->
-    <div  class="promotions-section">
+    <div class="promotions-section">
       <div class="promotions-header">
         <h5 class="promotions-title">
           <i class="bi bi-percent me-2"></i>
@@ -79,8 +76,8 @@
   <h2 class="text-center mb-5 text-white">Sản phẩm nổi bật</h2>
   <div class="product-grid">
     @for(product of featureProducts; track product.id) {
-      <app-product-card [product]="product" (viewDetails)="product.id">
-      </app-product-card>
+    <app-product-card [product]="product" (viewDetails)="product.id">
+    </app-product-card>
     }
   </div>
 </section>
@@ -161,4 +158,3 @@
     </div>
   </div>
 </section>
-

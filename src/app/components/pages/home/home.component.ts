@@ -13,6 +13,7 @@ import { DeviceService } from '../../../core/services/ui/device.service';
 import { HomeService } from '../../../core/services/api/home.service';
 import { ProductSearchQuery } from '../../../models/models/product/product-search-query.model';
 import { CdkAriaLive } from "../../../../../node_modules/@angular/cdk/a11y/index";
+import { ChristmasProductCardComponent } from '../../common/product-cards/christmas-product-card/christmas-product-card.component';
 
 @Component({
   selector: 'app-home',
@@ -21,8 +22,9 @@ import { CdkAriaLive } from "../../../../../node_modules/@angular/cdk/a11y/index
     CommonModule,
     FormsModule,
     ProductCardComponent,
-    CategoryPanelComponent
-],
+    CategoryPanelComponent,
+    ChristmasProductCardComponent
+  ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
@@ -31,7 +33,7 @@ export class HomeComponent {
   searchQuery: string = '';
   currentSlide: number = 0;
   autoSlideInterval: any;
-  
+
   featureProducts: ProductListItemModel[] = [];
 
   brandName1 = "Iphone";
@@ -40,7 +42,7 @@ export class HomeComponent {
   brandProducts2: ProductListItemModel[] = [];
 
   // heroAdvertisementImageLink = "https://res.cloudinary.com/dc8ijvcze/image/upload/v1777281828/TechShop/images/advertisement/hero-advertisement/April30th.jpg";
-  heroAdvertisementImageLink = "https://res.cloudinary.com/dc8ijvcze/image/upload/v1777281828/TechShop/images/advertisement/hero-advertisement/WorldCup.png";
+  heroAdvertisementImageLink = "https://res.cloudinary.com/dc8ijvcze/image/upload/v1777281828/TechShop/images/advertisement/hero-advertisement/christmas.png";
 
 
   // Carousel slides data
@@ -117,7 +119,7 @@ export class HomeComponent {
   ngOnInit(): void {
     document.body.classList.add('home-background');
     this.startAutoSlide();
-    
+
     this.loadData();
   }
 
@@ -125,8 +127,8 @@ export class HomeComponent {
 
     this.homeService.getFeaturedProducts().subscribe((res) => {
       if (res.data) {
-          this.featureProducts = res.data;
-        }
+        this.featureProducts = res.data;
+      }
     })
 
     const iphoneProductQuery: ProductSearchQuery = {
@@ -137,8 +139,8 @@ export class HomeComponent {
 
     this.productService.getProducts(iphoneProductQuery).subscribe((res) => {
       if (res.data) {
-          this.brandProducts1 = res.data.items;
-        }
+        this.brandProducts1 = res.data.items;
+      }
     })
 
     const samsungProductQuery: ProductSearchQuery = {
@@ -149,8 +151,8 @@ export class HomeComponent {
 
     this.productService.getProducts(samsungProductQuery).subscribe((res) => {
       if (res.data) {
-          this.brandProducts2 = res.data.items;
-        }
+        this.brandProducts2 = res.data.items;
+      }
     })
   }
 

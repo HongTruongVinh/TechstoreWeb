@@ -1,0 +1,57 @@
+<a class="xmas-product-card" [routerLink]="['/', buildProductUrl(product)]">
+  <!-- Snowflakes decoration -->
+  <div class="snowflakes" aria-hidden="true">
+    <div class="snowflake">&#10052;</div>
+    <div class="snowflake">&#10053;</div>
+    <div class="snowflake">&#10052;</div>
+    <div class="snowflake">&#10053;</div>
+    <div class="snowflake">&#10052;</div>
+  </div>
+
+  <!-- Sale ribbon -->
+  <div *ngIf="product.salePrice > 0" class="xmas-ribbon">
+    <span>&#127877; -{{ getDiscountPercent() }}%</span>
+  </div>
+
+  <!-- Product image area -->
+  <div class="xmas-product-image">
+    <!-- Top garland decoration -->
+    <div class="garland" aria-hidden="true">
+      <span class="bulb bulb-red"></span>
+      <span class="bulb bulb-gold"></span>
+      <span class="bulb bulb-green"></span>
+      <span class="bulb bulb-red"></span>
+      <span class="bulb bulb-gold"></span>
+      <span class="bulb bulb-green"></span>
+      <span class="bulb bulb-red"></span>
+    </div>
+    <img [src]="product.mainImageUrl | fullImageUrl" [alt]="product.productName" class="img-fluid d-block" />
+  </div>
+
+  <!-- Product info -->
+  <div class="xmas-product-info">
+    <h6 class="xmas-product-title">{{ product.productName }}</h6>
+
+    <!-- Pricing -->
+    <div *ngIf="product.salePrice > 0" class="xmas-product-price">
+      <span class="xmas-current-price">{{ formatPrice(product.price - product.salePrice) }}</span>
+      <span class="xmas-old-price">{{ formatPrice(product.price) }}</span>
+    </div>
+    <div *ngIf="product.salePrice < 1" class="xmas-product-price">
+      <span class="xmas-current-price">{{ formatPrice(product.price) }}</span>
+    </div>
+
+    <!-- Rating -->
+    <div class="xmas-product-rating">
+      <span *ngFor="let star of getStarsArray(product.averageRating ?? 0)">
+        <i *ngIf="star === 1" class="bi bi-star-fill"></i>
+        <i *ngIf="star === 0.5" class="bi bi-star-half"></i>
+        <i *ngIf="star === 0" class="bi bi-star"></i>
+      </span>
+      <span class="xmas-sold-count">({{ product.soldCount }})</span>
+    </div>
+
+    <!-- Warranty -->
+    <p class="xmas-warranty">&#127873; Bảo hành {{ product.warranty }} tháng</p>
+  </div>
+</a>
